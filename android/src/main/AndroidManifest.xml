@@ -1,3 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.gianlucaparadise.flutter_cast_framework">
+    package="com.gianlucaparadise.flutter_cast_framework">
+
+    <application>
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.gianlucaparadise.flutter_cast_framework.cast.CastOptionsProvider" />
+    </application>
 </manifest>
