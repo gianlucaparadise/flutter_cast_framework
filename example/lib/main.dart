@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast/CastContext.dart';
+import 'package:flutter_cast_framework/cast/widget/CastButton.dart';
 import 'package:flutter_cast_framework/flutter_cast_framework.dart';
 
 void main() => runApp(MyApp());
@@ -32,7 +33,12 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Cast plugin example app'),
         ),
         body: Center(
-          child: Text('Cast State: $_castState'),
+          child: Column(
+            children: [
+              Text('Cast State: $_castState'),
+              CastButton()
+            ],
+          )
         ),
       ),
     );
