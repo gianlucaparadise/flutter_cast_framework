@@ -8,13 +8,15 @@ class CastIcon extends StatefulWidget {
   _CastIconState createState() => _CastIconState();
 }
 
-class _CastIconState extends State<CastIcon> {
-  static const _connectingAssetNameList = {
-    2: "assets/ic_cast_24dp.svg",
-    3: "assets/ic_cast1_24dp.svg",
-    4: "assets/ic_cast_connected_24dp.svg",
-  };
+Widget _getButton(String assetName) {
+  return SvgPicture.asset(
+    assetName,
+    package: 'flutter_cast_framework',
+    semanticsLabel: 'Cast Button',
+  );
+}
 
+class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
   CastState _castState = CastState.unavailable;
 
   CastState get castState => _castState;
@@ -32,33 +34,94 @@ class _CastIconState extends State<CastIcon> {
     });
   }
 
-  Widget getEmpty() => Container();
+  Widget _getEmpty() => Container();
 
-  Widget getButton() {
-    int stateIndex = FlutterCastFramework.castContext.state.value.index;
-    String assetName = _connectingAssetNameList[stateIndex];
-    return SvgPicture.asset(
-      assetName,
-      package: 'flutter_cast_framework',
-      semanticsLabel: 'Cast Button',
-    );
-  }
+  Widget _getAnimatedButton() => _ConnectingIcon();
 
   @override
   Widget build(BuildContext context) {
     switch (_castState) {
       case CastState.unavailable:
-        return getEmpty();
+        return _getEmpty();
 
       case CastState.unconnected:
+        return _getButton("assets/ic_cast_24dp.svg");
+
       case CastState.connecting:
+        return _getAnimatedButton();
+
       case CastState.connected:
-        return getButton();
+        return _getButton("assets/ic_cast_connected_24dp.svg");
 
       case CastState.default_state:
       default:
         debugPrint("State not handled: $_castState");
-        return getEmpty();
+        return _getEmpty();
     }
+  }
+}
+
+class _ConnectingIcon extends StatefulWidget {
+  @override
+  _ConnectingIconState createState() => _ConnectingIconState();
+}
+
+class _ConnectingIconState extends State<_ConnectingIcon> {
+  static final List<String> _connectingAnimationFrames = [
+    "assets/ic_cast0_24dp.svg",
+    "assets/ic_cast1_24dp.svg",
+    "assets/ic_cast2_24dp.svg",
+  ];
+
+  int _frameIndex = 0;
+
+  bool isAnimating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _start();
+  }
+
+  _start() {
+    if (!this.mounted) return;
+
+    setState(() {
+      _frameIndex = 0;
+      isAnimating = true;
+    });
+  }
+
+  _nextFrame() async {
+    if (!mounted) return;
+
+    if (_frameIndex < _connectingAnimationFrames.length - 1) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      setState(() {
+        _frameIndex += 1;
+      });
+    } else {
+      // When I reach the end, I re-start from the beginning
+      await Future.delayed(const Duration(seconds: 1));
+      _start();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String frame;
+    if (_frameIndex < _connectingAnimationFrames.length) {
+      frame = _connectingAnimationFrames[_frameIndex];
+    } else {
+      // FIXME: sometimes this number is over the length
+      debugPrint("_ConnectingIconState: FrameIndex overflow");
+      frame = _connectingAnimationFrames.last;
+    }
+
+    if (isAnimating) {
+      _nextFrame();
+    }
+
+    return _getButton(frame);
   }
 }
