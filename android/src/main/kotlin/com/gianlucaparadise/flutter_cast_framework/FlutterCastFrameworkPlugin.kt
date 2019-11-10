@@ -1,6 +1,10 @@
 package com.gianlucaparadise.flutter_cast_framework
 
 import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.mediarouter.app.MediaRouteChooserDialog
 import androidx.mediarouter.app.MediaRouteControllerDialog
 import com.google.android.gms.cast.framework.CastContext
@@ -10,13 +14,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
-class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val channel: MethodChannel) : MethodCallHandler {
+class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val channel: MethodChannel) : MethodCallHandler, LifecycleObserver {
     companion object {
         const val TAG = "AndroidCastPlugin"
-
-        // @StyleRes
-        // var customStyleResId: Int? = null
-        // private val themeResId get() = customStyleResId ?: R.style.Theme_AppCompat_DayNight_Dialog_Alert
 
         @JvmStatic
         fun registerWith(registrar: Registrar) {
@@ -26,10 +26,17 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
     }
 
     init {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
         CastContext.getSharedInstance(registrar.activeContext()).addCastStateListener { i ->
             Log.d(TAG, "Cast state changed: $i")
             channel.invokeMethod("onCastStateChanged", i)
         }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume() {
+        Log.d(TAG, "App: ON_RESUME")
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {

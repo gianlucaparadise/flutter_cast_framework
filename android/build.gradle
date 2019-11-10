@@ -40,7 +40,13 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "2.0.0"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation "com.google.android.gms:play-services-cast-framework:17.1.0"
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 }
