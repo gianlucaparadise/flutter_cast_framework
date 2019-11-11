@@ -53,7 +53,7 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
       case CastState.connected:
         return _getButton("assets/ic_cast_connected_24dp.svg");
 
-      case CastState.default_state:
+      case CastState.idle:
       default:
         debugPrint("State not handled: $_castState");
         return _getEmpty();

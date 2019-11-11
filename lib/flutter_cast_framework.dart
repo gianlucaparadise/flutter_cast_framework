@@ -1,11 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cast_framework/MethodNames.dart';
 import 'package:flutter_cast_framework/cast/CastContext.dart';
-
-class MethodNames {
-  static const onCastStateChanged = "onCastStateChanged";
-  static const showCastDialog = "showCastDialog";
-}
 
 class FlutterCastFramework {
   static const MethodChannel _channel =
@@ -20,9 +16,20 @@ class FlutterCastFramework {
       debugPrint("Method call on flutter: $method $arguments");
 
       switch (method) {
-        case MethodNames.onCastStateChanged:
-          int castState = arguments;
-          castContext.state.value = CastState.values[castState];
+        case PlatformMethodNames.onCastStateChanged:
+          castContext.onCastStateChanged(arguments);
+          break;
+
+        case PlatformMethodNames.onSessionStarting:
+        case PlatformMethodNames.onSessionStarted:
+        case PlatformMethodNames.onSessionStartFailed:
+        case PlatformMethodNames.onSessionEnding:
+        case PlatformMethodNames.onSessionEnded:
+        case PlatformMethodNames.onSessionResuming:
+        case PlatformMethodNames.onSessionResumed:
+        case PlatformMethodNames.onSessionResumeFailed:
+        case PlatformMethodNames.onSessionSuspended:
+          castContext.sessionManager.onSessionStateChanged(method, arguments);
           break;
 
         default:
