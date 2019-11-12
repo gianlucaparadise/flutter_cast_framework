@@ -14,12 +14,25 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   CastState _castState = CastState.idle;
   SessionState _sessionState = SessionState.idle;
+  String _message = '';
+
+  final textMessageController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     FlutterCastFramework.castContext.state.addListener(_onCastStateChanged);
-    FlutterCastFramework.castContext.sessionManager.state.addListener(_onSessionStateChanged);
+    FlutterCastFramework.castContext.sessionManager.state
+        .addListener(_onSessionStateChanged);
+    FlutterCastFramework.castContext.sessionManager.onMessageReceived =
+        _onMessageReceived;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    textMessageController.dispose();
+    super.dispose();
   }
 
   void _onCastStateChanged() {
@@ -32,8 +45,22 @@ class _MyAppState extends State<MyApp> {
   void _onSessionStateChanged() {
     debugPrint("Session state changed from example");
     setState(() {
-      _sessionState = FlutterCastFramework.castContext.sessionManager.state.value;
+      _sessionState =
+          FlutterCastFramework.castContext.sessionManager.state.value;
     });
+  }
+
+  void _onMessageReceived(String namespace, String message) {
+    debugPrint("Message received from example");
+    setState(() {
+      _message = message;
+    });
+  }
+
+  void _onSendMessage() {
+    String message = this.textMessageController.text;
+    FlutterCastFramework.castContext.sessionManager
+        .sendMessage('urn:x-cast:cast-your-instructions', message);
   }
 
   @override
@@ -47,8 +74,30 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             children: [
               CastButton(),
+              Text(
+                'States',
+                style: Theme.of(context).textTheme.title,
+              ),
               Text('Cast State: $_castState'),
               Text('Cast State: $_sessionState'),
+              Text(
+                'Message',
+                style: Theme.of(context).textTheme.title,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: textMessageController,
+                    ),
+                  ),
+                  RaisedButton(
+                    child: Text('Send'),
+                    onPressed: _onSendMessage,
+                  )
+                ],
+              ),
+              Text('Received Message: $_message'),
             ],
           ),
         ),

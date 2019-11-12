@@ -7,6 +7,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.mediarouter.app.MediaRouteChooserDialog
 import androidx.mediarouter.app.MediaRouteControllerDialog
+import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
+import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
@@ -28,23 +30,6 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
         }
     }
 
-    private object MethodNames {
-        const val onCastStateChanged = "CastContext.onCastStateChanged"
-        const val showCastDialog = "showCastDialog"
-
-        // region SessionManager
-        const val onSessionStarting = "SessionManager.onSessionStarting"
-        const val onSessionStarted = "SessionManager.onSessionStarted"
-        const val onSessionStartFailed = "SessionManager.onSessionStartFailed"
-        const val onSessionEnding = "SessionManager.onSessionEnding"
-        const val onSessionEnded = "SessionManager.onSessionEnded"
-        const val onSessionResuming = "SessionManager.onSessionResuming"
-        const val onSessionResumed = "SessionManager.onSessionResumed"
-        const val onSessionResumeFailed = "SessionManager.onSessionResumeFailed"
-        const val onSessionSuspended = "SessionManager.onSessionSuspended"
-        // end-region
-    }
-
     init {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
@@ -57,16 +42,32 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
     private lateinit var mSessionManager: SessionManager
     private val mSessionManagerListener = CastSessionManagerListener()
 
+    private val mMessageCastingChannel = MessageCastingChannel(channel)
+
+    private var mCastSession: CastSession? = null
+        set(value) {
+            Log.d(TAG, "Updating mCastSession - castSession changed: ${field != value}")
+            // if (field == value) return // Despite the instances are the same, I need to re-attach the listener to every new session instance
+
+            val result = NamespaceResult(oldSession = field, newSession = value)
+
+            field = value
+
+            channel.invokeMethod(MethodNames.getSessionMessageNamespaces, null, result)
+        }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         Log.d(TAG, "App: ON_CREATE")
         mSessionManager = CastContext.getSharedInstance(registrar.activeContext()).sessionManager
+        mCastSession = mSessionManager.currentCastSession
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {
         Log.d(TAG, "App: ON_RESUME")
         mSessionManager.addSessionManagerListener(mSessionManagerListener, CastSession::class.java)
+        mCastSession = mSessionManager.currentCastSession
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -76,39 +77,53 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
                 mSessionManagerListener,
                 CastSession::class.java
         )
+        // I can't set this to null because I need the cast session to send commands from notification
+        // mCastSession = null
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
-        when (call.method) {
-            MethodNames.showCastDialog -> showCastDialog()
+        val method = call.method
+        val arguments = call.arguments
+
+        when (method) {
+            MethodNames.showCastDialog -> CastDialogOpener.showCastDialog(registrar)
+            MethodNames.sendMessage -> this.mMessageCastingChannel.sendMessage(mCastSession, arguments)
             else -> result.notImplemented()
         }
     }
 
-    private fun showCastDialog() {
-        val castContext = CastContext.getSharedInstance(registrar.activeContext())
-        val castSession = castContext.sessionManager.currentCastSession
+    private inner class NamespaceResult(val oldSession: CastSession?, val newSession: CastSession?) : Result {
+        override fun notImplemented() {
+            Log.d(TAG, "Updating mCastSession - notImplemented")
+        }
 
-        val activity = this.registrar.activity()
-        val themeResId = activity.packageManager.getActivityInfo(activity.componentName, 0).themeResource
+        override fun error(p0: String?, p1: String?, p2: Any?) {
+            Log.d(TAG, "Updating mCastSession - error - $p0 $p1 $p2")
+        }
 
-        try {
-            if (castSession != null) {
-                // This dialog allows the user to control or disconnect from the currently selected route.
-                MediaRouteControllerDialog(registrar.activeContext(), themeResId)
-                        .show()
-            } else {
-                // This dialog allows the user to choose a route that matches a given selector.
-                MediaRouteChooserDialog(registrar.activeContext(), themeResId).apply {
-                    routeSelector = castContext.mergedSelector
-                    show()
+        override fun success(args: Any?) {
+            Log.d(TAG, "Updating mCastSession - success - param: $args")
+            if (oldSession == null && newSession == null) return // nothing to do here
+            if (args == null) return // nothing to do here
+
+            if (args !is ArrayList<*>)
+                throw IllegalArgumentException("${MethodNames.getSessionMessageNamespaces} method expects an ArrayList<String>")
+
+            if (!args.any()) return  // nothing to do here
+
+            if (args[0] !is String)
+                throw IllegalArgumentException("${MethodNames.getSessionMessageNamespaces} method expects an ArrayList<String>")
+
+            val namespaces = args as ArrayList<String>
+            namespaces.forEach {
+                try {
+                    oldSession?.removeMessageReceivedCallbacks(it)
+                    newSession?.setMessageReceivedCallbacks(it, mMessageCastingChannel)
+                }
+                catch (e: java.lang.Exception) {
+                    Log.e(TAG, "Updating mCastSession - Exception while creating channel", e)
                 }
             }
-        } catch (ex: IllegalArgumentException) {
-            Log.d(TAG, "Exception while opening Dialog")
-            throw IllegalArgumentException("Error while opening MediaRouteDialog." +
-                    " Did you use AppCompat theme on your activity?" +
-                    " Check https://developers.google.com/cast/docs/android_sender/integrate#androidtheme", ex)
         }
     }
 
@@ -123,11 +138,15 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
         override fun onSessionStarting(session: CastSession?) {
             Log.d(TAG, "onSessionStarting")
             channel.invokeMethod(MethodNames.onSessionStarting, null)
+
+            mCastSession = session
         }
 
         override fun onSessionResuming(session: CastSession?, p1: String?) {
             Log.d(TAG, "onSessionResuming")
             channel.invokeMethod(MethodNames.onSessionResuming, null)
+
+            mCastSession = session
         }
 
         override fun onSessionEnding(session: CastSession?) {
@@ -148,11 +167,15 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
         override fun onSessionStarted(session: CastSession, sessionId: String) {
             Log.d(TAG, "onSessionStarted")
             channel.invokeMethod(MethodNames.onSessionStarted, null)
+
+            mCastSession = session
         }
 
         override fun onSessionResumed(session: CastSession, wasSuspended: Boolean) {
             Log.d(TAG, "onSessionResumed")
             channel.invokeMethod(MethodNames.onSessionResumed, null)
+
+            mCastSession = session
         }
 
         override fun onSessionEnded(session: CastSession, error: Int) {

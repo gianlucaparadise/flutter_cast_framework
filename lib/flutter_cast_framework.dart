@@ -32,10 +32,19 @@ class FlutterCastFramework {
           castContext.sessionManager.onSessionStateChanged(method, arguments);
           break;
 
+        case PlatformMethodNames.getSessionMessageNamespaces:
+          return ["urn:x-cast:cast-your-instructions"];
+
+        case PlatformMethodNames.onMessageReceived:
+          castContext.sessionManager.platformOnMessageReceived(arguments);
+          break;
+
         default:
           debugPrint("Method not handled: $method");
           break;
       }
+
+      return null;
     });
   }
 

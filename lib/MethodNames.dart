@@ -11,4 +11,8 @@ class PlatformMethodNames {
   static const onSessionResumed = "SessionManager.onSessionResumed";
   static const onSessionResumeFailed = "SessionManager.onSessionResumeFailed";
   static const onSessionSuspended = "SessionManager.onSessionSuspended";
+
+  static const getSessionMessageNamespaces = "CastSession.getSessionMessageNamespaces";
+  static const onMessageReceived = "CastSession.onMessageReceived";
+  static const sendMessage = "CastSession.sendMessage";
 }

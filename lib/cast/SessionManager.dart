@@ -1,7 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cast_framework/MethodNames.dart';
 
 class SessionManager {
+  final MethodChannel _channel;
+
+  SessionManager(this._channel);
+
   final ValueNotifier<SessionState> state = ValueNotifier(SessionState.idle);
 
   void onSessionStateChanged(String method, dynamic arguments) {
@@ -35,7 +40,28 @@ class SessionManager {
         break;
     }
   }
+
+  MessageReceivedCallback onMessageReceived;
+
+  void platformOnMessageReceived(dynamic arguments) {
+    if (onMessageReceived == null) return;
+    final namespace = arguments['namespace'];
+    final message = arguments['message'];
+
+    onMessageReceived(namespace, message);
+  }
+
+  void sendMessage(String namespace, String message) {
+    final argsMap = {
+      'namespace': namespace,
+      'message': '{"message":"$message"}'
+    };
+    _channel.invokeMethod(PlatformMethodNames.sendMessage, argsMap);
+  }
 }
+
+typedef MessageReceivedCallback = void Function(
+    String namespace, String message);
 
 enum SessionState {
   idle,

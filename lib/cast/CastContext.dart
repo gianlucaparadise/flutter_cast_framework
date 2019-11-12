@@ -18,7 +18,13 @@ class CastContext {
     state.value = CastState.values[castState];
   }
 
-  SessionManager sessionManager = SessionManager();
+  SessionManager _sessionManager;
+  SessionManager get sessionManager {
+    if (_sessionManager == null) {
+      _sessionManager = SessionManager(_channel);
+    }
+    return _sessionManager;
+  }
 }
 
 enum CastState {
