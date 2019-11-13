@@ -7,6 +7,9 @@ class FlutterCastFramework {
   static const MethodChannel _channel =
       const MethodChannel('flutter_cast_framework');
 
+  /// List of namespaces to listen for custom messages
+  static List<String> namespaces = [];
+
   static bool _isInitiated = false;
 
   static _init() {
@@ -33,7 +36,7 @@ class FlutterCastFramework {
           break;
 
         case PlatformMethodNames.getSessionMessageNamespaces:
-          return ["urn:x-cast:cast-your-instructions"];
+          return namespaces;
 
         case PlatformMethodNames.onMessageReceived:
           castContext.sessionManager.platformOnMessageReceived(arguments);

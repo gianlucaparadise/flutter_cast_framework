@@ -6,7 +6,10 @@ import com.google.android.gms.cast.framework.OptionsProvider
 import com.google.android.gms.cast.framework.SessionProvider
 
 
-class CastOptionsProvider : OptionsProvider {
+/**
+ * This is here to be used as an example
+ */
+class DefaultCastOptionsProvider : OptionsProvider {
     override fun getCastOptions(context: Context): CastOptions {
         return CastOptions.Builder()
                 .setReceiverApplicationId("4F8B3483")

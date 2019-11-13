@@ -44,7 +44,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation "com.google.android.gms:play-services-cast-framework:17.1.0"
+    api "com.google.android.gms:play-services-cast-framework:17.1.0"
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"

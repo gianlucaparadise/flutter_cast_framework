@@ -18,9 +18,12 @@ class _MyAppState extends State<MyApp> {
 
   final textMessageController = TextEditingController();
 
+  final String castNamespace = 'urn:x-cast:cast-your-instructions';
+
   @override
   void initState() {
     super.initState();
+    FlutterCastFramework.namespaces = [castNamespace];
     FlutterCastFramework.castContext.state.addListener(_onCastStateChanged);
     FlutterCastFramework.castContext.sessionManager.state
         .addListener(_onSessionStateChanged);
@@ -60,7 +63,7 @@ class _MyAppState extends State<MyApp> {
   void _onSendMessage() {
     String message = this.textMessageController.text;
     FlutterCastFramework.castContext.sessionManager
-        .sendMessage('urn:x-cast:cast-your-instructions', message);
+        .sendMessage(castNamespace, message);
   }
 
   @override
@@ -79,7 +82,7 @@ class _MyAppState extends State<MyApp> {
                 style: Theme.of(context).textTheme.title,
               ),
               Text('Cast State: $_castState'),
-              Text('Cast State: $_sessionState'),
+              Text('Session State: $_sessionState'),
               Text(
                 'Message',
                 style: Theme.of(context).textTheme.title,
