@@ -10,6 +10,8 @@ import com.google.android.gms.cast.framework.SessionProvider
  * This is here to be used as an example
  */
 class DefaultCastOptionsProvider : OptionsProvider {
+    // TODO: find a way to build this from dart code. Maybe source_gen?
+
     override fun getCastOptions(context: Context): CastOptions {
         return CastOptions.Builder()
                 .setReceiverApplicationId("4F8B3483")
