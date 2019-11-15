@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cast_framework/MethodNames.dart';
-import 'package:flutter_cast_framework/cast/CastContext.dart';
+
+import 'MethodNames.dart';
+import 'cast/CastContext.dart';
 
 class FlutterCastFramework {
   static const MethodChannel _channel =

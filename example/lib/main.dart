@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cast_framework/cast/CastContext.dart';
-import 'package:flutter_cast_framework/cast/SessionManager.dart';
-import 'package:flutter_cast_framework/cast/widgets/CastButton.dart';
-import 'package:flutter_cast_framework/flutter_cast_framework.dart';
+import 'package:flutter_cast_framework/cast.dart';
+import 'package:flutter_cast_framework/widgets.dart';
 
 void main() => runApp(MyApp());
 

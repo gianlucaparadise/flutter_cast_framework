@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cast_framework/MethodNames.dart';
+import '../MethodNames.dart';
 
 class SessionManager {
   final MethodChannel _channel;

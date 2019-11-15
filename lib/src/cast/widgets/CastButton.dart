@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_cast_framework/cast/widgets/CastIcon.dart';
-import 'package:flutter_cast_framework/flutter_cast_framework.dart';
+
+import '../../flutter_cast_framework.dart';
+import 'CastIcon.dart';
 
 class CastButton extends StatelessWidget {
   @override

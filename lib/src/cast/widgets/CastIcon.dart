@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_cast_framework/cast/CastContext.dart';
-import 'package:flutter_cast_framework/flutter_cast_framework.dart';
+import '../CastContext.dart';
+import '../../flutter_cast_framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CastIcon extends StatefulWidget {

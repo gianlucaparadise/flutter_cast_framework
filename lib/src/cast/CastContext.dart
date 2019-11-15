@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cast_framework/MethodNames.dart';
-import 'package:flutter_cast_framework/cast/SessionManager.dart';
+import '../MethodNames.dart';
+import 'SessionManager.dart';
 
 class CastContext {
   final ValueNotifier<CastState> state = ValueNotifier(CastState.unavailable);
