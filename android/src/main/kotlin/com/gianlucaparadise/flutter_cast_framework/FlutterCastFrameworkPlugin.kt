@@ -68,6 +68,9 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
         Log.d(TAG, "App: ON_RESUME")
         mSessionManager.addSessionManagerListener(mSessionManagerListener, CastSession::class.java)
         mCastSession = mSessionManager.currentCastSession
+
+        val castState = CastContext.getSharedInstance(registrar.activeContext()).castState
+        channel.invokeMethod(MethodNames.onCastStateChanged, castState)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)

@@ -54,7 +54,7 @@ class SessionManager {
   void sendMessage(String namespace, String message) {
     final argsMap = {
       'namespace': namespace,
-      'message': '{"message":"$message"}'
+      'message': message
     };
     _channel.invokeMethod(PlatformMethodNames.sendMessage, argsMap);
   }

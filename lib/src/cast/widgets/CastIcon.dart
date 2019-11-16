@@ -17,7 +17,7 @@ Widget _getButton(String assetName) {
 }
 
 class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
-  CastState _castState = CastState.unavailable;
+  CastState _castState = FlutterCastFramework.castContext.state.value;
 
   CastState get castState => _castState;
 
