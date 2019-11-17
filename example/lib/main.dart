@@ -74,7 +74,9 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: Column(
             children: [
-              CastButton(),
+              CastButton(
+                color: Colors.blue,
+              ),
               Text(
                 'States',
                 style: Theme.of(context).textTheme.title,

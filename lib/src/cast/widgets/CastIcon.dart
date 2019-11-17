@@ -1,16 +1,26 @@
 import 'package:flutter/widgets.dart';
-import '../CastContext.dart';
-import '../../flutter_cast_framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../flutter_cast_framework.dart';
+import '../CastContext.dart';
+
+const Color _defaultIconColor = Color.fromARGB(255, 255, 255, 255); // white
+
 class CastIcon extends StatefulWidget {
+  final Color color;
+
+  CastIcon({
+    this.color = _defaultIconColor,
+  });
+
   @override
   _CastIconState createState() => _CastIconState();
 }
 
-Widget _getButton(String assetName) {
+Widget _getButton(String assetName, Color color) {
   return SvgPicture.asset(
     assetName,
+    color: color,
     package: 'flutter_cast_framework',
     semanticsLabel: 'Cast Button',
   );
@@ -36,7 +46,7 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
 
   Widget _getEmpty() => Container();
 
-  Widget _getAnimatedButton() => _ConnectingIcon();
+  Widget _getAnimatedButton() => _ConnectingIcon(color: widget.color);
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +55,13 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
         return _getEmpty();
 
       case CastState.unconnected:
-        return _getButton("assets/ic_cast_24dp.svg");
+        return _getButton("assets/ic_cast_24dp.svg", widget.color);
 
       case CastState.connecting:
         return _getAnimatedButton();
 
       case CastState.connected:
-        return _getButton("assets/ic_cast_connected_24dp.svg");
+        return _getButton("assets/ic_cast_connected_24dp.svg", widget.color);
 
       case CastState.idle:
       default:
@@ -62,6 +72,12 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
 }
 
 class _ConnectingIcon extends StatefulWidget {
+  final Color color;
+
+  _ConnectingIcon({
+    this.color = _defaultIconColor,
+  });
+
   @override
   _ConnectingIconState createState() => _ConnectingIconState();
 }
@@ -122,6 +138,6 @@ class _ConnectingIconState extends State<_ConnectingIcon> {
       _nextFrame();
     }
 
-    return _getButton(frame);
+    return _getButton(frame, widget.color);
   }
 }

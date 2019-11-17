@@ -4,10 +4,18 @@ import '../../flutter_cast_framework.dart';
 import 'CastIcon.dart';
 
 class CastButton extends StatelessWidget {
+  final Color color;
+
+  CastButton({
+    this.color,
+  });
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        child: CastIcon(),
+        child: CastIcon(
+          color: color,
+        ),
         onTap: () => FlutterCastFramework.castContext.showCastChooserDialog());
   }
 }
