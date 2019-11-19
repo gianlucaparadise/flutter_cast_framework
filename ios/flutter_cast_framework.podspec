@@ -14,8 +14,11 @@ A new flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  s.dependency 'Flutter'
+  s.static_framework = true
 
-  s.ios.deployment_target = '8.0'
+  s.dependency 'Flutter'
+  s.dependency 'google-cast-sdk-no-bluetooth', '~> 4.4.4'
+
+  s.ios.deployment_target = '9.0'
 end
 

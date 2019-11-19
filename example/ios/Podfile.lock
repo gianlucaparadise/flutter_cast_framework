@@ -2,10 +2,22 @@ PODS:
   - Flutter (1.0.0)
   - flutter_cast_framework (0.0.1):
     - Flutter
+    - google-cast-sdk-no-bluetooth (~> 4.4.4)
+  - google-cast-sdk-no-bluetooth (4.4.4):
+    - google-cast-sdk-no-bluetooth/Core (= 4.4.4)
+    - Protobuf (~> 3.0)
+  - google-cast-sdk-no-bluetooth/Core (4.4.4):
+    - Protobuf (~> 3.0)
+  - Protobuf (3.9.0)
 
 DEPENDENCIES:
   - Flutter (from `.symlinks/flutter/ios`)
   - flutter_cast_framework (from `.symlinks/plugins/flutter_cast_framework/ios`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - google-cast-sdk-no-bluetooth
+    - Protobuf
 
 EXTERNAL SOURCES:
   Flutter:
@@ -15,7 +27,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_cast_framework: 949a52df62065109b8e46f32c14230e095963af1
+  flutter_cast_framework: 2728e840a40f44fb3cbcedbcd2c8d3f4efd53839
+  google-cast-sdk-no-bluetooth: e0af19280673fba052f7fc3ddde6116c733ce505
+  Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
 
 PODFILE CHECKSUM: b6a0a141693093b304368d08511b46cf3d1d0ac5
 
