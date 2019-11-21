@@ -22,4 +22,8 @@ enum MethodNames : String {
     case onSessionResumeFailed = "SessionManager.onSessionResumeFailed"
     case onSessionSuspended = "SessionManager.onSessionSuspended"
     // end-region
+
+    case getSessionMessageNamespaces = "CastSession.getSessionMessageNamespaces"
+    case onMessageReceived = "CastSession.onMessageReceived"
+    case sendMessage = "CastSession.sendMessage"
 }

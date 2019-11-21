@@ -15,18 +15,48 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     
     private let sessionManager: GCKSessionManager
     
+    private var castingChannels: Dictionary<String, MessageCastingChannel> = [:]
+    
     var _castSession: GCKCastSession?
     var castSession: GCKCastSession? {
         get { return _castSession }
         set {
             print("Updating castSession - castSession changed: \(_castSession != newValue)")
-            // if (_castSession == newValue) return // Despite the instances are the same, I need to re-attach the listener to every new session instance
-
-            // val result = NamespaceResult(oldSession = field, newSession = value)
-
+            
+            let oldSession = _castSession
+            let newSession = newValue
+            
             _castSession = newValue
 
-            // channel.invokeMethod(MethodNames.getSessionMessageNamespaces, null, result)
+            channel.invokeMethod(MethodNames.getSessionMessageNamespaces.rawValue, arguments: nil) { (args) in
+                print("Updating castSession - success - param: \(args ?? "-")")
+                if (oldSession == nil && newSession == nil) {
+                    return // nothing to do here
+                }
+                
+                let namespaces = args as? NSArray
+                if (namespaces == nil || namespaces?.count == 0) {
+                    return  // nothing to do here
+                }
+                
+                // removing castingChannels from old session
+                if (oldSession != nil && self.castingChannels.count != 0) {
+                    self.castingChannels.values.forEach { (castingChannel) in
+                        oldSession?.remove(castingChannel)
+                    }
+                }
+
+                namespaces?.forEach({ (namespaceRaw) in
+                    if (!(namespaceRaw is String)) {
+                        return
+                    }
+                    
+                    let namespace = namespaceRaw as! String
+                    let castingChannel = MessageCastingChannel.init(namespace: namespace, channel: self.channel)
+                    self.castingChannels[namespace] = castingChannel
+                    newSession?.add(castingChannel)
+                })
+            }
         }
     }
     
@@ -44,9 +74,9 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         let app = UIApplication.shared
         notificationCenter.addObserver(self, selector: #selector(appDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: app)
         notificationCenter.addObserver(self, selector: #selector(appWillResignActive), name: NSNotification.Name.UIApplicationWillResignActive, object: app)
-        notificationCenter.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: app)
-        notificationCenter.addObserver(self, selector: #selector(appWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: app)
-        notificationCenter.addObserver(self, selector: #selector(appWillTerminate), name: NSNotification.Name.UIApplicationWillTerminate, object: app)
+        //notificationCenter.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: app)
+        //notificationCenter.addObserver(self, selector: #selector(appWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: app)
+        //notificationCenter.addObserver(self, selector: #selector(appWillTerminate), name: NSNotification.Name.UIApplicationWillTerminate, object: app)
     }
     
     @objc func appDidBecomeActive() {
@@ -61,18 +91,6 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         print("AppLife: appWillResignActive - App moved to background!")
         self.sessionManager.remove(self)
         self.castSession = nil
-    }
-    
-    @objc func appDidEnterBackground() {
-        print("AppLife: appDidEnterBackground")
-    }
-    
-    @objc func appWillEnterForeground() {
-        print("AppLife: appWillEnterForeground")
-    }
-    
-    @objc func appWillTerminate() {
-        print("AppLife: appWillTerminate")
     }
     
     private func onCastStateChanged(state: GCKCastContext, change: NSKeyValueObservedChange<GCKCastState>) {
@@ -92,6 +110,8 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         switch call.method {
         case MethodNames.showCastDialog.rawValue:
             castContext.presentCastDialog()
+        case MethodNames.sendMessage.rawValue:
+            MessageCastingChannel.sendMessage(allCastingChannels: self.castingChannels, arguments: call.arguments)
         default:
             print("Method [\(call.method)] is not implemented.")
         }
