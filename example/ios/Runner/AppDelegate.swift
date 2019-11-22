@@ -4,13 +4,14 @@ import GoogleCast
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, GCKLoggerDelegate {
-    let kReceiverAppID = kGCKDefaultMediaReceiverApplicationID
+    let kReceiverAppID = "4F8B3483"
     let kDebugLoggingEnabled = true
     
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
     ) -> Bool {
+        // todo: find a way to init chromecast inside library
         let criteria = GCKDiscoveryCriteria(applicationID: kReceiverAppID)
         let options = GCKCastOptions(discoveryCriteria: criteria)
         GCKCastContext.setSharedInstanceWith(options)

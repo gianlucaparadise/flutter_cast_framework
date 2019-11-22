@@ -6,17 +6,14 @@ Flutter Cast Framework is a POC of a flutter plugin that lets you use Chromecast
 
 ## Exposed APIs
 
-Currently only the following APIs are integrated:
+Currently only the following APIs are integrated (both Android and iOS):
 
-* Android:
-    * Cast State
-    * Session state
-    * Send custom message
-    * Listen to received custom messages
-    * Cast Button
-    * Chromecast connection
-* iOS:
-    * Not implemented yet
+* Cast State
+* Session state
+* Send custom message
+* Listen to received custom messages
+* Cast Button
+* Chromecast connection
 
 ## Setup
 
@@ -45,7 +42,7 @@ import com.google.android.gms.cast.framework.SessionProvider
 class CastOptionsProvider : OptionsProvider {
     override fun getCastOptions(context: Context): CastOptions {
         return CastOptions.Builder()
-                .setReceiverApplicationId("4F8B3483")
+                .setReceiverApplicationId("4F8B3483") // Your receiver Application ID
                 .build()
     }
 
@@ -70,6 +67,68 @@ Add the following entry in the `AndroidManifest.xml` file under the `<applicatio
 #### 3. Theme
 
 Make sure that your application and your activity are using an `AppCompat` theme (as stated [here](https://developers.google.com/cast/docs/android_sender/integrate#androidtheme)).
+
+### iOS Setup
+
+#### 1. Minimum iOS version
+
+Make sure you minimum iOS version is 9.0.
+Select *Runner* from left pane > *General* tab > *Deployment Info* > *Target*: set 9.0 or higher
+
+#### 2. Install iOS dependencies
+
+When Xcode is closed, open a terminal at the root folder of your project and run:
+
+```bash
+cd ios && pod install
+```
+
+#### 3. Open project in Xcode
+
+To open your flutter project with Xcode from Android Studio: *Tools* > *Flutter* > *Open iOS module in Xcode*
+
+#### 4. Chromecast SDK setup
+
+Add the following lines to your `AppDelegate.swift`:
+
+```diff
+ import UIKit
+ import Flutter
++import GoogleCast
+ 
+ @UIApplicationMain
+-@objc class AppDelegate: FlutterAppDelegate {
++@objc class AppDelegate: FlutterAppDelegate, GCKLoggerDelegate {
++  let kReceiverAppID = "4F8B3483" // Your receiver Application ID
++  let kDebugLoggingEnabled = true
++  
+   override func application(
+     _ application: UIApplication,
+     didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+   ) -> Bool {
++    let criteria = GCKDiscoveryCriteria(applicationID: kReceiverAppID)
++    let options = GCKCastOptions(discoveryCriteria: criteria)
++    GCKCastContext.setSharedInstanceWith(options)
++
++    // Enable logger.
++    GCKLogger.sharedInstance().delegate = self
++    
+     GeneratedPluginRegistrant.register(with: self)
+     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+   }
++  
++  // MARK: - GCKLoggerDelegate
++  
++  func logMessage(_ message: String,
++                  at level: GCKLoggerLevel,
++                  fromFunction function: String,
++                  location: String) {
++      if (kDebugLoggingEnabled) {
++          print(function + " - " + message)
++      }
++  }
+ }
+```
 
 ## Tech notes
 
