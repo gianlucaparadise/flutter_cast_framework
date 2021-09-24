@@ -79,13 +79,13 @@ class _MyAppState extends State<MyApp> {
               ),
               Text(
                 'States',
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
               Text('Cast State: $_castState'),
               Text('Session State: $_sessionState'),
               Text(
                 'Message',
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
               Row(
                 children: [
@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> {
                       controller: textMessageController,
                     ),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Send'),
                     onPressed: _onSendMessage,
                   )
