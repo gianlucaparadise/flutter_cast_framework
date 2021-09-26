@@ -1,48 +1,107 @@
 package com.gianlucaparadise.flutter_cast_framework
 
+import android.app.Activity
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.mediarouter.app.MediaRouteChooserDialog
-import androidx.mediarouter.app.MediaRouteControllerDialog
 import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
 import com.google.android.gms.cast.framework.SessionManagerListener
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
-class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val channel: MethodChannel) : MethodCallHandler, LifecycleObserver {
+
+class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, LifecycleObserver {
     companion object {
         const val TAG = "AndroidCastPlugin"
 
         @JvmStatic
         fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "flutter_cast_framework")
-            channel.setMethodCallHandler(FlutterCastFrameworkPlugin(registrar, channel))
+            val plugin = FlutterCastFrameworkPlugin()
+            plugin.onAttachedToEngine(registrar.context(), registrar.messenger())
         }
     }
 
     init {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
-
-        CastContext.getSharedInstance(registrar.activeContext()).addCastStateListener { i ->
-            Log.d(TAG, "Cast state changed: $i")
-            channel.invokeMethod(MethodNames.onCastStateChanged, i)
-        }
     }
+
+    //region FlutterPlugin interface
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        Log.d(TAG, "onAttachedToEngine")
+        onAttachedToEngine(binding.applicationContext, binding.binaryMessenger)
+    }
+
+    private fun onAttachedToEngine(applicationContext: Context, messenger: BinaryMessenger) {
+        this.applicationContext = applicationContext
+
+        val methodChannel = MethodChannel(messenger, "flutter_cast_framework")
+        methodChannel.setMethodCallHandler(this)
+        channel = methodChannel
+
+        mMessageCastingChannel = MessageCastingChannel(methodChannel)
+
+        CastContext.getSharedInstance(applicationContext).addCastStateListener { i ->
+            Log.d(TAG, "Cast state changed: $i")
+            methodChannel.invokeMethod(MethodNames.onCastStateChanged, i)
+        }
+
+        mSessionManager = CastContext.getSharedInstance(applicationContext).sessionManager
+        mCastSession = mSessionManager.currentCastSession
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        Log.d(TAG, "onDetachedFromEngine")
+        applicationContext = null;
+        channel?.setMethodCallHandler(null);
+        channel = null;
+        mMessageCastingChannel = null
+    }
+    //endregion
+
+    //region ActivityAware
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        Log.d(TAG, "onAttachedToActivity")
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        Log.d(TAG, "onDetachedFromActivityForConfigChanges")
+        activity = null
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        Log.d(TAG, "onReattachedToActivityForConfigChanges")
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivity() {
+        Log.d(TAG, "onDetachedFromActivity")
+        activity = null
+    }
+    //endregion
 
     private lateinit var mSessionManager: SessionManager
     private val mSessionManagerListener = CastSessionManagerListener()
 
-    private val mMessageCastingChannel = MessageCastingChannel(channel)
+    private var channel: MethodChannel? = null
+    private var applicationContext: Context? = null
+    private var activity: Activity? = null
+
+    private var mMessageCastingChannel: MessageCastingChannel? = null
 
     private var mCastSession: CastSession? = null
         set(value) {
@@ -53,14 +112,13 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
 
             field = value
 
-            channel.invokeMethod(MethodNames.getSessionMessageNamespaces, null, result)
+            channel?.invokeMethod(MethodNames.getSessionMessageNamespaces, null, result)
         }
 
+    //region LifecycleObserver
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         Log.d(TAG, "App: ON_CREATE")
-        mSessionManager = CastContext.getSharedInstance(registrar.activeContext()).sessionManager
-        mCastSession = mSessionManager.currentCastSession
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -69,8 +127,13 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
         mSessionManager.addSessionManagerListener(mSessionManagerListener, CastSession::class.java)
         mCastSession = mSessionManager.currentCastSession
 
-        val castState = CastContext.getSharedInstance(registrar.activeContext()).castState
-        channel.invokeMethod(MethodNames.onCastStateChanged, castState)
+        val context = applicationContext
+        if (context == null) {
+            Log.d(TAG, "App: ON_RESUME - missing context")
+            return
+        }
+        val castState = CastContext.getSharedInstance(context).castState
+        channel?.invokeMethod(MethodNames.onCastStateChanged, castState)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -83,14 +146,24 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
         // I can't set this to null because I need the cast session to send commands from notification
         // mCastSession = null
     }
+    //endregion
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         val method = call.method
         val arguments = call.arguments
 
         when (method) {
-            MethodNames.showCastDialog -> CastDialogOpener.showCastDialog(registrar)
-            MethodNames.sendMessage -> this.mMessageCastingChannel.sendMessage(mCastSession, arguments)
+            MethodNames.showCastDialog -> {
+                val context = applicationContext
+                val activity = this.activity
+                if (context == null || activity == null) {
+                    Log.d(TAG, "onMethodCall - missing context")
+                    return
+                }
+
+                CastDialogOpener.showCastDialog(context, activity)
+            }
+            MethodNames.sendMessage -> this.mMessageCastingChannel?.sendMessage(mCastSession, arguments)
             else -> result.notImplemented()
         }
     }
@@ -122,8 +195,7 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
                 try {
                     oldSession?.removeMessageReceivedCallbacks(it)
                     newSession?.setMessageReceivedCallbacks(it, mMessageCastingChannel)
-                }
-                catch (e: java.lang.Exception) {
+                } catch (e: java.lang.Exception) {
                     Log.e(TAG, "Updating mCastSession - Exception while creating channel", e)
                 }
             }
@@ -134,56 +206,56 @@ class FlutterCastFrameworkPlugin(private val registrar: Registrar, private val c
         private var TAG = "SessionManagerListenerImpl"
 
         override fun onSessionSuspended(session: CastSession?, p1: Int) {
-            Log.d(TAG, "onSessionSuspended")
-            channel.invokeMethod(MethodNames.onSessionSuspended, null)
+            Log.d(TAG, "onSessionSuspended - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionSuspended, null)
         }
 
         override fun onSessionStarting(session: CastSession?) {
-            Log.d(TAG, "onSessionStarting")
-            channel.invokeMethod(MethodNames.onSessionStarting, null)
+            Log.d(TAG, "onSessionStarting - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionStarting, null)
 
             mCastSession = session
         }
 
         override fun onSessionResuming(session: CastSession?, p1: String?) {
-            Log.d(TAG, "onSessionResuming")
-            channel.invokeMethod(MethodNames.onSessionResuming, null)
+            Log.d(TAG, "onSessionResuming - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionResuming, null)
 
             mCastSession = session
         }
 
         override fun onSessionEnding(session: CastSession?) {
-            Log.d(TAG, "onSessionEnding")
-            channel.invokeMethod(MethodNames.onSessionEnding, null)
+            Log.d(TAG, "onSessionEnding - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionEnding, null)
         }
 
         override fun onSessionStartFailed(session: CastSession?, p1: Int) {
-            Log.d(TAG, "onSessionStartFailed")
-            channel.invokeMethod(MethodNames.onSessionStartFailed, null)
+            Log.d(TAG, "onSessionStartFailed - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionStartFailed, null)
         }
 
         override fun onSessionResumeFailed(session: CastSession?, p1: Int) {
-            Log.d(TAG, "onSessionResumeFailed")
-            channel.invokeMethod(MethodNames.onSessionResumeFailed, null)
+            Log.d(TAG, "onSessionResumeFailed - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionResumeFailed, null)
         }
 
         override fun onSessionStarted(session: CastSession, sessionId: String) {
-            Log.d(TAG, "onSessionStarted")
-            channel.invokeMethod(MethodNames.onSessionStarted, null)
+            Log.d(TAG, "onSessionStarted - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionStarted, null)
 
             mCastSession = session
         }
 
         override fun onSessionResumed(session: CastSession, wasSuspended: Boolean) {
-            Log.d(TAG, "onSessionResumed")
-            channel.invokeMethod(MethodNames.onSessionResumed, null)
+            Log.d(TAG, "onSessionResumed - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionResumed, null)
 
             mCastSession = session
         }
 
         override fun onSessionEnded(session: CastSession, error: Int) {
-            Log.d(TAG, "onSessionEnded")
-            channel.invokeMethod(MethodNames.onSessionEnded, null)
+            Log.d(TAG, "onSessionEnded - channel is null? ${channel == null}")
+            channel?.invokeMethod(MethodNames.onSessionEnded, null)
         }
     }
 }
