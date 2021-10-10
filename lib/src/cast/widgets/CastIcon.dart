@@ -74,9 +74,7 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
 class _ConnectingIcon extends StatefulWidget {
   final Color color;
 
-  _ConnectingIcon({
-    this.color = _defaultIconColor,
-  });
+  _ConnectingIcon({required this.color});
 
   @override
   _ConnectingIconState createState() => _ConnectingIconState();

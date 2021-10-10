@@ -18,12 +18,13 @@ class CastContext {
     state.value = CastState.values[castState];
   }
 
-  SessionManager _sessionManager;
+  SessionManager? _sessionManager;
   SessionManager get sessionManager {
-    if (_sessionManager == null) {
-      _sessionManager = SessionManager(_channel);
+    var result = _sessionManager;
+    if (result == null) {
+      _sessionManager = result = SessionManager(_channel);
     }
-    return _sessionManager;
+    return result;
   }
 }
 

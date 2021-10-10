@@ -41,21 +41,20 @@ class SessionManager {
     }
   }
 
-  MessageReceivedCallback onMessageReceived;
+  MessageReceivedCallback? onMessageReceived;
 
   void platformOnMessageReceived(dynamic arguments) {
-    if (onMessageReceived == null) return;
+    var thisOnMessageReceived = onMessageReceived;
+
+    if (thisOnMessageReceived == null) return;
     final namespace = arguments['namespace'];
     final message = arguments['message'];
 
-    onMessageReceived(namespace, message);
+    thisOnMessageReceived(namespace, message);
   }
 
   void sendMessage(String namespace, String message) {
-    final argsMap = {
-      'namespace': namespace,
-      'message': message
-    };
+    final argsMap = {'namespace': namespace, 'message': message};
     _channel.invokeMethod(PlatformMethodNames.sendMessage, argsMap);
   }
 }

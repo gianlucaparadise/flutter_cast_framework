@@ -7,7 +7,7 @@ class CastButton extends StatelessWidget {
   final Color color;
 
   CastButton({
-    this.color,
+    required this.color,
   });
 
   @override

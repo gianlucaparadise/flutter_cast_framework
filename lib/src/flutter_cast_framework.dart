@@ -52,16 +52,17 @@ class FlutterCastFramework {
     });
   }
 
-  static CastContext _castContext;
+  static CastContext? _castContext;
 
   // This must be the plugin entry point
   static CastContext get castContext {
-    if (!_isInitiated || _castContext == null) {
-      _castContext = CastContext(_channel);
+    var castContext = _castContext;
+    if (!_isInitiated || castContext == null) {
+      _castContext = castContext = CastContext(_channel);
       // TODO: find a better way to init the plugin
       _isInitiated = true;
       _init();
     }
-    return _castContext;
+    return castContext;
   }
 }
