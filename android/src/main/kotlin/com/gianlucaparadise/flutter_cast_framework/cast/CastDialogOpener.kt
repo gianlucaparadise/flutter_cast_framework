@@ -7,7 +7,6 @@ import androidx.mediarouter.app.MediaRouteChooserDialog
 import androidx.mediarouter.app.MediaRouteControllerDialog
 import com.gianlucaparadise.flutter_cast_framework.FlutterCastFrameworkPlugin
 import com.google.android.gms.cast.framework.CastContext
-import io.flutter.plugin.common.PluginRegistry
 
 object CastDialogOpener {
     fun showCastDialog(applicationContext: Context, activity: Activity) {
@@ -19,11 +18,11 @@ object CastDialogOpener {
         try {
             if (castSession != null) {
                 // This dialog allows the user to control or disconnect from the currently selected route.
-                MediaRouteControllerDialog(applicationContext, themeResId)
+                MediaRouteControllerDialog(activity, themeResId)
                         .show()
             } else {
                 // This dialog allows the user to choose a route that matches a given selector.
-                MediaRouteChooserDialog(applicationContext, themeResId).apply {
+                MediaRouteChooserDialog(activity, themeResId).apply {
                     routeSelector = castContext.mergedSelector
                     show()
                 }
