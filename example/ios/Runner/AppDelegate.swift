@@ -9,7 +9,7 @@ import GoogleCast
     
     override func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         // todo: find a way to init chromecast inside library
         let criteria = GCKDiscoveryCriteria(applicationID: kReceiverAppID)
