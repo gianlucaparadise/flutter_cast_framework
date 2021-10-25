@@ -85,7 +85,7 @@ cd ios && pod install
 
 #### 3. Open project in Xcode
 
-To open your flutter project with Xcode from Android Studio: *Tools* > *Flutter* > *Open iOS module in Xcode*
+To open your flutter project with Xcode running `open ios/Runner.xcworkspace`
 
 #### 4. Chromecast SDK setup
 
