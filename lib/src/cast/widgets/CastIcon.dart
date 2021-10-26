@@ -39,7 +39,10 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
   }
 
   void _onCastStateChanged() {
+    if (!mounted) return;
+
     setState(() {
+      if (!mounted) return;
       _castState = FlutterCastFramework.castContext.state.value;
     });
   }
@@ -101,6 +104,7 @@ class _ConnectingIconState extends State<_ConnectingIcon> {
     if (!this.mounted) return;
 
     setState(() {
+      if (!mounted) return;
       _frameIndex = 0;
       isAnimating = true;
     });
@@ -111,9 +115,12 @@ class _ConnectingIconState extends State<_ConnectingIcon> {
 
     if (_frameIndex < _connectingAnimationFrames.length - 1) {
       await Future.delayed(const Duration(milliseconds: 300));
-      setState(() {
-        _frameIndex += 1;
-      });
+      if (mounted) {
+        setState(() {
+          if (!mounted) return;
+          _frameIndex += 1;
+        });
+      }
     } else {
       // When I reach the end, I re-start from the beginning
       await Future.delayed(const Duration(seconds: 1));
