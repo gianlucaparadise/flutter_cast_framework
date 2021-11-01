@@ -127,6 +127,34 @@ public class HostApis {
       }
     }
   }
+  private static class CastFlutterApiCodec extends StandardMessageCodec {
+    public static final CastFlutterApiCodec INSTANCE = new CastFlutterApiCodec();
+    private CastFlutterApiCodec() {}
+  }
+
+  /** Generated class from Pigeon that represents Flutter messages that can be called from Java.*/
+  public static class CastFlutterApi {
+    private final BinaryMessenger binaryMessenger;
+    public CastFlutterApi(BinaryMessenger argBinaryMessenger){
+      this.binaryMessenger = argBinaryMessenger;
+    }
+    public interface Reply<T> {
+      void reply(T reply);
+    }
+    static MessageCodec<Object> getCodec() {
+      return CastFlutterApiCodec.INSTANCE;
+    }
+
+    public void getSessionMessageNamespaces(Reply<List<String>> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.getSessionMessageNamespaces", getCodec());
+      channel.send(null, channelReply -> {
+        @SuppressWarnings("ConstantConditions")
+        List<String> output = (List<String>)channelReply;
+        callback.reply(output);
+      });
+    }
+  }
   private static Map<String, Object> wrapError(Throwable exception) {
     Map<String, Object> errorMap = new HashMap<>();
     errorMap.put("message", exception.toString());

@@ -138,3 +138,60 @@ void CastApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastApi> 
     }
   }
 }
+@interface CastFlutterApiCodecReader : FlutterStandardReader
+@end
+@implementation CastFlutterApiCodecReader
+@end
+
+@interface CastFlutterApiCodecWriter : FlutterStandardWriter
+@end
+@implementation CastFlutterApiCodecWriter
+@end
+
+@interface CastFlutterApiCodecReaderWriter : FlutterStandardReaderWriter
+@end
+@implementation CastFlutterApiCodecReaderWriter
+- (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
+  return [[CastFlutterApiCodecWriter alloc] initWithData:data];
+}
+- (FlutterStandardReader *)readerWithData:(NSData *)data {
+  return [[CastFlutterApiCodecReader alloc] initWithData:data];
+}
+@end
+
+NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
+  static dispatch_once_t s_pred = 0;
+  static FlutterStandardMessageCodec *s_sharedObject = nil;
+  dispatch_once(&s_pred, ^{
+    CastFlutterApiCodecReaderWriter *readerWriter = [[CastFlutterApiCodecReaderWriter alloc] init];
+    s_sharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  });
+  return s_sharedObject;
+}
+
+
+@interface CastFlutterApi ()
+@property (nonatomic, strong) NSObject<FlutterBinaryMessenger> *binaryMessenger;
+@end
+
+@implementation CastFlutterApi
+- (instancetype)initWithBinaryMessenger:(NSObject<FlutterBinaryMessenger> *)binaryMessenger {
+  self = [super init];
+  if (self) {
+    _binaryMessenger = binaryMessenger;
+  }
+  return self;
+}
+
+- (void)getSessionMessageNamespacesWithCompletion:(void(^)(NSArray<NSString *> *, NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.getSessionMessageNamespaces"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:nil reply:^(id reply) {
+    NSArray<NSString *> *output = reply;
+    completion(output, nil);
+  }];
+}
+@end

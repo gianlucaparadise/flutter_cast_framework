@@ -108,3 +108,27 @@ class CastApi {
     }
   }
 }
+
+class _CastFlutterApiCodec extends StandardMessageCodec {
+  const _CastFlutterApiCodec();
+}
+abstract class CastFlutterApi {
+  static const MessageCodec<Object?> codec = _CastFlutterApiCodec();
+
+  List<String?> getSessionMessageNamespaces();
+  static void setup(CastFlutterApi? api) {
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.getSessionMessageNamespaces', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          // ignore message
+          final List<String?> output = api.getSessionMessageNamespaces();
+          return output;
+        });
+      }
+    }
+  }
+}

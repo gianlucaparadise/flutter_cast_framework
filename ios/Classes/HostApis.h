@@ -25,4 +25,11 @@ NSObject<FlutterMessageCodec> *CastApiGetCodec(void);
 
 extern void CastApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastApi> *_Nullable api);
 
+/// The codec used by CastFlutterApi.
+NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
+
+@interface CastFlutterApi : NSObject
+- (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
+- (void)getSessionMessageNamespacesWithCompletion:(void(^)(NSArray<NSString *> *, NSError *_Nullable))completion;
+@end
 NS_ASSUME_NONNULL_END

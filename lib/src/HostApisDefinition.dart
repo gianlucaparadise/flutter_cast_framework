@@ -10,3 +10,8 @@ abstract class CastApi {
   void sendMessage(CastMessage message);
   void showCastDialog();
 }
+
+@FlutterApi()
+abstract class CastFlutterApi {
+  List<String> getSessionMessageNamespaces();
+}
