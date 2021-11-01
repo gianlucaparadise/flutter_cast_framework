@@ -32,5 +32,14 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
 - (void)getSessionMessageNamespacesWithCompletion:(void(^)(NSArray<NSString *> *, NSError *_Nullable))completion;
 - (void)onCastStateChangedCastState:(NSNumber *)castState completion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionStartingWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionStartedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionStartFailedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionEndingWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionEndedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionResumingWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionResumedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionResumeFailedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onSessionSuspendedWithCompletion:(void(^)(NSError *_Nullable))completion;
 @end
 NS_ASSUME_NONNULL_END
