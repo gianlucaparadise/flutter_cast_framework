@@ -9,8 +9,7 @@ import Foundation
 
 enum MethodNames : String {
     case onCastStateChanged = "CastContext.onCastStateChanged"
-    case showCastDialog = "showCastDialog"
-
+    
     // region SessionManager
     case onSessionStarting = "SessionManager.onSessionStarting"
     case onSessionStarted = "SessionManager.onSessionStarted"

@@ -111,12 +111,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        switch call.method {
-        case MethodNames.showCastDialog.rawValue:
-            castContext.presentCastDialog()
-        default:
-            print("Method [\(call.method)] is not implemented.")
-        }
+        print("Method [\(call.method)] is not implemented.")
     }
     
     deinit {
@@ -127,6 +122,10 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     public func sendMessageMessage(_ message: CastMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
         MessageCastingChannel.sendMessage(allCastingChannels: self.castingChannels, castMessage: message)
+    }
+    
+    public func showCastDialogWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        castContext.presentCastDialog()
     }
     
     // MARK: - GCKSessionManagerListener

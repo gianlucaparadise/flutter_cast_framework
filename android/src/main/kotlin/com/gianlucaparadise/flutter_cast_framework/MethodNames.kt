@@ -2,7 +2,6 @@ package com.gianlucaparadise.flutter_cast_framework
 
 object MethodNames {
     const val onCastStateChanged = "CastContext.onCastStateChanged"
-    const val showCastDialog = "showCastDialog"
 
     // region SessionManager
     const val onSessionStarting = "SessionManager.onSessionStarting"

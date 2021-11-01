@@ -153,22 +153,8 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     //endregion
 
     override fun onMethodCall(call: MethodCall, result: Result) {
-        val method = call.method
-        val arguments = call.arguments
-
-        when (method) {
-            MethodNames.showCastDialog -> {
-                val context = applicationContext
-                val activity = this.activity
-                if (context == null || activity == null) {
-                    Log.d(TAG, "onMethodCall - missing context")
-                    return
-                }
-
-                CastDialogOpener.showCastDialog(context, activity)
-            }
-            else -> result.notImplemented()
-        }
+        Log.d(TAG, "onMethodCall - ${call.method} not implemented")
+        result.notImplemented()
     }
 
     private inner class MyApi : HostApis.CastApi {
@@ -176,6 +162,16 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             mMessageCastingChannel?.sendMessage(mCastSession, message)
         }
 
+        override fun showCastDialog() {
+            val context = applicationContext
+            val activity = activity
+            if (context == null || activity == null) {
+                Log.d(TAG, "showCastDialog - missing context")
+                return
+            }
+
+            CastDialogOpener.showCastDialog(context, activity)
+        }
     }
 
     private inner class NamespaceResult(val oldSession: CastSession?, val newSession: CastSession?) : Result {
