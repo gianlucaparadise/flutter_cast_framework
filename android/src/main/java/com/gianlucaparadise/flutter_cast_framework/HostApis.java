@@ -73,6 +73,7 @@ public class HostApis {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
   public interface CastApi {
     void sendMessage(CastMessage message);
+    void showCastDialog();
 
     /** The codec used by CastApi. */
     static MessageCodec<Object> getCodec() {
@@ -94,6 +95,25 @@ public class HostApis {
                 throw new NullPointerException("messageArg unexpectedly null.");
               }
               api.sendMessage(messageArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastApi.showCastDialog", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              api.showCastDialog();
               wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {

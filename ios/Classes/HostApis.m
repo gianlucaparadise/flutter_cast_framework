@@ -119,4 +119,22 @@ void CastApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastApi> 
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.CastApi.showCastDialog"
+        binaryMessenger:binaryMessenger
+        codec:CastApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(showCastDialogWithError:)], @"CastApi api (%@) doesn't respond to @selector(showCastDialogWithError:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        [api showCastDialogWithError:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }

@@ -8,4 +8,5 @@ class CastMessage {
 @HostApi()
 abstract class CastApi {
   void sendMessage(CastMessage message);
+  void showCastDialog();
 }

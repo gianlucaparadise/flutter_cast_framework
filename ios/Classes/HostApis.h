@@ -20,6 +20,7 @@ NSObject<FlutterMessageCodec> *CastApiGetCodec(void);
 
 @protocol CastApi
 - (void)sendMessageMessage:(CastMessage *)message error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)showCastDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CastApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastApi> *_Nullable api);
