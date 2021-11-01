@@ -1,6 +1,5 @@
 class PlatformMethodNames {
   static const onCastStateChanged = "CastContext.onCastStateChanged";
-  static const showCastDialog = "showCastDialog";
 
   static const onSessionStarting = "SessionManager.onSessionStarting";
   static const onSessionStarted = "SessionManager.onSessionStarted";

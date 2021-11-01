@@ -60,7 +60,7 @@ class FlutterCastFramework {
   static CastContext get castContext {
     var castContext = _castContext;
     if (!_isInitiated || castContext == null) {
-      _castContext = castContext = CastContext(_channel, castApi);
+      _castContext = castContext = CastContext(castApi);
       // TODO: find a better way to init the plugin
       _isInitiated = true;
       _init();
