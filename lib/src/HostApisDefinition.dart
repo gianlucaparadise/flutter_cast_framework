@@ -15,6 +15,7 @@ abstract class CastApi {
 abstract class CastFlutterApi {
   List<String> getSessionMessageNamespaces();
   void onCastStateChanged(int castState);
+  void onMessageReceived(CastMessage message);
 
   //region Session State handling
   void onSessionStarting();

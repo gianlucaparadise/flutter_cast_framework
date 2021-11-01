@@ -111,6 +111,27 @@ class CastApi {
 
 class _CastFlutterApiCodec extends StandardMessageCodec {
   const _CastFlutterApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is CastMessage) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else 
+{
+      super.writeValue(buffer, value);
+    }
+  }
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:       
+        return CastMessage.decode(readValue(buffer)!);
+      
+      default:      
+        return super.readValueOfType(type, buffer);
+      
+    }
+  }
 }
 abstract class CastFlutterApi {
   static const MessageCodec<Object?> codec = _CastFlutterApiCodec();
@@ -126,6 +147,7 @@ abstract class CastFlutterApi {
   void onSessionResumed();
   void onSessionResumeFailed();
   void onSessionSuspended();
+  void onMessageReceived(CastMessage message);
   static void setup(CastFlutterApi? api) {
     {
       const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -269,6 +291,22 @@ abstract class CastFlutterApi {
         channel.setMessageHandler((Object? message) async {
           // ignore message
           api.onSessionSuspended();
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.onMessageReceived', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onMessageReceived was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final CastMessage? arg_message = args[0] as CastMessage?;
+          assert(arg_message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onMessageReceived was null, expected non-null CastMessage.');
+          api.onMessageReceived(arg_message!);
           return;
         });
       }

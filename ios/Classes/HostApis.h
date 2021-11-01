@@ -41,5 +41,6 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (void)onSessionResumedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionResumeFailedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionSuspendedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onMessageReceivedMessage:(CastMessage *)message completion:(void(^)(NSError *_Nullable))completion;
 @end
 NS_ASSUME_NONNULL_END

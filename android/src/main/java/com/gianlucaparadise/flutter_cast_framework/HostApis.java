@@ -130,6 +130,27 @@ public class HostApis {
   private static class CastFlutterApiCodec extends StandardMessageCodec {
     public static final CastFlutterApiCodec INSTANCE = new CastFlutterApiCodec();
     private CastFlutterApiCodec() {}
+    @Override
+    protected Object readValueOfType(byte type, ByteBuffer buffer) {
+      switch (type) {
+        case (byte)128:         
+          return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
+        
+        default:        
+          return super.readValueOfType(type, buffer);
+        
+      }
+    }
+    @Override
+    protected void writeValue(ByteArrayOutputStream stream, Object value)     {
+      if (value instanceof CastMessage) {
+        stream.write(128);
+        writeValue(stream, ((CastMessage) value).toMap());
+      } else 
+{
+        super.writeValue(stream, value);
+      }
+    }
   }
 
   /** Generated class from Pigeon that represents Flutter messages that can be called from Java.*/
@@ -221,6 +242,13 @@ public class HostApis {
       BasicMessageChannel<Object> channel =
           new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onSessionSuspended", getCodec());
       channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void onMessageReceived(CastMessage messageArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onMessageReceived", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(messageArg)), channelReply -> {
         callback.reply(null);
       });
     }

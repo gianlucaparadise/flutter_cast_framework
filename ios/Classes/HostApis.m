@@ -141,11 +141,32 @@ void CastApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastApi> 
 @interface CastFlutterApiCodecReader : FlutterStandardReader
 @end
 @implementation CastFlutterApiCodecReader
+- (nullable id)readValueOfType:(UInt8)type 
+{
+  switch (type) {
+    case 128:     
+      return [CastMessage fromMap:[self readValue]];
+    
+    default:    
+      return [super readValueOfType:type];
+    
+  }
+}
 @end
 
 @interface CastFlutterApiCodecWriter : FlutterStandardWriter
 @end
 @implementation CastFlutterApiCodecWriter
+- (void)writeValue:(id)value 
+{
+  if ([value isKindOfClass:[CastMessage class]]) {
+    [self writeByte:128];
+    [self writeValue:[value toMap]];
+  } else 
+{
+    [super writeValue:value];
+  }
+}
 @end
 
 @interface CastFlutterApiCodecReaderWriter : FlutterStandardReaderWriter
@@ -291,6 +312,16 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
       binaryMessenger:self.binaryMessenger
       codec:CastFlutterApiGetCodec()];
   [channel sendMessage:nil reply:^(id reply) {
+    completion(nil);
+  }];
+}
+- (void)onMessageReceivedMessage:(CastMessage *)arg_message completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.onMessageReceived"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_message] reply:^(id reply) {
     completion(nil);
   }];
 }
