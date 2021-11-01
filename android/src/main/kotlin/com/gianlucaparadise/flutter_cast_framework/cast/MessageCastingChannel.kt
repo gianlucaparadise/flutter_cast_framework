@@ -1,6 +1,7 @@
 package com.gianlucaparadise.flutter_cast_framework.cast
 
 import android.util.Log
+import com.gianlucaparadise.flutter_cast_framework.HostApis
 import com.gianlucaparadise.flutter_cast_framework.MethodNames
 import com.google.android.gms.cast.Cast
 import com.google.android.gms.cast.CastDevice
@@ -22,11 +23,12 @@ class MessageCastingChannel(private val channel: MethodChannel) : Cast.MessageRe
         channel.invokeMethod(MethodNames.onMessageReceived, argsMap)
     }
 
-    fun sendMessage(castSession: CastSession?, arguments: Any) {
-        Log.d(TAG, "Send Message arguments: $arguments:")
-        val argsMap = arguments as HashMap<String, String?>
-        val namespace = argsMap["namespace"]
-        val message = argsMap["message"]
+    fun sendMessage(castSession: CastSession?, castMessage: HostApis.CastMessage?) {
+        Log.d(TAG, "Send Message arguments: $castMessage:")
+        if (castMessage == null) return
+
+        val namespace = castMessage.namespace
+        val message = castMessage.message
 
         sendMessage(castSession, namespace, message)
     }

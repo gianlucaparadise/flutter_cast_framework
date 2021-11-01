@@ -54,6 +54,9 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
         mMessageCastingChannel = MessageCastingChannel(methodChannel)
 
+        castApi = MyApi()
+        HostApis.CastApi.setup(messenger, castApi)
+
         CastContext.getSharedInstance(applicationContext).addCastStateListener { i ->
             Log.d(TAG, "Cast state changed: $i")
             methodChannel.invokeMethod(MethodNames.onCastStateChanged, i)
@@ -98,6 +101,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private val mSessionManagerListener = CastSessionManagerListener()
 
     private var channel: MethodChannel? = null
+    private var castApi : HostApis.CastApi? = null
     private var applicationContext: Context? = null
     private var activity: Activity? = null
 
@@ -163,9 +167,15 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
                 CastDialogOpener.showCastDialog(context, activity)
             }
-            MethodNames.sendMessage -> this.mMessageCastingChannel?.sendMessage(mCastSession, arguments)
             else -> result.notImplemented()
         }
+    }
+
+    private inner class MyApi : HostApis.CastApi {
+        override fun sendMessage(message: HostApis.CastMessage?) {
+            mMessageCastingChannel?.sendMessage(mCastSession, message)
+        }
+
     }
 
     private inner class NamespaceResult(val oldSession: CastSession?, val newSession: CastSession?) : Result {

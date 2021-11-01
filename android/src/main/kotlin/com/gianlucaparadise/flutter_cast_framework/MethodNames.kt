@@ -18,5 +18,4 @@ object MethodNames {
 
     const val getSessionMessageNamespaces = "CastSession.getSessionMessageNamespaces"
     const val onMessageReceived = "CastSession.onMessageReceived"
-    const val sendMessage = "CastSession.sendMessage"
 }
