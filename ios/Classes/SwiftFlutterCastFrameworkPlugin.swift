@@ -5,8 +5,11 @@ import GoogleCast
 public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastApi {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let messenger : FlutterBinaryMessenger = registrar.messenger()
+        
         let channel = FlutterMethodChannel(name: "flutter_cast_framework", binaryMessenger: messenger)
-        let instance = SwiftFlutterCastFrameworkPlugin(channel: channel)
+        let flutterApi = CastFlutterApi.init(binaryMessenger: messenger)
+        
+        let instance = SwiftFlutterCastFrameworkPlugin(channel: channel, flutterApi: flutterApi)
         registrar.addMethodCallDelegate(instance, channel: channel)
         
         let api : CastApi & NSObjectProtocol = instance
@@ -16,6 +19,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     private let castContext: GCKCastContext
     private var castStateObserver: NSKeyValueObservation?
     private let channel: FlutterMethodChannel
+    private let flutterApi : CastFlutterApi
     
     private let sessionManager: GCKSessionManager
     
@@ -32,14 +36,13 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
             
             _castSession = newValue
 
-            channel.invokeMethod(MethodNames.getSessionMessageNamespaces.rawValue, arguments: nil) { (args) in
-                print("Updating castSession - success - param: \(args ?? "-")")
+            flutterApi.getSessionMessageNamespaces { (namespaces, err) in
+                print("Updating castSession - getSessionMessageNamespaces success - param: \(namespaces.joined(separator: ", "))")
                 if (oldSession == nil && newSession == nil) {
                     return // nothing to do here
                 }
                 
-                let namespaces = args as? NSArray
-                if (namespaces == nil || namespaces?.count == 0) {
+                if (namespaces.count == 0) {
                     return  // nothing to do here
                 }
                 
@@ -50,12 +53,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
                     }
                 }
 
-                namespaces?.forEach({ (namespaceRaw) in
-                    if (!(namespaceRaw is String)) {
-                        return
-                    }
-                    
-                    let namespace = namespaceRaw as! String
+                namespaces.forEach({ (namespace) in
                     let castingChannel = MessageCastingChannel.init(namespace: namespace, channel: self.channel)
                     self.castingChannels[namespace] = castingChannel
                     newSession?.add(castingChannel)
@@ -64,10 +62,12 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         }
     }
     
-    init(channel: FlutterMethodChannel) {
+    init(channel: FlutterMethodChannel, flutterApi : CastFlutterApi) {
         self.channel = channel
         self.castContext = GCKCastContext.sharedInstance()
         self.sessionManager = GCKCastContext.sharedInstance().sessionManager
+        
+        self.flutterApi = flutterApi
         
         super.init()
         

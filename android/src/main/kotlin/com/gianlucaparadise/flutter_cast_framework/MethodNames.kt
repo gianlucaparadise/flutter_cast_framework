@@ -15,6 +15,5 @@ object MethodNames {
     const val onSessionSuspended = "SessionManager.onSessionSuspended"
     // end-region
 
-    const val getSessionMessageNamespaces = "CastSession.getSessionMessageNamespaces"
     const val onMessageReceived = "CastSession.onMessageReceived"
 }

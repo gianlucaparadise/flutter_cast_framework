@@ -16,6 +16,7 @@ class FlutterCastFramework {
   static bool _isInitiated = false;
 
   static _init() {
+    CastFlutterApi.setup(CastFlutterApiImpl());
     _channel.setMethodCallHandler((MethodCall call) async {
       String method = call.method;
       dynamic arguments = call.arguments;
@@ -37,9 +38,6 @@ class FlutterCastFramework {
         case PlatformMethodNames.onSessionSuspended:
           castContext.sessionManager.onSessionStateChanged(method, arguments);
           break;
-
-        case PlatformMethodNames.getSessionMessageNamespaces:
-          return namespaces;
 
         case PlatformMethodNames.onMessageReceived:
           castContext.sessionManager.platformOnMessageReceived(arguments);
@@ -66,5 +64,12 @@ class FlutterCastFramework {
       _init();
     }
     return castContext;
+  }
+}
+
+class CastFlutterApiImpl extends CastFlutterApi {
+  @override
+  List<String?> getSessionMessageNamespaces() {
+    return FlutterCastFramework.namespaces;
   }
 }

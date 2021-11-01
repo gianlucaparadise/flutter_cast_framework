@@ -57,6 +57,8 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         castApi = MyApi()
         HostApis.CastApi.setup(messenger, castApi)
 
+        flutterApi = HostApis.CastFlutterApi(messenger)
+
         CastContext.getSharedInstance(applicationContext).addCastStateListener { i ->
             Log.d(TAG, "Cast state changed: $i")
             methodChannel.invokeMethod(MethodNames.onCastStateChanged, i)
@@ -102,6 +104,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
     private var channel: MethodChannel? = null
     private var castApi : HostApis.CastApi? = null
+    private var flutterApi: HostApis.CastFlutterApi? = null
     private var applicationContext: Context? = null
     private var activity: Activity? = null
 
@@ -112,11 +115,10 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             Log.d(TAG, "Updating mCastSession - castSession changed: ${field != value}")
             // if (field == value) return // Despite the instances are the same, I need to re-attach the listener to every new session instance
 
-            val result = NamespaceResult(oldSession = field, newSession = value)
-
+            val oldSession = field
             field = value
 
-            channel?.invokeMethod(MethodNames.getSessionMessageNamespaces, null, result)
+            flutterApi?.getSessionMessageNamespaces(getOnNamespaceResult(oldSession, newSession = value))
         }
 
     //region LifecycleObserver
@@ -174,36 +176,17 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         }
     }
 
-    private inner class NamespaceResult(val oldSession: CastSession?, val newSession: CastSession?) : Result {
-        override fun notImplemented() {
-            Log.d(TAG, "Updating mCastSession - notImplemented")
-        }
+    private fun getOnNamespaceResult(oldSession: CastSession?, newSession: CastSession?) = HostApis.CastFlutterApi.Reply<MutableList<String>> { namespaces ->
+        Log.d(TAG, "Updating mCastSession - getOnNamespaceResult - param: $namespaces")
+        if (oldSession == null && newSession == null) return@Reply // nothing to do here
+        if (namespaces == null || !namespaces.any()) return@Reply  // nothing to do here
 
-        override fun error(p0: String?, p1: String?, p2: Any?) {
-            Log.d(TAG, "Updating mCastSession - error - $p0 $p1 $p2")
-        }
-
-        override fun success(args: Any?) {
-            Log.d(TAG, "Updating mCastSession - success - param: $args")
-            if (oldSession == null && newSession == null) return // nothing to do here
-            if (args == null) return // nothing to do here
-
-            if (args !is ArrayList<*>)
-                throw IllegalArgumentException("${MethodNames.getSessionMessageNamespaces} method expects an ArrayList<String>")
-
-            if (!args.any()) return  // nothing to do here
-
-            if (args[0] !is String)
-                throw IllegalArgumentException("${MethodNames.getSessionMessageNamespaces} method expects an ArrayList<String>")
-
-            val namespaces = args as ArrayList<String>
-            namespaces.forEach {
-                try {
-                    oldSession?.removeMessageReceivedCallbacks(it)
-                    newSession?.setMessageReceivedCallbacks(it, mMessageCastingChannel)
-                } catch (e: java.lang.Exception) {
-                    Log.e(TAG, "Updating mCastSession - Exception while creating channel", e)
-                }
+        namespaces.forEach { namespace ->
+            try {
+                oldSession?.removeMessageReceivedCallbacks(namespace)
+                newSession?.setMessageReceivedCallbacks(namespace, mMessageCastingChannel)
+            } catch (e: java.lang.Exception) {
+                Log.e(TAG, "Updating mCastSession - Exception while creating channel", e)
             }
         }
     }
