@@ -116,6 +116,7 @@ abstract class CastFlutterApi {
   static const MessageCodec<Object?> codec = _CastFlutterApiCodec();
 
   List<String?> getSessionMessageNamespaces();
+  void onCastStateChanged(int castState);
   static void setup(CastFlutterApi? api) {
     {
       const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -127,6 +128,22 @@ abstract class CastFlutterApi {
           // ignore message
           final List<String?> output = api.getSessionMessageNamespaces();
           return output;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.onCastStateChanged', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onCastStateChanged was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_castState = args[0] as int?;
+          assert(arg_castState != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onCastStateChanged was null, expected non-null int.');
+          api.onCastStateChanged(arg_castState!);
+          return;
         });
       }
     }

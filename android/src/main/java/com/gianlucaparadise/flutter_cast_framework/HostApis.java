@@ -154,6 +154,13 @@ public class HostApis {
         callback.reply(output);
       });
     }
+    public void onCastStateChanged(Long castStateArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onCastStateChanged", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(castStateArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
   }
   private static Map<String, Object> wrapError(Throwable exception) {
     Map<String, Object> errorMap = new HashMap<>();

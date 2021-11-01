@@ -14,4 +14,5 @@ abstract class CastApi {
 @FlutterApi()
 abstract class CastFlutterApi {
   List<String> getSessionMessageNamespaces();
+  void onCastStateChanged(int castState);
 }

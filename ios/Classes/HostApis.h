@@ -31,5 +31,6 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 @interface CastFlutterApi : NSObject
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
 - (void)getSessionMessageNamespacesWithCompletion:(void(^)(NSArray<NSString *> *, NSError *_Nullable))completion;
+- (void)onCastStateChangedCastState:(NSNumber *)castState completion:(void(^)(NSError *_Nullable))completion;
 @end
 NS_ASSUME_NONNULL_END

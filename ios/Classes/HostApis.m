@@ -194,4 +194,14 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
     completion(output, nil);
   }];
 }
+- (void)onCastStateChangedCastState:(NSNumber *)arg_castState completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.onCastStateChanged"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_castState] reply:^(id reply) {
+    completion(nil);
+  }];
+}
 @end
