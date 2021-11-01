@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 /** Generated class from Pigeon. */
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression"})
-public class HostApis {
+public class PlatformBridgeApis {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class CastMessage {
@@ -44,9 +44,9 @@ public class HostApis {
       return fromMapResult;
     }
   }
-  private static class CastApiCodec extends StandardMessageCodec {
-    public static final CastApiCodec INSTANCE = new CastApiCodec();
-    private CastApiCodec() {}
+  private static class CastHostApiCodec extends StandardMessageCodec {
+    public static final CastHostApiCodec INSTANCE = new CastHostApiCodec();
+    private CastHostApiCodec() {}
     @Override
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
       switch (type) {
@@ -71,20 +71,20 @@ public class HostApis {
   }
 
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
-  public interface CastApi {
+  public interface CastHostApi {
     void sendMessage(CastMessage message);
     void showCastDialog();
 
-    /** The codec used by CastApi. */
+    /** The codec used by CastHostApi. */
     static MessageCodec<Object> getCodec() {
-      return CastApiCodec.INSTANCE;
+      return CastHostApiCodec.INSTANCE;
     }
 
-    /** Sets up an instance of `CastApi` to handle messages through the `binaryMessenger`. */
-    static void setup(BinaryMessenger binaryMessenger, CastApi api) {
+    /** Sets up an instance of `CastHostApi` to handle messages through the `binaryMessenger`. */
+    static void setup(BinaryMessenger binaryMessenger, CastHostApi api) {
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastApi.sendMessage", getCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.sendMessage", getCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -108,7 +108,7 @@ public class HostApis {
       }
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastApi.showCastDialog", getCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.showCastDialog", getCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -182,6 +182,13 @@ public class HostApis {
         callback.reply(null);
       });
     }
+    public void onMessageReceived(CastMessage messageArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onMessageReceived", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(messageArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
     public void onSessionStarting(Reply<Void> callback) {
       BasicMessageChannel<Object> channel =
           new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onSessionStarting", getCodec());
@@ -242,13 +249,6 @@ public class HostApis {
       BasicMessageChannel<Object> channel =
           new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onSessionSuspended", getCodec());
       channel.send(null, channelReply -> {
-        callback.reply(null);
-      });
-    }
-    public void onMessageReceived(CastMessage messageArg, Reply<Void> callback) {
-      BasicMessageChannel<Object> channel =
-          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onMessageReceived", getCodec());
-      channel.send(new ArrayList<Object>(Arrays.asList(messageArg)), channelReply -> {
         callback.reply(null);
       });
     }

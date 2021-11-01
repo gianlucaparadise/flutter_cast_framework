@@ -15,15 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString * message;
 @end
 
-/// The codec used by CastApi.
-NSObject<FlutterMessageCodec> *CastApiGetCodec(void);
+/// The codec used by CastHostApi.
+NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 
-@protocol CastApi
+@protocol CastHostApi
 - (void)sendMessageMessage:(CastMessage *)message error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)showCastDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
-extern void CastApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastApi> *_Nullable api);
+extern void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastHostApi> *_Nullable api);
 
 /// The codec used by CastFlutterApi.
 NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
@@ -32,6 +32,7 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
 - (void)getSessionMessageNamespacesWithCompletion:(void(^)(NSArray<NSString *> *, NSError *_Nullable))completion;
 - (void)onCastStateChangedCastState:(NSNumber *)castState completion:(void(^)(NSError *_Nullable))completion;
+- (void)onMessageReceivedMessage:(CastMessage *)message completion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionStartingWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionStartedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionStartFailedWithCompletion:(void(^)(NSError *_Nullable))completion;
@@ -41,6 +42,5 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (void)onSessionResumedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionResumeFailedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionSuspendedWithCompletion:(void(^)(NSError *_Nullable))completion;
-- (void)onMessageReceivedMessage:(CastMessage *)message completion:(void(^)(NSError *_Nullable))completion;
 @end
 NS_ASSUME_NONNULL_END

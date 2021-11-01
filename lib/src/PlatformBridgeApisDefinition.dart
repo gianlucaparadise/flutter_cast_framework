@@ -6,7 +6,7 @@ class CastMessage {
 }
 
 @HostApi()
-abstract class CastApi {
+abstract class CastHostApi {
   void sendMessage(CastMessage message);
   void showCastDialog();
 }

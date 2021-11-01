@@ -27,8 +27,8 @@ class CastMessage {
   }
 }
 
-class _CastApiCodec extends StandardMessageCodec {
-  const _CastApiCodec();
+class _CastHostApiCodec extends StandardMessageCodec {
+  const _CastHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
     if (value is CastMessage) {
@@ -52,19 +52,19 @@ class _CastApiCodec extends StandardMessageCodec {
   }
 }
 
-class CastApi {
-  /// Constructor for [CastApi].  The [binaryMessenger] named argument is
+class CastHostApi {
+  /// Constructor for [CastHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  CastApi({BinaryMessenger? binaryMessenger}) : _binaryMessenger = binaryMessenger;
+  CastHostApi({BinaryMessenger? binaryMessenger}) : _binaryMessenger = binaryMessenger;
 
   final BinaryMessenger? _binaryMessenger;
 
-  static const MessageCodec<Object?> codec = _CastApiCodec();
+  static const MessageCodec<Object?> codec = _CastHostApiCodec();
 
   Future<void> sendMessage(CastMessage arg_message) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.CastApi.sendMessage', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.CastHostApi.sendMessage', codec, binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_message]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -87,7 +87,7 @@ class CastApi {
 
   Future<void> showCastDialog() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.CastApi.showCastDialog', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.CastHostApi.showCastDialog', codec, binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -138,6 +138,7 @@ abstract class CastFlutterApi {
 
   List<String?> getSessionMessageNamespaces();
   void onCastStateChanged(int castState);
+  void onMessageReceived(CastMessage message);
   void onSessionStarting();
   void onSessionStarted();
   void onSessionStartFailed();
@@ -147,7 +148,6 @@ abstract class CastFlutterApi {
   void onSessionResumed();
   void onSessionResumeFailed();
   void onSessionSuspended();
-  void onMessageReceived(CastMessage message);
   static void setup(CastFlutterApi? api) {
     {
       const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -174,6 +174,22 @@ abstract class CastFlutterApi {
           final int? arg_castState = args[0] as int?;
           assert(arg_castState != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onCastStateChanged was null, expected non-null int.');
           api.onCastStateChanged(arg_castState!);
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.onMessageReceived', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onMessageReceived was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final CastMessage? arg_message = args[0] as CastMessage?;
+          assert(arg_message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onMessageReceived was null, expected non-null CastMessage.');
+          api.onMessageReceived(arg_message!);
           return;
         });
       }
@@ -291,22 +307,6 @@ abstract class CastFlutterApi {
         channel.setMessageHandler((Object? message) async {
           // ignore message
           api.onSessionSuspended();
-          return;
-        });
-      }
-    }
-    {
-      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.CastFlutterApi.onMessageReceived', codec);
-      if (api == null) {
-        channel.setMessageHandler(null);
-      } else {
-        channel.setMessageHandler((Object? message) async {
-          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onMessageReceived was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final CastMessage? arg_message = args[0] as CastMessage?;
-          assert(arg_message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onMessageReceived was null, expected non-null CastMessage.');
-          api.onMessageReceived(arg_message!);
           return;
         });
       }
