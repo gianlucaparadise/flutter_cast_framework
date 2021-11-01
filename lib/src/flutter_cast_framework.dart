@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cast_framework/cast.dart';
 
 import 'HostApis.dart';
 import 'MethodNames.dart';
@@ -23,18 +24,6 @@ class FlutterCastFramework {
       debugPrint("Method call on flutter: $method $arguments");
 
       switch (method) {
-        case PlatformMethodNames.onSessionStarting:
-        case PlatformMethodNames.onSessionStarted:
-        case PlatformMethodNames.onSessionStartFailed:
-        case PlatformMethodNames.onSessionEnding:
-        case PlatformMethodNames.onSessionEnded:
-        case PlatformMethodNames.onSessionResuming:
-        case PlatformMethodNames.onSessionResumed:
-        case PlatformMethodNames.onSessionResumeFailed:
-        case PlatformMethodNames.onSessionSuspended:
-          castContext.sessionManager.onSessionStateChanged(method, arguments);
-          break;
-
         case PlatformMethodNames.onMessageReceived:
           castContext.sessionManager.platformOnMessageReceived(arguments);
           break;
@@ -74,4 +63,51 @@ class CastFlutterApiImpl extends CastFlutterApi {
     debugPrint("yoyo onCastStateChanged: $castState");
     FlutterCastFramework.castContext.onCastStateChanged(castState);
   }
+
+  //region Session State handling
+  @override
+  void onSessionEnded() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_ended);
+  }
+
+  @override
+  void onSessionEnding() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_ending);
+  }
+
+  @override
+  void onSessionResumeFailed() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_resume_failed);
+  }
+
+  @override
+  void onSessionResumed() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_resumed);
+  }
+
+  @override
+  void onSessionResuming() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_resuming);
+  }
+
+  @override
+  void onSessionStartFailed() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_start_failed);
+  }
+
+  @override
+  void onSessionStarted() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_started);
+  }
+
+  @override
+  void onSessionStarting() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_starting);
+  }
+
+  @override
+  void onSessionSuspended() {
+    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_suspended);
+  }
+  //endregion
 }

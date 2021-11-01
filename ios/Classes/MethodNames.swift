@@ -8,17 +8,5 @@
 import Foundation
 
 enum MethodNames : String {
-    // region SessionManager
-    case onSessionStarting = "SessionManager.onSessionStarting"
-    case onSessionStarted = "SessionManager.onSessionStarted"
-    case onSessionStartFailed = "SessionManager.onSessionStartFailed"
-    case onSessionEnding = "SessionManager.onSessionEnding"
-    case onSessionEnded = "SessionManager.onSessionEnded"
-    case onSessionResuming = "SessionManager.onSessionResuming"
-    case onSessionResumed = "SessionManager.onSessionResumed"
-    case onSessionResumeFailed = "SessionManager.onSessionResumeFailed"
-    case onSessionSuspended = "SessionManager.onSessionSuspended"
-    // end-region
-
     case onMessageReceived = "CastSession.onMessageReceived"
 }

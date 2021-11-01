@@ -135,13 +135,15 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionSuspended
     public func sessionManager(_ sessionManager: GCKSessionManager, didSuspend session: GCKCastSession, with reason: GCKConnectionSuspendReason) {
         print("SessionListener: didSuspend")
-        channel.invokeMethod(MethodNames.onSessionSuspended.rawValue, arguments: nil)
+        flutterApi.onSessionSuspended { (_:Error?) in
+        }
     }
     
     // onSessionStarting
     public func sessionManager(_ sessionManager: GCKSessionManager, willStart session: GCKCastSession) {
         print("SessionListener: willStart")
-        channel.invokeMethod(MethodNames.onSessionStarting.rawValue, arguments: nil)
+        flutterApi.onSessionStarting { (_:Error?) in
+        }
         
         castSession = session
     }
@@ -149,7 +151,8 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionResuming
     public func sessionManager(_ sessionManager: GCKSessionManager, willResumeCastSession session: GCKCastSession) {
         print("SessionListener: willResumeCastSession")
-        channel.invokeMethod(MethodNames.onSessionResuming.rawValue, arguments: nil)
+        flutterApi.onSessionResuming { (_:Error?) in
+        }
         
         castSession = session
     }
@@ -157,13 +160,15 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionEnding
     public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
         print("SessionListener: willEnd")
-        channel.invokeMethod(MethodNames.onSessionEnding.rawValue, arguments: nil)
+        flutterApi.onSessionEnding { (_:Error?) in
+        }
     }
     
     // onSessionStartFailed
     public func sessionManager(_ sessionManager: GCKSessionManager, didFailToStart session: GCKCastSession, withError error: Error) {
         print("SessionListener: didFailToStart")
-        channel.invokeMethod(MethodNames.onSessionStartFailed.rawValue, arguments: nil)
+        flutterApi.onSessionStartFailed { (_:Error?) in
+        }
     }
     
     // onSessionResumeFailed - Can't find this on iOS
@@ -171,7 +176,8 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionStarted
     public func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKCastSession) {
         print("SessionListener: didStart")
-        channel.invokeMethod(MethodNames.onSessionStarted.rawValue, arguments: nil)
+        flutterApi.onSessionStarted { (_:Error?) in
+        }
         
         castSession = session
     }
@@ -179,7 +185,8 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionResumed
     public func sessionManager(_ sessionManager: GCKSessionManager, didResumeCastSession session: GCKCastSession) {
         print("SessionListener: didResumeCastSession")
-        channel.invokeMethod(MethodNames.onSessionResumed.rawValue, arguments: nil)
+        flutterApi.onSessionResumed { (_:Error?) in
+        }
         
         castSession = session
     }
@@ -187,6 +194,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionEnded
     public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
         print("SessionListener: didEnd")
-        channel.invokeMethod(MethodNames.onSessionEnded.rawValue, arguments: nil)
+        flutterApi.onSessionEnded { (_:Error?) in
+        }
     }
 }

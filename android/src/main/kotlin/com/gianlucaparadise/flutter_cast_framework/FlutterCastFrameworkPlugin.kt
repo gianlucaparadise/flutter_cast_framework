@@ -195,56 +195,56 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         private var TAG = "SessionManagerListenerImpl"
 
         override fun onSessionSuspended(session: CastSession?, p1: Int) {
-            Log.d(TAG, "onSessionSuspended - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionSuspended, null)
+            Log.d(TAG, "onSessionSuspended")
+            flutterApi?.onSessionSuspended { }
         }
 
         override fun onSessionStarting(session: CastSession?) {
-            Log.d(TAG, "onSessionStarting - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionStarting, null)
+            Log.d(TAG, "onSessionStarting")
+            flutterApi?.onSessionStarting { }
 
             mCastSession = session
         }
 
         override fun onSessionResuming(session: CastSession?, p1: String?) {
-            Log.d(TAG, "onSessionResuming - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionResuming, null)
+            Log.d(TAG, "onSessionResuming")
+            flutterApi?.onSessionResuming { }
 
             mCastSession = session
         }
 
         override fun onSessionEnding(session: CastSession?) {
-            Log.d(TAG, "onSessionEnding - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionEnding, null)
+            Log.d(TAG, "onSessionEnding")
+            flutterApi?.onSessionEnding { }
         }
 
         override fun onSessionStartFailed(session: CastSession?, p1: Int) {
-            Log.d(TAG, "onSessionStartFailed - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionStartFailed, null)
+            Log.d(TAG, "onSessionStartFailed")
+            flutterApi?.onSessionStartFailed { }
         }
 
         override fun onSessionResumeFailed(session: CastSession?, p1: Int) {
-            Log.d(TAG, "onSessionResumeFailed - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionResumeFailed, null)
+            Log.d(TAG, "onSessionResumeFailed")
+            flutterApi?.onSessionResumeFailed { }
         }
 
         override fun onSessionStarted(session: CastSession, sessionId: String) {
-            Log.d(TAG, "onSessionStarted - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionStarted, null)
+            Log.d(TAG, "onSessionStarted")
+            flutterApi?.onSessionStarted { }
 
             mCastSession = session
         }
 
         override fun onSessionResumed(session: CastSession, wasSuspended: Boolean) {
-            Log.d(TAG, "onSessionResumed - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionResumed, null)
+            Log.d(TAG, "onSessionResumed")
+            flutterApi?.onSessionResumed { }
 
             mCastSession = session
         }
 
         override fun onSessionEnded(session: CastSession, error: Int) {
-            Log.d(TAG, "onSessionEnded - channel is null? ${channel == null}")
-            channel?.invokeMethod(MethodNames.onSessionEnded, null)
+            Log.d(TAG, "onSessionEnded")
+            flutterApi?.onSessionEnded { }
         }
     }
 }

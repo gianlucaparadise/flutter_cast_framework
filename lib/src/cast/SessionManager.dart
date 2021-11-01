@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import '../HostApis.dart';
-import '../MethodNames.dart';
 
 class SessionManager {
   final CastApi castApi;
@@ -10,34 +8,21 @@ class SessionManager {
 
   final ValueNotifier<SessionState> state = ValueNotifier(SessionState.idle);
 
-  void onSessionStateChanged(String method, dynamic arguments) {
-    switch (method) {
-      case PlatformMethodNames.onSessionStarting:
-        state.value = SessionState.session_starting;
+  void onSessionStateChanged(SessionState sessionState) {
+    switch (sessionState) {
+      case SessionState.session_starting:
+      case SessionState.session_started:
+      case SessionState.session_start_failed:
+      case SessionState.session_ending:
+      case SessionState.session_ended:
+      case SessionState.session_resuming:
+      case SessionState.session_resumed:
+      case SessionState.session_resume_failed:
+      case SessionState.session_suspended:
+        state.value = sessionState;
         break;
-      case PlatformMethodNames.onSessionStarted:
-        state.value = SessionState.session_started;
-        break;
-      case PlatformMethodNames.onSessionStartFailed:
-        state.value = SessionState.session_start_failed;
-        break;
-      case PlatformMethodNames.onSessionEnding:
-        state.value = SessionState.session_ending;
-        break;
-      case PlatformMethodNames.onSessionEnded:
-        state.value = SessionState.session_ended;
-        break;
-      case PlatformMethodNames.onSessionResuming:
-        state.value = SessionState.session_resuming;
-        break;
-      case PlatformMethodNames.onSessionResumed:
-        state.value = SessionState.session_resumed;
-        break;
-      case PlatformMethodNames.onSessionResumeFailed:
-        state.value = SessionState.session_resume_failed;
-        break;
-      case PlatformMethodNames.onSessionSuspended:
-        state.value = SessionState.session_suspended;
+      case SessionState.idle:
+        // Not raised
         break;
     }
   }
