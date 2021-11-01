@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
-import '../HostApis.dart';
+import '../PlatformBridgeApis.dart';
 
 class SessionManager {
-  final CastApi castApi;
+  final CastHostApi hostApi;
 
-  SessionManager(this.castApi);
+  SessionManager(this.hostApi);
 
   final ValueNotifier<SessionState> state = ValueNotifier(SessionState.idle);
 
@@ -43,7 +43,7 @@ class SessionManager {
     final castMessage = CastMessage();
     castMessage.namespace = namespace;
     castMessage.message = message;
-    castApi.sendMessage(castMessage);
+    hostApi.sendMessage(castMessage);
   }
 }
 

@@ -2,7 +2,7 @@ import Flutter
 import UIKit
 import GoogleCast
 
-public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastApi {
+public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastHostApi {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let messenger : FlutterBinaryMessenger = registrar.messenger()
         let flutterApi = CastFlutterApi.init(binaryMessenger: messenger)
@@ -12,8 +12,8 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         let channel = FlutterMethodChannel(name: "flutter_cast_framework_dummy_channel", binaryMessenger: messenger)
         registrar.addMethodCallDelegate(instance, channel: channel)
         
-        let api : CastApi & NSObjectProtocol = instance
-        CastApiSetup(messenger, api)
+        let api : CastHostApi & NSObjectProtocol = instance
+        CastHostApiSetup(messenger, api)
     }
     
     private let castContext: GCKCastContext

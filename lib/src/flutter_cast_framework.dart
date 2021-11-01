@@ -1,10 +1,10 @@
 import 'package:flutter_cast_framework/cast.dart';
 
-import 'HostApis.dart';
+import 'PlatformBridgeApis.dart';
 import 'cast/CastContext.dart';
 
 class FlutterCastFramework {
-  static final castApi = CastApi();
+  static final hostApi = CastHostApi();
 
   /// List of namespaces to listen for custom messages
   static List<String> namespaces = [];
@@ -21,7 +21,7 @@ class FlutterCastFramework {
   static CastContext get castContext {
     var castContext = _castContext;
     if (!_isInitiated || castContext == null) {
-      _castContext = castContext = CastContext(castApi);
+      _castContext = castContext = CastContext(hostApi);
       // TODO: find a better way to init the plugin
       _isInitiated = true;
       _init();

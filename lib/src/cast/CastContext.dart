@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
-import '../HostApis.dart';
+import '../PlatformBridgeApis.dart';
 import 'SessionManager.dart';
 
 class CastContext {
   final ValueNotifier<CastState> state = ValueNotifier(CastState.unavailable);
-  final CastApi castApi;
+  final CastHostApi hostApi;
 
-  CastContext(this.castApi);
+  CastContext(this.hostApi);
 
   void showCastChooserDialog() {
-    castApi.showCastDialog();
+    hostApi.showCastDialog();
   }
 
   void onCastStateChanged(int castState) {
@@ -20,7 +20,7 @@ class CastContext {
   SessionManager get sessionManager {
     var result = _sessionManager;
     if (result == null) {
-      _sessionManager = result = SessionManager(castApi);
+      _sessionManager = result = SessionManager(hostApi);
     }
     return result;
   }

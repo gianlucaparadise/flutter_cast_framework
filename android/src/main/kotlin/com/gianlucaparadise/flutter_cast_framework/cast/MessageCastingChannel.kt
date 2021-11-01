@@ -1,26 +1,26 @@
 package com.gianlucaparadise.flutter_cast_framework.cast
 
 import android.util.Log
-import com.gianlucaparadise.flutter_cast_framework.HostApis
+import com.gianlucaparadise.flutter_cast_framework.PlatformBridgeApis
 import com.google.android.gms.cast.Cast
 import com.google.android.gms.cast.CastDevice
 import com.google.android.gms.cast.framework.CastSession
 
-class MessageCastingChannel(private val flutterApi : HostApis.CastFlutterApi) : Cast.MessageReceivedCallback {
+class MessageCastingChannel(private val flutterApi : PlatformBridgeApis.CastFlutterApi) : Cast.MessageReceivedCallback {
     companion object {
         const val TAG = "MessageCastingChannel"
     }
 
     override fun onMessageReceived(castDevice: CastDevice?, namespace: String?, message: String?) {
         Log.d(TAG, "Message received: $message:")
-        val castMessage = HostApis.CastMessage()
+        val castMessage = PlatformBridgeApis.CastMessage()
         castMessage.namespace = namespace
         castMessage.message = message
 
         flutterApi.onMessageReceived(castMessage) {}
     }
 
-    fun sendMessage(castSession: CastSession?, castMessage: HostApis.CastMessage?) {
+    fun sendMessage(castSession: CastSession?, castMessage: PlatformBridgeApis.CastMessage?) {
         Log.d(TAG, "Send Message arguments: $castMessage:")
         if (castMessage == null) return
 

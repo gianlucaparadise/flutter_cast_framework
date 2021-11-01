@@ -1,5 +1,5 @@
 #import <Flutter/Flutter.h>
-#import "HostApis.h"
+#import "PlatformBridgeApis.h"
 
 @interface FlutterCastFrameworkPlugin : NSObject<FlutterPlugin>
 @end

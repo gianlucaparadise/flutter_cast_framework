@@ -18,7 +18,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
@@ -49,9 +48,9 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         this.applicationContext = applicationContext
 
         castApi = MyApi()
-        HostApis.CastApi.setup(messenger, castApi)
+        PlatformBridgeApis.CastHostApi.setup(messenger, castApi)
 
-        val castFlutterApi = HostApis.CastFlutterApi(messenger)
+        val castFlutterApi = PlatformBridgeApis.CastFlutterApi(messenger)
         flutterApi = castFlutterApi
 
         mMessageCastingChannel = MessageCastingChannel(castFlutterApi)
@@ -97,8 +96,8 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private lateinit var mSessionManager: SessionManager
     private val mSessionManagerListener = CastSessionManagerListener()
 
-    private var castApi : HostApis.CastApi? = null
-    private var flutterApi: HostApis.CastFlutterApi? = null
+    private var castApi : PlatformBridgeApis.CastHostApi? = null
+    private var flutterApi: PlatformBridgeApis.CastFlutterApi? = null
     private var applicationContext: Context? = null
     private var activity: Activity? = null
 
@@ -153,8 +152,8 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         result.notImplemented()
     }
 
-    private inner class MyApi : HostApis.CastApi {
-        override fun sendMessage(message: HostApis.CastMessage?) {
+    private inner class MyApi : PlatformBridgeApis.CastHostApi {
+        override fun sendMessage(message: PlatformBridgeApis.CastMessage?) {
             mMessageCastingChannel?.sendMessage(mCastSession, message)
         }
 
@@ -170,7 +169,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         }
     }
 
-    private fun getOnNamespaceResult(oldSession: CastSession?, newSession: CastSession?) = HostApis.CastFlutterApi.Reply<MutableList<String>> { namespaces ->
+    private fun getOnNamespaceResult(oldSession: CastSession?, newSession: CastSession?) = PlatformBridgeApis.CastFlutterApi.Reply<MutableList<String>> { namespaces ->
         Log.d(TAG, "Updating mCastSession - getOnNamespaceResult - param: $namespaces")
         if (oldSession == null && newSession == null) return@Reply // nothing to do here
         if (namespaces == null || !namespaces.any()) return@Reply  // nothing to do here
