@@ -14,5 +14,4 @@ class PlatformMethodNames {
 
   static const getSessionMessageNamespaces = "CastSession.getSessionMessageNamespaces";
   static const onMessageReceived = "CastSession.onMessageReceived";
-  static const sendMessage = "CastSession.sendMessage";
 }

@@ -1,13 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import '../HostApis.dart';
 import '../MethodNames.dart';
 import 'SessionManager.dart';
 
 class CastContext {
   final ValueNotifier<CastState> state = ValueNotifier(CastState.unavailable);
   final MethodChannel _channel;
+  final CastApi castApi;
 
-  CastContext(this._channel);
+  CastContext(this._channel, this.castApi);
 
   void showCastChooserDialog() {
     _channel.invokeMethod(PlatformMethodNames.showCastDialog);
@@ -22,7 +24,7 @@ class CastContext {
   SessionManager get sessionManager {
     var result = _sessionManager;
     if (result == null) {
-      _sessionManager = result = SessionManager(_channel);
+      _sessionManager = result = SessionManager(castApi);
     }
     return result;
   }

@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import '../HostApis.dart';
 import '../MethodNames.dart';
 
 class SessionManager {
-  final MethodChannel _channel;
+  final CastApi castApi;
 
-  SessionManager(this._channel);
+  SessionManager(this.castApi);
 
   final ValueNotifier<SessionState> state = ValueNotifier(SessionState.idle);
 
@@ -54,8 +55,10 @@ class SessionManager {
   }
 
   void sendMessage(String namespace, String message) {
-    final argsMap = {'namespace': namespace, 'message': message};
-    _channel.invokeMethod(PlatformMethodNames.sendMessage, argsMap);
+    final castMessage = CastMessage();
+    castMessage.namespace = namespace;
+    castMessage.message = message;
+    castApi.sendMessage(castMessage);
   }
 }
 

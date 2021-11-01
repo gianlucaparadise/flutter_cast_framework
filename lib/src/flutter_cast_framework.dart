@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'HostApis.dart';
 import 'MethodNames.dart';
 import 'cast/CastContext.dart';
 
 class FlutterCastFramework {
   static const MethodChannel _channel =
       const MethodChannel('flutter_cast_framework');
+  static final castApi = CastApi();
 
   /// List of namespaces to listen for custom messages
   static List<String> namespaces = [];
@@ -58,7 +60,7 @@ class FlutterCastFramework {
   static CastContext get castContext {
     var castContext = _castContext;
     if (!_isInitiated || castContext == null) {
-      _castContext = castContext = CastContext(_channel);
+      _castContext = castContext = CastContext(_channel, castApi);
       // TODO: find a better way to init the plugin
       _isInitiated = true;
       _init();
