@@ -2,11 +2,15 @@ import Flutter
 import UIKit
 import GoogleCast
 
-public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener {
+public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastApi {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "flutter_cast_framework", binaryMessenger: registrar.messenger())
+        let messenger : FlutterBinaryMessenger = registrar.messenger()
+        let channel = FlutterMethodChannel(name: "flutter_cast_framework", binaryMessenger: messenger)
         let instance = SwiftFlutterCastFrameworkPlugin(channel: channel)
         registrar.addMethodCallDelegate(instance, channel: channel)
+        
+        let api : CastApi & NSObjectProtocol = instance
+        CastApiSetup(messenger, api)
     }
     
     private let castContext: GCKCastContext
@@ -110,8 +114,6 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         switch call.method {
         case MethodNames.showCastDialog.rawValue:
             castContext.presentCastDialog()
-        case MethodNames.sendMessage.rawValue:
-            MessageCastingChannel.sendMessage(allCastingChannels: self.castingChannels, arguments: call.arguments)
         default:
             print("Method [\(call.method)] is not implemented.")
         }
@@ -120,6 +122,11 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     deinit {
         castStateObserver?.invalidate()
         castStateObserver = nil
+    }
+    
+    public func sendMessageMessage(_ message: CastMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        MessageCastingChannel.sendMessage(allCastingChannels: self.castingChannels, castMessage: message)
     }
     
     // MARK: - GCKSessionManagerListener

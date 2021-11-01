@@ -29,15 +29,9 @@ class MessageCastingChannel : GCKCastChannel {
         channel.invokeMethod(MethodNames.onMessageReceived.rawValue, arguments: argsMap)
     }
     
-    public static func sendMessage(allCastingChannels: Dictionary<String, MessageCastingChannel>, arguments: Any?) {
-        let argsMap = arguments as? NSDictionary
-        if (argsMap == nil) {
-            print("Arguments not valid: can't send message")
-            return
-        }
-        
-        let namespaceRaw = argsMap?.value(forKey: "namespace") as? String
-        let messageRaw = argsMap?.value(forKey: "message") as? String
+    public static func sendMessage(allCastingChannels: Dictionary<String, MessageCastingChannel>, castMessage: CastMessage) {
+        let namespaceRaw = castMessage.namespace
+        let messageRaw = castMessage.message
         
         if (namespaceRaw == nil) {
             print("Namespace not valid: can't send message")

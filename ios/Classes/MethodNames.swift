@@ -25,5 +25,4 @@ enum MethodNames : String {
 
     case getSessionMessageNamespaces = "CastSession.getSessionMessageNamespaces"
     case onMessageReceived = "CastSession.onMessageReceived"
-    case sendMessage = "CastSession.sendMessage"
 }
