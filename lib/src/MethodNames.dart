@@ -1,6 +1,4 @@
 class PlatformMethodNames {
-  static const onCastStateChanged = "CastContext.onCastStateChanged";
-
   static const onSessionStarting = "SessionManager.onSessionStarting";
   static const onSessionStarted = "SessionManager.onSessionStarted";
   static const onSessionStartFailed = "SessionManager.onSessionStartFailed";

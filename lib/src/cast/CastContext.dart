@@ -12,8 +12,7 @@ class CastContext {
     castApi.showCastDialog();
   }
 
-  void onCastStateChanged(dynamic arguments) {
-    int castState = arguments;
+  void onCastStateChanged(int castState) {
     state.value = CastState.values[castState];
   }
 

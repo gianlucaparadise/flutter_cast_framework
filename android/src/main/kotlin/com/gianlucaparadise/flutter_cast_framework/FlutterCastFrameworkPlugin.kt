@@ -61,7 +61,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
         CastContext.getSharedInstance(applicationContext).addCastStateListener { i ->
             Log.d(TAG, "Cast state changed: $i")
-            methodChannel.invokeMethod(MethodNames.onCastStateChanged, i)
+            flutterApi?.onCastStateChanged(i.toLong(), null)
         }
 
         mSessionManager = CastContext.getSharedInstance(applicationContext).sessionManager
@@ -139,7 +139,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             return
         }
         val castState = CastContext.getSharedInstance(context).castState
-        channel?.invokeMethod(MethodNames.onCastStateChanged, castState)
+        flutterApi?.onCastStateChanged(castState.toLong()) { }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)

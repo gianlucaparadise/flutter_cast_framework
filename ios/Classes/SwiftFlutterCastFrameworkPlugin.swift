@@ -107,7 +107,9 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         let castStateRaw = castState.rawValue
         // Android CastStates are 1-to-4, while iOS CastStates are 0-to-3. I align iOS to Android by adding 1
         let castStateRawAdjusted = castStateRaw + 1
-        self.channel.invokeMethod(MethodNames.onCastStateChanged.rawValue, arguments: castStateRawAdjusted)
+        self.flutterApi.onCastStateChangedCastState(NSNumber(value: castStateRawAdjusted)) { (_: Error?) in
+            
+        }
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {

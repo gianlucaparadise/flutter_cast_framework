@@ -23,10 +23,6 @@ class FlutterCastFramework {
       debugPrint("Method call on flutter: $method $arguments");
 
       switch (method) {
-        case PlatformMethodNames.onCastStateChanged:
-          castContext.onCastStateChanged(arguments);
-          break;
-
         case PlatformMethodNames.onSessionStarting:
         case PlatformMethodNames.onSessionStarted:
         case PlatformMethodNames.onSessionStartFailed:
@@ -71,5 +67,11 @@ class CastFlutterApiImpl extends CastFlutterApi {
   @override
   List<String?> getSessionMessageNamespaces() {
     return FlutterCastFramework.namespaces;
+  }
+
+  @override
+  void onCastStateChanged(int castState) {
+    debugPrint("yoyo onCastStateChanged: $castState");
+    FlutterCastFramework.castContext.onCastStateChanged(castState);
   }
 }
