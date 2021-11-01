@@ -10,23 +10,23 @@ import GoogleCast
 
 class MessageCastingChannel : GCKCastChannel {
     
-    let channel: FlutterMethodChannel
+    let flutterApi: CastFlutterApi
     let namespace: String
     
-    init(namespace: String, channel: FlutterMethodChannel) {
-        self.channel = channel
+    init(namespace: String, flutterApi: CastFlutterApi) {
+        self.flutterApi = flutterApi
         self.namespace = namespace
         super.init(namespace: namespace)
     }
     
     override func didReceiveTextMessage(_ message: String) {
         print("Message received: .\(message)")
-        let argsMap: NSDictionary = [
-            "namespace": namespace,
-            "message": message
-        ]
-
-        channel.invokeMethod(MethodNames.onMessageReceived.rawValue, arguments: argsMap)
+        let castMessage = CastMessage.init()
+        castMessage.namespace = namespace
+        castMessage.message = message
+        
+        flutterApi.onMessageReceivedMessage(castMessage) { (_: Error?) in
+        }
     }
     
     public static func sendMessage(allCastingChannels: Dictionary<String, MessageCastingChannel>, castMessage: CastMessage) {

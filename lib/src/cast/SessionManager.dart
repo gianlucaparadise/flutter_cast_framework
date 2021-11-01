@@ -29,12 +29,12 @@ class SessionManager {
 
   MessageReceivedCallback? onMessageReceived;
 
-  void platformOnMessageReceived(dynamic arguments) {
+  void platformOnMessageReceived(CastMessage castMessage) {
     var thisOnMessageReceived = onMessageReceived;
 
     if (thisOnMessageReceived == null) return;
-    final namespace = arguments['namespace'];
-    final message = arguments['message'];
+    final namespace = castMessage.namespace ?? "";
+    final message = castMessage.message ?? "";
 
     thisOnMessageReceived(namespace, message);
   }

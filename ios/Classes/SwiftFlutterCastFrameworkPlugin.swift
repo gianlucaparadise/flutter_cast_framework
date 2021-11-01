@@ -54,7 +54,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
                 }
 
                 namespaces.forEach({ (namespace) in
-                    let castingChannel = MessageCastingChannel.init(namespace: namespace, channel: self.channel)
+                    let castingChannel = MessageCastingChannel.init(namespace: namespace, flutterApi: self.flutterApi)
                     self.castingChannels[namespace] = castingChannel
                     newSession?.add(castingChannel)
                 })

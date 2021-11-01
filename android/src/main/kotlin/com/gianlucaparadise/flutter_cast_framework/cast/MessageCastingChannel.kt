@@ -2,25 +2,22 @@ package com.gianlucaparadise.flutter_cast_framework.cast
 
 import android.util.Log
 import com.gianlucaparadise.flutter_cast_framework.HostApis
-import com.gianlucaparadise.flutter_cast_framework.MethodNames
 import com.google.android.gms.cast.Cast
 import com.google.android.gms.cast.CastDevice
 import com.google.android.gms.cast.framework.CastSession
-import io.flutter.plugin.common.MethodChannel
 
-class MessageCastingChannel(private val channel: MethodChannel) : Cast.MessageReceivedCallback {
+class MessageCastingChannel(private val flutterApi : HostApis.CastFlutterApi) : Cast.MessageReceivedCallback {
     companion object {
         const val TAG = "MessageCastingChannel"
     }
 
     override fun onMessageReceived(castDevice: CastDevice?, namespace: String?, message: String?) {
         Log.d(TAG, "Message received: $message:")
-        val argsMap: HashMap<String, String?> = hashMapOf(
-                "namespace" to namespace,
-                "message" to message
-        )
+        val castMessage = HostApis.CastMessage()
+        castMessage.namespace = namespace
+        castMessage.message = message
 
-        channel.invokeMethod(MethodNames.onMessageReceived, argsMap)
+        flutterApi.onMessageReceived(castMessage) {}
     }
 
     fun sendMessage(castSession: CastSession?, castMessage: HostApis.CastMessage?) {

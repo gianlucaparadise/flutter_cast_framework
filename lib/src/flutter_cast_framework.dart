@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cast_framework/cast.dart';
 
 import 'HostApis.dart';
-import 'MethodNames.dart';
 import 'cast/CastContext.dart';
 
 class FlutterCastFramework {
@@ -24,10 +23,6 @@ class FlutterCastFramework {
       debugPrint("Method call on flutter: $method $arguments");
 
       switch (method) {
-        case PlatformMethodNames.onMessageReceived:
-          castContext.sessionManager.platformOnMessageReceived(arguments);
-          break;
-
         default:
           debugPrint("Method not handled: $method");
           break;
@@ -60,8 +55,12 @@ class CastFlutterApiImpl extends CastFlutterApi {
 
   @override
   void onCastStateChanged(int castState) {
-    debugPrint("yoyo onCastStateChanged: $castState");
     FlutterCastFramework.castContext.onCastStateChanged(castState);
+  }
+
+  @override
+  void onMessageReceived(CastMessage castMessage) {
+    FlutterCastFramework.castContext.sessionManager.platformOnMessageReceived(castMessage);
   }
 
   //region Session State handling

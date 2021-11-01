@@ -52,12 +52,13 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         methodChannel.setMethodCallHandler(this)
         channel = methodChannel
 
-        mMessageCastingChannel = MessageCastingChannel(methodChannel)
-
         castApi = MyApi()
         HostApis.CastApi.setup(messenger, castApi)
 
-        flutterApi = HostApis.CastFlutterApi(messenger)
+        val castFlutterApi = HostApis.CastFlutterApi(messenger)
+        flutterApi = castFlutterApi
+
+        mMessageCastingChannel = MessageCastingChannel(castFlutterApi)
 
         CastContext.getSharedInstance(applicationContext).addCastStateListener { i ->
             Log.d(TAG, "Cast state changed: $i")
