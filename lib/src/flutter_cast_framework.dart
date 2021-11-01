@@ -1,13 +1,9 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_cast_framework/cast.dart';
 
 import 'HostApis.dart';
 import 'cast/CastContext.dart';
 
 class FlutterCastFramework {
-  static const MethodChannel _channel =
-      const MethodChannel('flutter_cast_framework');
   static final castApi = CastApi();
 
   /// List of namespaces to listen for custom messages
@@ -17,19 +13,6 @@ class FlutterCastFramework {
 
   static _init() {
     CastFlutterApi.setup(CastFlutterApiImpl());
-    _channel.setMethodCallHandler((MethodCall call) async {
-      String method = call.method;
-      dynamic arguments = call.arguments;
-      debugPrint("Method call on flutter: $method $arguments");
-
-      switch (method) {
-        default:
-          debugPrint("Method not handled: $method");
-          break;
-      }
-
-      return null;
-    });
   }
 
   static CastContext? _castContext;

@@ -48,10 +48,6 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private fun onAttachedToEngine(applicationContext: Context, messenger: BinaryMessenger) {
         this.applicationContext = applicationContext
 
-        val methodChannel = MethodChannel(messenger, "flutter_cast_framework")
-        methodChannel.setMethodCallHandler(this)
-        channel = methodChannel
-
         castApi = MyApi()
         HostApis.CastApi.setup(messenger, castApi)
 
@@ -72,8 +68,6 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         Log.d(TAG, "onDetachedFromEngine")
         applicationContext = null;
-        channel?.setMethodCallHandler(null);
-        channel = null;
         mMessageCastingChannel = null
     }
     //endregion
@@ -103,7 +97,6 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private lateinit var mSessionManager: SessionManager
     private val mSessionManagerListener = CastSessionManagerListener()
 
-    private var channel: MethodChannel? = null
     private var castApi : HostApis.CastApi? = null
     private var flutterApi: HostApis.CastFlutterApi? = null
     private var applicationContext: Context? = null
