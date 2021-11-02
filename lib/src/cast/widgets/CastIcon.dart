@@ -8,8 +8,10 @@ const Color _defaultIconColor = Color.fromARGB(255, 255, 255, 255); // white
 
 class CastIcon extends StatefulWidget {
   final Color color;
+  final FlutterCastFramework castFramework;
 
   CastIcon({
+    required this.castFramework,
     this.color = _defaultIconColor,
   });
 
@@ -27,15 +29,16 @@ Widget _getButton(String assetName, Color color) {
 }
 
 class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
-  CastState _castState = FlutterCastFramework.castContext.state.value;
-
+  late CastState _castState;
   CastState get castState => _castState;
 
   @override
   void initState() {
     super.initState();
+    var castContext = widget.castFramework.castContext;
 
-    FlutterCastFramework.castContext.state.addListener(_onCastStateChanged);
+    _castState = castContext.state.value;
+    castContext.state.addListener(_onCastStateChanged);
   }
 
   void _onCastStateChanged() {
@@ -43,7 +46,7 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
 
     setState(() {
       if (!mounted) return;
-      _castState = FlutterCastFramework.castContext.state.value;
+      _castState = widget.castFramework.castContext.state.value;
     });
   }
 

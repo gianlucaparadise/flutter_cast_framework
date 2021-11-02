@@ -1,95 +1,85 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_cast_framework/cast.dart';
 
 import 'PlatformBridgeApis.dart';
 import 'cast/CastContext.dart';
 
-class FlutterCastFramework {
-  static final hostApi = CastHostApi();
+class FlutterCastFramework extends CastFlutterApi {
+  final hostApi = CastHostApi();
+  late CastContext castContext;
 
   /// List of namespaces to listen for custom messages
-  static List<String> namespaces = [];
+  late List<String> namespaces = [];
 
-  static bool _isInitiated = false;
-
-  static _init() {
-    CastFlutterApi.setup(CastFlutterApiImpl());
+  FlutterCastFramework.create(List<String> namespaces) {
+    debugPrint("FlutterCastFramework created!");
+    this.namespaces = namespaces;
+    this.castContext = CastContext(hostApi);
+    CastFlutterApi.setup(this);
   }
 
-  static CastContext? _castContext;
-
-  // This must be the plugin entry point
-  static CastContext get castContext {
-    var castContext = _castContext;
-    if (!_isInitiated || castContext == null) {
-      _castContext = castContext = CastContext(hostApi);
-      // TODO: find a better way to init the plugin
-      _isInitiated = true;
-      _init();
-    }
-    return castContext;
-  }
-}
-
-class CastFlutterApiImpl extends CastFlutterApi {
+  //region CastFlutterApi implementation
   @override
   List<String?> getSessionMessageNamespaces() {
-    return FlutterCastFramework.namespaces;
+    return namespaces;
   }
 
   @override
   void onCastStateChanged(int castState) {
-    FlutterCastFramework.castContext.onCastStateChanged(castState);
+    castContext.onCastStateChanged(castState);
   }
 
   @override
   void onMessageReceived(CastMessage castMessage) {
-    FlutterCastFramework.castContext.sessionManager.platformOnMessageReceived(castMessage);
+    castContext.sessionManager.platformOnMessageReceived(castMessage);
   }
 
   //region Session State handling
   @override
   void onSessionEnded() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_ended);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_ended);
   }
 
   @override
   void onSessionEnding() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_ending);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_ending);
   }
 
   @override
   void onSessionResumeFailed() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_resume_failed);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_resume_failed);
   }
 
   @override
   void onSessionResumed() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_resumed);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_resumed);
   }
 
   @override
   void onSessionResuming() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_resuming);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_resuming);
   }
 
   @override
   void onSessionStartFailed() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_start_failed);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_start_failed);
   }
 
   @override
   void onSessionStarted() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_started);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_started);
   }
 
   @override
   void onSessionStarting() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_starting);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_starting);
   }
 
   @override
   void onSessionSuspended() {
-    FlutterCastFramework.castContext.sessionManager.onSessionStateChanged(SessionState.session_suspended);
+    castContext.sessionManager.onSessionStateChanged(SessionState.session_suspended);
   }
+  //endregion
+
   //endregion
 }

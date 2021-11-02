@@ -10,6 +10,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late FlutterCastFramework castFramework;
+
   CastState _castState = CastState.idle;
   SessionState _sessionState = SessionState.idle;
   String _message = '';
@@ -21,11 +23,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    FlutterCastFramework.namespaces = [castNamespace];
-    FlutterCastFramework.castContext.state.addListener(_onCastStateChanged);
-    FlutterCastFramework.castContext.sessionManager.state
+    castFramework = FlutterCastFramework.create([castNamespace]);
+    castFramework.castContext.state.addListener(_onCastStateChanged);
+    castFramework.castContext.sessionManager.state
         .addListener(_onSessionStateChanged);
-    FlutterCastFramework.castContext.sessionManager.onMessageReceived =
+    castFramework.castContext.sessionManager.onMessageReceived =
         _onMessageReceived;
   }
 
@@ -39,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   void _onCastStateChanged() {
     debugPrint("Cast state changed from example");
     setState(() {
-      _castState = FlutterCastFramework.castContext.state.value;
+      _castState = castFramework.castContext.state.value;
     });
   }
 
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
     debugPrint("Session state changed from example");
     setState(() {
       _sessionState =
-          FlutterCastFramework.castContext.sessionManager.state.value;
+          castFramework.castContext.sessionManager.state.value;
     });
   }
 
@@ -60,7 +62,7 @@ class _MyAppState extends State<MyApp> {
 
   void _onSendMessage() {
     String message = this.textMessageController.text;
-    FlutterCastFramework.castContext.sessionManager
+    castFramework.castContext.sessionManager
         .sendMessage(castNamespace, message);
   }
 
@@ -75,6 +77,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             children: [
               CastButton(
+                castFramework: castFramework,
                 color: Colors.blue,
               ),
               Text(

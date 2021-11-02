@@ -6,8 +6,10 @@ import 'CastIcon.dart';
 class CastButton extends StatelessWidget {
   final Color color;
   final EdgeInsets padding;
+  final FlutterCastFramework castFramework;
 
   CastButton({
+    required this.castFramework,
     this.color = const Color(0xFFFFFFFF), // white
     this.padding = const EdgeInsets.all(8.0),
   });
@@ -18,9 +20,10 @@ class CastButton extends StatelessWidget {
         child: Padding(
           padding: padding,
           child:  CastIcon(
+            castFramework: castFramework,
             color: color,
           ),
         ),
-        onTap: () => FlutterCastFramework.castContext.showCastChooserDialog());
+        onTap: () => castFramework.castContext.showCastChooserDialog());
   }
 }
