@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../PlatformBridgeApis.dart';
+import 'RemoteMediaClient.dart';
 
 class SessionManager {
   final CastHostApi hostApi;
@@ -44,6 +45,15 @@ class SessionManager {
     castMessage.namespace = namespace;
     castMessage.message = message;
     hostApi.sendMessage(castMessage);
+  }
+
+  RemoteMediaClient? _remoteMediaClient;
+  RemoteMediaClient get remoteMediaClient {
+    var result = _remoteMediaClient;
+    if (result == null) {
+      _remoteMediaClient = result = RemoteMediaClient(hostApi);
+    }
+    return result;
   }
 }
 
