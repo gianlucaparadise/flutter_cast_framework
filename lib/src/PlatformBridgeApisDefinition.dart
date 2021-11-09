@@ -38,21 +38,6 @@ enum StreamType {
   live,
 }
 
-// extension StreamTypeExtension on StreamType {
-//   int get intValue {
-//     switch (this) {
-//       case StreamType.invalid:
-//         return -1;
-//       case StreamType.none:
-//         return 0;
-//       case StreamType.buffered:
-//         return 1;
-//       case StreamType.live:
-//         return 2;
-//     }
-//   }
-// }
-
 /// Docs here: https://developers.google.com/android/reference/com/google/android/gms/cast/MediaMetadata
 class MediaMetadata {
   MediaType? mediaType;
@@ -83,27 +68,6 @@ enum MediaType {
   /// The smallest media type value that can be assigned for application-defined media types.
   user,
 }
-
-// extension MediaTypeExtension on MediaType {
-//   int get intValue {
-//     switch (this) {
-//       case MediaType.generic:
-//         return 0;
-//       case MediaType.movie:
-//         return 1;
-//       case MediaType.tvShow:
-//         return 2;
-//       case MediaType.musicTrack:
-//         return 3;
-//       case MediaType.photo:
-//         return 4;
-//       case MediaType.audiobookChapter:
-//         return 5;
-//       case MediaType.user:
-//         return 100;
-//     }
-//   }
-// }
 
 /// Docs here: https://developers.google.com/android/reference/com/google/android/gms/common/images/WebImage
 class WebImage {
@@ -197,69 +161,6 @@ enum MediaMetadataKey {
   width,
 }
 
-// extension MediaMetadataExtension on MediaMetadataKey {
-//   String get stringValue {
-//     switch (this) {
-//       case MediaMetadataKey.albumArtist:
-//         return "com.google.android.gms.cast.metadata.ALBUM_ARTIST";
-//       case MediaMetadataKey.albumTitle:
-//         return "com.google.android.gms.cast.metadata.ALBUM_TITLE";
-//       case MediaMetadataKey.artist:
-//         return "com.google.android.gms.cast.metadata.ARTIST";
-//       case MediaMetadataKey.bookTitle:
-//         return "com.google.android.gms.cast.metadata.BOOK_TITLE";
-//       case MediaMetadataKey.broadcastDate:
-//         return "com.google.android.gms.cast.metadata.BROADCAST_DATE";
-//       case MediaMetadataKey.chapterNumber:
-//         return "com.google.android.gms.cast.metadata.CHAPTER_NUMBER";
-//       case MediaMetadataKey.chapterTitle:
-//         return "com.google.android.gms.cast.metadata.CHAPTER_TITLE";
-//       case MediaMetadataKey.composer:
-//         return "com.google.android.gms.cast.metadata.COMPOSER";
-//       case MediaMetadataKey.creationDate:
-//         return "com.google.android.gms.cast.metadata.CREATION_DATE";
-//       case MediaMetadataKey.discNumber:
-//         return "com.google.android.gms.cast.metadata.DISC_NUMBER";
-//       case MediaMetadataKey.episodeNumber:
-//         return "com.google.android.gms.cast.metadata.EPISODE_NUMBER";
-//       case MediaMetadataKey.height:
-//         return "com.google.android.gms.cast.metadata.HEIGHT";
-//       case MediaMetadataKey.locationLatitude:
-//         return "com.google.android.gms.cast.metadata.LOCATION_LATITUDE";
-//       case MediaMetadataKey.locationLongitude:
-//         return "com.google.android.gms.cast.metadata.LOCATION_LONGITUDE";
-//       case MediaMetadataKey.locationName:
-//         return "com.google.android.gms.cast.metadata.LOCATION_NAME";
-//       case MediaMetadataKey.queueItemId:
-//         return "com.google.android.gms.cast.metadata.QUEUE_ITEM_ID";
-//       case MediaMetadataKey.releaseDate:
-//         return "com.google.android.gms.cast.metadata.RELEASE_DATE";
-//       case MediaMetadataKey.seasonNumber:
-//         return "com.google.android.gms.cast.metadata.SEASON_NUMBER";
-//       case MediaMetadataKey.sectionDuration:
-//         return "com.google.android.gms.cast.metadata.SECTION_DURATION";
-//       case MediaMetadataKey.sectionStartAbsoluteTime:
-//         return "com.google.android.gms.cast.metadata.SECTION_START_ABSOLUTE_TIME";
-//       case MediaMetadataKey.sectionStartTimeInContainer:
-//         return "com.google.android.gms.cast.metadata.SECTION_START_TIME_IN_CONTAINER";
-//       case MediaMetadataKey.sectionStartTimeInMedia:
-//         return "com.google.android.gms.cast.metadata.SECTION_START_TIME_IN_MEDIA";
-//       case MediaMetadataKey.seriesTitle:
-//         return "com.google.android.gms.cast.metadata.SERIES_TITLE";
-//       case MediaMetadataKey.studio:
-//         return "com.google.android.gms.cast.metadata.STUDIO";
-//       case MediaMetadataKey.subtitle:
-//         return "com.google.android.gms.cast.metadata.SUBTITLE";
-//       case MediaMetadataKey.title:
-//         return "com.google.android.gms.cast.metadata.TITLE";
-//       case MediaMetadataKey.trackNumber:
-//         return "com.google.android.gms.cast.metadata.TRACK_NUMBER";
-//       case MediaMetadataKey.width:
-//         return "com.google.android.gms.cast.metadata.WIDTH";
-//     }
-//   }
-// }
-
 /// Docs here: https://developers.google.com/android/reference/com/google/android/gms/cast/MediaTrack
 class MediaTrack {
   int? id;
@@ -267,7 +168,7 @@ class MediaTrack {
   String? name;
   TrackSubtype? trackSubtype;
   String? contentId;
-  String? langiage;
+  String? language;
 }
 
 /// Docs here: https://developers.google.com/android/reference/com/google/android/gms/cast/MediaTrack
@@ -284,21 +185,6 @@ enum TrackType {
   /// A media track type indicating a video track.
   video,
 }
-
-// extension TrackTypeExtension on TrackType {
-//   int get intValue {
-//     switch (this) {
-//       case TrackType.unknown:
-//         return 0;
-//       case TrackType.text:
-//         return 1;
-//       case TrackType.audio:
-//         return 2;
-//       case TrackType.video:
-//         return 3;
-//     }
-//   }
-// }
 
 /// Docs here: https://developers.google.com/android/reference/com/google/android/gms/cast/MediaTrack
 enum TrackSubtype {
@@ -323,27 +209,6 @@ enum TrackSubtype {
   /// A media track subtype indicating metadata.
   metadata,
 }
-
-// extension TrackSubtypeExtension on TrackSubtype {
-//   int get intValue {
-//     switch (this) {
-//       case TrackSubtype.unknown:
-//         return -1;
-//       case TrackSubtype.none:
-//         return 0;
-//       case TrackSubtype.subtitles:
-//         return 1;
-//       case TrackSubtype.captions:
-//         return 2;
-//       case TrackSubtype.descriptions:
-//         return 3;
-//       case TrackSubtype.chapters:
-//         return 4;
-//       case TrackSubtype.metadata:
-//         return 5;
-//     }
-//   }
-// }
 
 //#endregion
 

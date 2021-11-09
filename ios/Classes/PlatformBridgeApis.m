@@ -22,9 +22,147 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
       };
 }
 
+@interface MediaLoadRequestData ()
++ (MediaLoadRequestData *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
+@interface MediaInfo ()
++ (MediaInfo *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
+@interface MediaMetadata ()
++ (MediaMetadata *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
+@interface WebImage ()
++ (WebImage *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
+@interface MediaTrack ()
++ (MediaTrack *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
 @interface CastMessage ()
 + (CastMessage *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
+@end
+
+@implementation MediaLoadRequestData
++ (MediaLoadRequestData *)fromMap:(NSDictionary *)dict {
+  MediaLoadRequestData *result = [[MediaLoadRequestData alloc] init];
+  result.shouldAutoplay = dict[@"shouldAutoplay"];
+  if ((NSNull *)result.shouldAutoplay == [NSNull null]) {
+    result.shouldAutoplay = nil;
+  }
+  result.currentTime = dict[@"currentTime"];
+  if ((NSNull *)result.currentTime == [NSNull null]) {
+    result.currentTime = nil;
+  }
+  result.mediaInfo = [MediaInfo fromMap:dict[@"mediaInfo"]];
+  if ((NSNull *)result.mediaInfo == [NSNull null]) {
+    result.mediaInfo = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.shouldAutoplay ? self.shouldAutoplay : [NSNull null]), @"shouldAutoplay", (self.currentTime ? self.currentTime : [NSNull null]), @"currentTime", (self.mediaInfo ? [self.mediaInfo toMap] : [NSNull null]), @"mediaInfo", nil];
+}
+@end
+
+@implementation MediaInfo
++ (MediaInfo *)fromMap:(NSDictionary *)dict {
+  MediaInfo *result = [[MediaInfo alloc] init];
+  result.contentId = dict[@"contentId"];
+  if ((NSNull *)result.contentId == [NSNull null]) {
+    result.contentId = nil;
+  }
+  result.streamType = [dict[@"streamType"] integerValue];
+  result.contentType = dict[@"contentType"];
+  if ((NSNull *)result.contentType == [NSNull null]) {
+    result.contentType = nil;
+  }
+  result.mediaMetadata = [MediaMetadata fromMap:dict[@"mediaMetadata"]];
+  if ((NSNull *)result.mediaMetadata == [NSNull null]) {
+    result.mediaMetadata = nil;
+  }
+  result.mediaTracks = dict[@"mediaTracks"];
+  if ((NSNull *)result.mediaTracks == [NSNull null]) {
+    result.mediaTracks = nil;
+  }
+  result.streamDuration = dict[@"streamDuration"];
+  if ((NSNull *)result.streamDuration == [NSNull null]) {
+    result.streamDuration = nil;
+  }
+  result.customDataAsJson = dict[@"customDataAsJson"];
+  if ((NSNull *)result.customDataAsJson == [NSNull null]) {
+    result.customDataAsJson = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.contentId ? self.contentId : [NSNull null]), @"contentId", @(self.streamType), @"streamType", (self.contentType ? self.contentType : [NSNull null]), @"contentType", (self.mediaMetadata ? [self.mediaMetadata toMap] : [NSNull null]), @"mediaMetadata", (self.mediaTracks ? self.mediaTracks : [NSNull null]), @"mediaTracks", (self.streamDuration ? self.streamDuration : [NSNull null]), @"streamDuration", (self.customDataAsJson ? self.customDataAsJson : [NSNull null]), @"customDataAsJson", nil];
+}
+@end
+
+@implementation MediaMetadata
++ (MediaMetadata *)fromMap:(NSDictionary *)dict {
+  MediaMetadata *result = [[MediaMetadata alloc] init];
+  result.mediaType = [dict[@"mediaType"] integerValue];
+  result.strings = dict[@"strings"];
+  if ((NSNull *)result.strings == [NSNull null]) {
+    result.strings = nil;
+  }
+  result.webImages = dict[@"webImages"];
+  if ((NSNull *)result.webImages == [NSNull null]) {
+    result.webImages = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:@(self.mediaType), @"mediaType", (self.strings ? self.strings : [NSNull null]), @"strings", (self.webImages ? self.webImages : [NSNull null]), @"webImages", nil];
+}
+@end
+
+@implementation WebImage
++ (WebImage *)fromMap:(NSDictionary *)dict {
+  WebImage *result = [[WebImage alloc] init];
+  result.url = dict[@"url"];
+  if ((NSNull *)result.url == [NSNull null]) {
+    result.url = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.url ? self.url : [NSNull null]), @"url", nil];
+}
+@end
+
+@implementation MediaTrack
++ (MediaTrack *)fromMap:(NSDictionary *)dict {
+  MediaTrack *result = [[MediaTrack alloc] init];
+  result.id = dict[@"id"];
+  if ((NSNull *)result.id == [NSNull null]) {
+    result.id = nil;
+  }
+  result.trackType = [dict[@"trackType"] integerValue];
+  result.name = dict[@"name"];
+  if ((NSNull *)result.name == [NSNull null]) {
+    result.name = nil;
+  }
+  result.trackSubtype = [dict[@"trackSubtype"] integerValue];
+  result.contentId = dict[@"contentId"];
+  if ((NSNull *)result.contentId == [NSNull null]) {
+    result.contentId = nil;
+  }
+  result.language = dict[@"language"];
+  if ((NSNull *)result.language == [NSNull null]) {
+    result.language = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.id ? self.id : [NSNull null]), @"id", @(self.trackType), @"trackType", (self.name ? self.name : [NSNull null]), @"name", @(self.trackSubtype), @"trackSubtype", (self.contentId ? self.contentId : [NSNull null]), @"contentId", (self.language ? self.language : [NSNull null]), @"language", nil];
+}
 @end
 
 @implementation CastMessage
@@ -54,6 +192,21 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
     case 128:     
       return [CastMessage fromMap:[self readValue]];
     
+    case 129:     
+      return [MediaInfo fromMap:[self readValue]];
+    
+    case 130:     
+      return [MediaLoadRequestData fromMap:[self readValue]];
+    
+    case 131:     
+      return [MediaMetadata fromMap:[self readValue]];
+    
+    case 132:     
+      return [MediaTrack fromMap:[self readValue]];
+    
+    case 133:     
+      return [WebImage fromMap:[self readValue]];
+    
     default:    
       return [super readValueOfType:type];
     
@@ -68,6 +221,26 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 {
   if ([value isKindOfClass:[CastMessage class]]) {
     [self writeByte:128];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaInfo class]]) {
+    [self writeByte:129];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaLoadRequestData class]]) {
+    [self writeByte:130];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaMetadata class]]) {
+    [self writeByte:131];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaTrack class]]) {
+    [self writeByte:132];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[WebImage class]]) {
+    [self writeByte:133];
     [self writeValue:[value toMap]];
   } else 
 {
@@ -130,6 +303,26 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         [api showCastDialogWithError:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.CastHostApi.loadMediaLoadRequestData"
+        binaryMessenger:binaryMessenger
+        codec:CastHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(loadMediaLoadRequestDataRequest:error:)], @"CastHostApi api (%@) doesn't respond to @selector(loadMediaLoadRequestDataRequest:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        MediaLoadRequestData *arg_request = args[0];
+        FlutterError *error;
+        [api loadMediaLoadRequestDataRequest:arg_request error:&error];
         callback(wrapResult(nil, error));
       }];
     }

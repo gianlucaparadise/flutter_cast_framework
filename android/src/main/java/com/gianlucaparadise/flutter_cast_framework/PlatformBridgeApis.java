@@ -19,6 +19,296 @@ import java.util.HashMap;
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression"})
 public class PlatformBridgeApis {
 
+  public enum StreamType {
+    invalid(0),
+    none(1),
+    buffered(2),
+    live(3);
+
+    private int index;
+    private StreamType(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum MediaType {
+    generic(0),
+    movie(1),
+    tvShow(2),
+    musicTrack(3),
+    photo(4),
+    audiobookChapter(5),
+    user(6);
+
+    private int index;
+    private MediaType(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum MediaMetadataKey {
+    albumArtist(0),
+    albumTitle(1),
+    artist(2),
+    bookTitle(3),
+    broadcastDate(4),
+    chapterNumber(5),
+    chapterTitle(6),
+    composer(7),
+    creationDate(8),
+    discNumber(9),
+    episodeNumber(10),
+    height(11),
+    locationLatitude(12),
+    locationLongitude(13),
+    locationName(14),
+    queueItemId(15),
+    releaseDate(16),
+    seasonNumber(17),
+    sectionDuration(18),
+    sectionStartAbsoluteTime(19),
+    sectionStartTimeInContainer(20),
+    sectionStartTimeInMedia(21),
+    seriesTitle(22),
+    studio(23),
+    subtitle(24),
+    title(25),
+    trackNumber(26),
+    width(27);
+
+    private int index;
+    private MediaMetadataKey(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum TrackType {
+    unknown(0),
+    text(1),
+    audio(2),
+    video(3);
+
+    private int index;
+    private TrackType(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum TrackSubtype {
+    unknown(0),
+    none(1),
+    subtitles(2),
+    captions(3),
+    descriptions(4),
+    chapters(5),
+    metadata(6);
+
+    private int index;
+    private TrackSubtype(final int index) {
+      this.index = index;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class MediaLoadRequestData {
+    private Boolean shouldAutoplay;
+    public Boolean getShouldAutoplay() { return shouldAutoplay; }
+    public void setShouldAutoplay(Boolean setterArg) { this.shouldAutoplay = setterArg; }
+
+    private Long currentTime;
+    public Long getCurrentTime() { return currentTime; }
+    public void setCurrentTime(Long setterArg) { this.currentTime = setterArg; }
+
+    private MediaInfo mediaInfo;
+    public MediaInfo getMediaInfo() { return mediaInfo; }
+    public void setMediaInfo(MediaInfo setterArg) { this.mediaInfo = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("shouldAutoplay", shouldAutoplay);
+      toMapResult.put("currentTime", currentTime);
+      toMapResult.put("mediaInfo", (mediaInfo == null) ? null : mediaInfo.toMap());
+      return toMapResult;
+    }
+    static MediaLoadRequestData fromMap(Map<String, Object> map) {
+      MediaLoadRequestData fromMapResult = new MediaLoadRequestData();
+      Object shouldAutoplay = map.get("shouldAutoplay");
+      fromMapResult.shouldAutoplay = (Boolean)shouldAutoplay;
+      Object currentTime = map.get("currentTime");
+      fromMapResult.currentTime = (currentTime == null) ? null : ((currentTime instanceof Integer) ? (Integer)currentTime : (Long)currentTime);
+      Object mediaInfo = map.get("mediaInfo");
+      fromMapResult.mediaInfo = MediaInfo.fromMap((Map)mediaInfo);
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class MediaInfo {
+    private String contentId;
+    public String getContentId() { return contentId; }
+    public void setContentId(String setterArg) { this.contentId = setterArg; }
+
+    private StreamType streamType;
+    public StreamType getStreamType() { return streamType; }
+    public void setStreamType(StreamType setterArg) { this.streamType = setterArg; }
+
+    private String contentType;
+    public String getContentType() { return contentType; }
+    public void setContentType(String setterArg) { this.contentType = setterArg; }
+
+    private MediaMetadata mediaMetadata;
+    public MediaMetadata getMediaMetadata() { return mediaMetadata; }
+    public void setMediaMetadata(MediaMetadata setterArg) { this.mediaMetadata = setterArg; }
+
+    private List<MediaTrack> mediaTracks;
+    public List<MediaTrack> getMediaTracks() { return mediaTracks; }
+    public void setMediaTracks(List<MediaTrack> setterArg) { this.mediaTracks = setterArg; }
+
+    private Long streamDuration;
+    public Long getStreamDuration() { return streamDuration; }
+    public void setStreamDuration(Long setterArg) { this.streamDuration = setterArg; }
+
+    private String customDataAsJson;
+    public String getCustomDataAsJson() { return customDataAsJson; }
+    public void setCustomDataAsJson(String setterArg) { this.customDataAsJson = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("contentId", contentId);
+      toMapResult.put("streamType", streamType.index);
+      toMapResult.put("contentType", contentType);
+      toMapResult.put("mediaMetadata", (mediaMetadata == null) ? null : mediaMetadata.toMap());
+      toMapResult.put("mediaTracks", mediaTracks);
+      toMapResult.put("streamDuration", streamDuration);
+      toMapResult.put("customDataAsJson", customDataAsJson);
+      return toMapResult;
+    }
+    static MediaInfo fromMap(Map<String, Object> map) {
+      MediaInfo fromMapResult = new MediaInfo();
+      Object contentId = map.get("contentId");
+      fromMapResult.contentId = (String)contentId;
+      Object streamType = map.get("streamType");
+      fromMapResult.streamType = StreamType.values()[(int)streamType];
+      Object contentType = map.get("contentType");
+      fromMapResult.contentType = (String)contentType;
+      Object mediaMetadata = map.get("mediaMetadata");
+      fromMapResult.mediaMetadata = MediaMetadata.fromMap((Map)mediaMetadata);
+      Object mediaTracks = map.get("mediaTracks");
+      fromMapResult.mediaTracks = (List<MediaTrack>)mediaTracks;
+      Object streamDuration = map.get("streamDuration");
+      fromMapResult.streamDuration = (streamDuration == null) ? null : ((streamDuration instanceof Integer) ? (Integer)streamDuration : (Long)streamDuration);
+      Object customDataAsJson = map.get("customDataAsJson");
+      fromMapResult.customDataAsJson = (String)customDataAsJson;
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class MediaMetadata {
+    private MediaType mediaType;
+    public MediaType getMediaType() { return mediaType; }
+    public void setMediaType(MediaType setterArg) { this.mediaType = setterArg; }
+
+    private Map<MediaMetadataKey, String> strings;
+    public Map<MediaMetadataKey, String> getStrings() { return strings; }
+    public void setStrings(Map<MediaMetadataKey, String> setterArg) { this.strings = setterArg; }
+
+    private List<WebImage> webImages;
+    public List<WebImage> getWebImages() { return webImages; }
+    public void setWebImages(List<WebImage> setterArg) { this.webImages = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("mediaType", mediaType.index);
+      toMapResult.put("strings", strings);
+      toMapResult.put("webImages", webImages);
+      return toMapResult;
+    }
+    static MediaMetadata fromMap(Map<String, Object> map) {
+      MediaMetadata fromMapResult = new MediaMetadata();
+      Object mediaType = map.get("mediaType");
+      fromMapResult.mediaType = MediaType.values()[(int)mediaType];
+      Object strings = map.get("strings");
+      fromMapResult.strings = (Map<MediaMetadataKey, String>)strings;
+      Object webImages = map.get("webImages");
+      fromMapResult.webImages = (List<WebImage>)webImages;
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class WebImage {
+    private String url;
+    public String getUrl() { return url; }
+    public void setUrl(String setterArg) { this.url = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("url", url);
+      return toMapResult;
+    }
+    static WebImage fromMap(Map<String, Object> map) {
+      WebImage fromMapResult = new WebImage();
+      Object url = map.get("url");
+      fromMapResult.url = (String)url;
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class MediaTrack {
+    private Long id;
+    public Long getId() { return id; }
+    public void setId(Long setterArg) { this.id = setterArg; }
+
+    private TrackType trackType;
+    public TrackType getTrackType() { return trackType; }
+    public void setTrackType(TrackType setterArg) { this.trackType = setterArg; }
+
+    private String name;
+    public String getName() { return name; }
+    public void setName(String setterArg) { this.name = setterArg; }
+
+    private TrackSubtype trackSubtype;
+    public TrackSubtype getTrackSubtype() { return trackSubtype; }
+    public void setTrackSubtype(TrackSubtype setterArg) { this.trackSubtype = setterArg; }
+
+    private String contentId;
+    public String getContentId() { return contentId; }
+    public void setContentId(String setterArg) { this.contentId = setterArg; }
+
+    private String language;
+    public String getLanguage() { return language; }
+    public void setLanguage(String setterArg) { this.language = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("id", id);
+      toMapResult.put("trackType", trackType.index);
+      toMapResult.put("name", name);
+      toMapResult.put("trackSubtype", trackSubtype.index);
+      toMapResult.put("contentId", contentId);
+      toMapResult.put("language", language);
+      return toMapResult;
+    }
+    static MediaTrack fromMap(Map<String, Object> map) {
+      MediaTrack fromMapResult = new MediaTrack();
+      Object id = map.get("id");
+      fromMapResult.id = (id == null) ? null : ((id instanceof Integer) ? (Integer)id : (Long)id);
+      Object trackType = map.get("trackType");
+      fromMapResult.trackType = TrackType.values()[(int)trackType];
+      Object name = map.get("name");
+      fromMapResult.name = (String)name;
+      Object trackSubtype = map.get("trackSubtype");
+      fromMapResult.trackSubtype = TrackSubtype.values()[(int)trackSubtype];
+      Object contentId = map.get("contentId");
+      fromMapResult.contentId = (String)contentId;
+      Object language = map.get("language");
+      fromMapResult.language = (String)language;
+      return fromMapResult;
+    }
+  }
+
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class CastMessage {
     private String namespace;
@@ -53,6 +343,21 @@ public class PlatformBridgeApis {
         case (byte)128:         
           return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
         
+        case (byte)129:         
+          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)130:         
+          return MediaLoadRequestData.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)131:         
+          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)132:         
+          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)133:         
+          return WebImage.fromMap((Map<String, Object>) readValue(buffer));
+        
         default:        
           return super.readValueOfType(type, buffer);
         
@@ -64,6 +369,26 @@ public class PlatformBridgeApis {
         stream.write(128);
         writeValue(stream, ((CastMessage) value).toMap());
       } else 
+      if (value instanceof MediaInfo) {
+        stream.write(129);
+        writeValue(stream, ((MediaInfo) value).toMap());
+      } else 
+      if (value instanceof MediaLoadRequestData) {
+        stream.write(130);
+        writeValue(stream, ((MediaLoadRequestData) value).toMap());
+      } else 
+      if (value instanceof MediaMetadata) {
+        stream.write(131);
+        writeValue(stream, ((MediaMetadata) value).toMap());
+      } else 
+      if (value instanceof MediaTrack) {
+        stream.write(132);
+        writeValue(stream, ((MediaTrack) value).toMap());
+      } else 
+      if (value instanceof WebImage) {
+        stream.write(133);
+        writeValue(stream, ((WebImage) value).toMap());
+      } else 
 {
         super.writeValue(stream, value);
       }
@@ -74,6 +399,7 @@ public class PlatformBridgeApis {
   public interface CastHostApi {
     void sendMessage(CastMessage message);
     void showCastDialog();
+    void loadMediaLoadRequestData(MediaLoadRequestData request);
 
     /** The codec used by CastHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -114,6 +440,30 @@ public class PlatformBridgeApis {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               api.showCastDialog();
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.loadMediaLoadRequestData", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              MediaLoadRequestData requestArg = (MediaLoadRequestData)args.get(0);
+              if (requestArg == null) {
+                throw new NullPointerException("requestArg unexpectedly null.");
+              }
+              api.loadMediaLoadRequestData(requestArg);
               wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {

@@ -8,7 +8,112 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, StreamType) {
+  StreamTypeInvalid = 0,
+  StreamTypeNone = 1,
+  StreamTypeBuffered = 2,
+  StreamTypeLive = 3,
+};
+
+typedef NS_ENUM(NSUInteger, MediaType) {
+  MediaTypeGeneric = 0,
+  MediaTypeMovie = 1,
+  MediaTypeTvShow = 2,
+  MediaTypeMusicTrack = 3,
+  MediaTypePhoto = 4,
+  MediaTypeAudiobookChapter = 5,
+  MediaTypeUser = 6,
+};
+
+typedef NS_ENUM(NSUInteger, MediaMetadataKey) {
+  MediaMetadataKeyAlbumArtist = 0,
+  MediaMetadataKeyAlbumTitle = 1,
+  MediaMetadataKeyArtist = 2,
+  MediaMetadataKeyBookTitle = 3,
+  MediaMetadataKeyBroadcastDate = 4,
+  MediaMetadataKeyChapterNumber = 5,
+  MediaMetadataKeyChapterTitle = 6,
+  MediaMetadataKeyComposer = 7,
+  MediaMetadataKeyCreationDate = 8,
+  MediaMetadataKeyDiscNumber = 9,
+  MediaMetadataKeyEpisodeNumber = 10,
+  MediaMetadataKeyHeight = 11,
+  MediaMetadataKeyLocationLatitude = 12,
+  MediaMetadataKeyLocationLongitude = 13,
+  MediaMetadataKeyLocationName = 14,
+  MediaMetadataKeyQueueItemId = 15,
+  MediaMetadataKeyReleaseDate = 16,
+  MediaMetadataKeySeasonNumber = 17,
+  MediaMetadataKeySectionDuration = 18,
+  MediaMetadataKeySectionStartAbsoluteTime = 19,
+  MediaMetadataKeySectionStartTimeInContainer = 20,
+  MediaMetadataKeySectionStartTimeInMedia = 21,
+  MediaMetadataKeySeriesTitle = 22,
+  MediaMetadataKeyStudio = 23,
+  MediaMetadataKeySubtitle = 24,
+  MediaMetadataKeyTitle = 25,
+  MediaMetadataKeyTrackNumber = 26,
+  MediaMetadataKeyWidth = 27,
+};
+
+typedef NS_ENUM(NSUInteger, TrackType) {
+  TrackTypeUnknown = 0,
+  TrackTypeText = 1,
+  TrackTypeAudio = 2,
+  TrackTypeVideo = 3,
+};
+
+typedef NS_ENUM(NSUInteger, TrackSubtype) {
+  TrackSubtypeUnknown = 0,
+  TrackSubtypeNone = 1,
+  TrackSubtypeSubtitles = 2,
+  TrackSubtypeCaptions = 3,
+  TrackSubtypeDescriptions = 4,
+  TrackSubtypeChapters = 5,
+  TrackSubtypeMetadata = 6,
+};
+
+@class MediaLoadRequestData;
+@class MediaInfo;
+@class MediaMetadata;
+@class WebImage;
+@class MediaTrack;
 @class CastMessage;
+
+@interface MediaLoadRequestData : NSObject
+@property(nonatomic, strong, nullable) NSNumber * shouldAutoplay;
+@property(nonatomic, strong, nullable) NSNumber * currentTime;
+@property(nonatomic, strong, nullable) MediaInfo * mediaInfo;
+@end
+
+@interface MediaInfo : NSObject
+@property(nonatomic, copy, nullable) NSString * contentId;
+@property(nonatomic, assign) StreamType streamType;
+@property(nonatomic, copy, nullable) NSString * contentType;
+@property(nonatomic, strong, nullable) MediaMetadata * mediaMetadata;
+@property(nonatomic, strong, nullable) NSArray<MediaTrack *> * mediaTracks;
+@property(nonatomic, strong, nullable) NSNumber * streamDuration;
+@property(nonatomic, copy, nullable) NSString * customDataAsJson;
+@end
+
+@interface MediaMetadata : NSObject
+@property(nonatomic, assign) MediaType mediaType;
+@property(nonatomic, strong, nullable) NSDictionary<MediaMetadataKey *, NSString *> * strings;
+@property(nonatomic, strong, nullable) NSArray<WebImage *> * webImages;
+@end
+
+@interface WebImage : NSObject
+@property(nonatomic, copy, nullable) NSString * url;
+@end
+
+@interface MediaTrack : NSObject
+@property(nonatomic, strong, nullable) NSNumber * id;
+@property(nonatomic, assign) TrackType trackType;
+@property(nonatomic, copy, nullable) NSString * name;
+@property(nonatomic, assign) TrackSubtype trackSubtype;
+@property(nonatomic, copy, nullable) NSString * contentId;
+@property(nonatomic, copy, nullable) NSString * language;
+@end
 
 @interface CastMessage : NSObject
 @property(nonatomic, copy, nullable) NSString * namespace;
@@ -21,6 +126,7 @@ NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 @protocol CastHostApi
 - (void)sendMessageMessage:(CastMessage *)message error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)showCastDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
+- (void)loadMediaLoadRequestDataRequest:(MediaLoadRequestData *)request error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastHostApi> *_Nullable api);
