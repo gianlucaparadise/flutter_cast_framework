@@ -9,10 +9,12 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
+import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
 import com.google.android.gms.cast.framework.SessionManagerListener
+import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -57,7 +59,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
         CastContext.getSharedInstance(applicationContext).addCastStateListener { i ->
             Log.d(TAG, "Cast state changed: $i")
-            flutterApi?.onCastStateChanged(i.toLong(), null)
+            flutterApi?.onCastStateChanged(i.toLong()) { }
         }
 
         mSessionManager = CastContext.getSharedInstance(applicationContext).sessionManager
@@ -166,6 +168,16 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             }
 
             CastDialogOpener.showCastDialog(context, activity)
+        }
+
+        override fun loadMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData?) {
+            if (request == null) return
+
+            val castSession: CastSession = mCastSession ?: return
+            val remoteMediaClient : RemoteMediaClient = castSession.remoteMediaClient ?: return
+
+            val mediaLoadRequest = getMediaLoadRequestData(request)
+            remoteMediaClient.load(mediaLoadRequest)
         }
     }
 
