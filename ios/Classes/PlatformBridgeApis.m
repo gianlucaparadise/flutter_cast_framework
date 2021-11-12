@@ -108,10 +108,6 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 + (MediaMetadata *)fromMap:(NSDictionary *)dict {
   MediaMetadata *result = [[MediaMetadata alloc] init];
   result.mediaType = [dict[@"mediaType"] integerValue];
-  result.strings = dict[@"strings"];
-  if ((NSNull *)result.strings == [NSNull null]) {
-    result.strings = nil;
-  }
   result.webImages = dict[@"webImages"];
   if ((NSNull *)result.webImages == [NSNull null]) {
     result.webImages = nil;
@@ -119,7 +115,7 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
   return result;
 }
 - (NSDictionary *)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:@(self.mediaType), @"mediaType", (self.strings ? self.strings : [NSNull null]), @"strings", (self.webImages ? self.webImages : [NSNull null]), @"webImages", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:@(self.mediaType), @"mediaType", (self.webImages ? self.webImages : [NSNull null]), @"webImages", nil];
 }
 @end
 

@@ -50,10 +50,10 @@ fun getMediaMetadata(mediaMetadata: PlatformBridgeApis.MediaMetadata) : MediaMet
     val mediaType = getMediaType(mediaMetadata.mediaType)
     val result = MediaMetadata(mediaType)
 
-    mediaMetadata.strings.forEach {
-        val key = getMediaMetadataKey(it.key)
-        result.putString(key, it.value)
-    }
+//    mediaMetadata.strings.forEach {
+//        val key = getMediaMetadataKey(it.key)
+//        result.putString(key, it.value)
+//    }
 
     mediaMetadata.webImages.forEach {
         val uri = Uri.parse(it.url)
@@ -76,38 +76,38 @@ fun getMediaType(mediaType: PlatformBridgeApis.MediaType) : Int {
     }
 }
 
-fun getMediaMetadataKey(mediaMetadataKey: PlatformBridgeApis.MediaMetadataKey) : String {
-    return when (mediaMetadataKey) {
-        PlatformBridgeApis.MediaMetadataKey.albumArtist -> "com.google.android.gms.cast.metadata.ALBUM_ARTIST"
-        PlatformBridgeApis.MediaMetadataKey.albumTitle -> "com.google.android.gms.cast.metadata.ALBUM_TITLE"
-        PlatformBridgeApis.MediaMetadataKey.artist -> "com.google.android.gms.cast.metadata.ARTIST"
-        PlatformBridgeApis.MediaMetadataKey.bookTitle -> "com.google.android.gms.cast.metadata.BOOK_TITLE"
-        PlatformBridgeApis.MediaMetadataKey.broadcastDate -> "com.google.android.gms.cast.metadata.BROADCAST_DATE"
-        PlatformBridgeApis.MediaMetadataKey.chapterNumber -> "com.google.android.gms.cast.metadata.CHAPTER_NUMBER"
-        PlatformBridgeApis.MediaMetadataKey.chapterTitle -> "com.google.android.gms.cast.metadata.CHAPTER_TITLE"
-        PlatformBridgeApis.MediaMetadataKey.composer -> "com.google.android.gms.cast.metadata.COMPOSER"
-        PlatformBridgeApis.MediaMetadataKey.creationDate -> "com.google.android.gms.cast.metadata.CREATION_DATE"
-        PlatformBridgeApis.MediaMetadataKey.discNumber -> "com.google.android.gms.cast.metadata.DISC_NUMBER"
-        PlatformBridgeApis.MediaMetadataKey.episodeNumber -> "com.google.android.gms.cast.metadata.EPISODE_NUMBER"
-        PlatformBridgeApis.MediaMetadataKey.height -> "com.google.android.gms.cast.metadata.HEIGHT"
-        PlatformBridgeApis.MediaMetadataKey.locationLatitude -> "com.google.android.gms.cast.metadata.LOCATION_LATITUDE"
-        PlatformBridgeApis.MediaMetadataKey.locationLongitude -> "com.google.android.gms.cast.metadata.LOCATION_LONGITUDE"
-        PlatformBridgeApis.MediaMetadataKey.locationName -> "com.google.android.gms.cast.metadata.LOCATION_NAME"
-        PlatformBridgeApis.MediaMetadataKey.queueItemId -> "com.google.android.gms.cast.metadata.QUEUE_ITEM_ID"
-        PlatformBridgeApis.MediaMetadataKey.releaseDate -> "com.google.android.gms.cast.metadata.RELEASE_DATE"
-        PlatformBridgeApis.MediaMetadataKey.seasonNumber -> "com.google.android.gms.cast.metadata.SEASON_NUMBER"
-        PlatformBridgeApis.MediaMetadataKey.sectionDuration -> "com.google.android.gms.cast.metadata.SECTION_DURATION"
-        PlatformBridgeApis.MediaMetadataKey.sectionStartAbsoluteTime -> "com.google.android.gms.cast.metadata.SECTION_START_ABSOLUTE_TIME"
-        PlatformBridgeApis.MediaMetadataKey.sectionStartTimeInContainer -> "com.google.android.gms.cast.metadata.SECTION_START_TIME_IN_CONTAINER"
-        PlatformBridgeApis.MediaMetadataKey.sectionStartTimeInMedia -> "com.google.android.gms.cast.metadata.SECTION_START_TIME_IN_MEDIA"
-        PlatformBridgeApis.MediaMetadataKey.seriesTitle -> "com.google.android.gms.cast.metadata.SERIES_TITLE"
-        PlatformBridgeApis.MediaMetadataKey.studio -> "com.google.android.gms.cast.metadata.STUDIO"
-        PlatformBridgeApis.MediaMetadataKey.subtitle -> "com.google.android.gms.cast.metadata.SUBTITLE"
-        PlatformBridgeApis.MediaMetadataKey.title -> "com.google.android.gms.cast.metadata.TITLE"
-        PlatformBridgeApis.MediaMetadataKey.trackNumber -> "com.google.android.gms.cast.metadata.TRACK_NUMBER"
-        PlatformBridgeApis.MediaMetadataKey.width -> "com.google.android.gms.cast.metadata.WIDTH"
-    }
-}
+//fun getMediaMetadataKey(mediaMetadataKey: PlatformBridgeApis.MediaMetadataKey) : String {
+//    return when (mediaMetadataKey) {
+//        PlatformBridgeApis.MediaMetadataKey.albumArtist -> "com.google.android.gms.cast.metadata.ALBUM_ARTIST"
+//        PlatformBridgeApis.MediaMetadataKey.albumTitle -> "com.google.android.gms.cast.metadata.ALBUM_TITLE"
+//        PlatformBridgeApis.MediaMetadataKey.artist -> "com.google.android.gms.cast.metadata.ARTIST"
+//        PlatformBridgeApis.MediaMetadataKey.bookTitle -> "com.google.android.gms.cast.metadata.BOOK_TITLE"
+//        PlatformBridgeApis.MediaMetadataKey.broadcastDate -> "com.google.android.gms.cast.metadata.BROADCAST_DATE"
+//        PlatformBridgeApis.MediaMetadataKey.chapterNumber -> "com.google.android.gms.cast.metadata.CHAPTER_NUMBER"
+//        PlatformBridgeApis.MediaMetadataKey.chapterTitle -> "com.google.android.gms.cast.metadata.CHAPTER_TITLE"
+//        PlatformBridgeApis.MediaMetadataKey.composer -> "com.google.android.gms.cast.metadata.COMPOSER"
+//        PlatformBridgeApis.MediaMetadataKey.creationDate -> "com.google.android.gms.cast.metadata.CREATION_DATE"
+//        PlatformBridgeApis.MediaMetadataKey.discNumber -> "com.google.android.gms.cast.metadata.DISC_NUMBER"
+//        PlatformBridgeApis.MediaMetadataKey.episodeNumber -> "com.google.android.gms.cast.metadata.EPISODE_NUMBER"
+//        PlatformBridgeApis.MediaMetadataKey.height -> "com.google.android.gms.cast.metadata.HEIGHT"
+//        PlatformBridgeApis.MediaMetadataKey.locationLatitude -> "com.google.android.gms.cast.metadata.LOCATION_LATITUDE"
+//        PlatformBridgeApis.MediaMetadataKey.locationLongitude -> "com.google.android.gms.cast.metadata.LOCATION_LONGITUDE"
+//        PlatformBridgeApis.MediaMetadataKey.locationName -> "com.google.android.gms.cast.metadata.LOCATION_NAME"
+//        PlatformBridgeApis.MediaMetadataKey.queueItemId -> "com.google.android.gms.cast.metadata.QUEUE_ITEM_ID"
+//        PlatformBridgeApis.MediaMetadataKey.releaseDate -> "com.google.android.gms.cast.metadata.RELEASE_DATE"
+//        PlatformBridgeApis.MediaMetadataKey.seasonNumber -> "com.google.android.gms.cast.metadata.SEASON_NUMBER"
+//        PlatformBridgeApis.MediaMetadataKey.sectionDuration -> "com.google.android.gms.cast.metadata.SECTION_DURATION"
+//        PlatformBridgeApis.MediaMetadataKey.sectionStartAbsoluteTime -> "com.google.android.gms.cast.metadata.SECTION_START_ABSOLUTE_TIME"
+//        PlatformBridgeApis.MediaMetadataKey.sectionStartTimeInContainer -> "com.google.android.gms.cast.metadata.SECTION_START_TIME_IN_CONTAINER"
+//        PlatformBridgeApis.MediaMetadataKey.sectionStartTimeInMedia -> "com.google.android.gms.cast.metadata.SECTION_START_TIME_IN_MEDIA"
+//        PlatformBridgeApis.MediaMetadataKey.seriesTitle -> "com.google.android.gms.cast.metadata.SERIES_TITLE"
+//        PlatformBridgeApis.MediaMetadataKey.studio -> "com.google.android.gms.cast.metadata.STUDIO"
+//        PlatformBridgeApis.MediaMetadataKey.subtitle -> "com.google.android.gms.cast.metadata.SUBTITLE"
+//        PlatformBridgeApis.MediaMetadataKey.title -> "com.google.android.gms.cast.metadata.TITLE"
+//        PlatformBridgeApis.MediaMetadataKey.trackNumber -> "com.google.android.gms.cast.metadata.TRACK_NUMBER"
+//        PlatformBridgeApis.MediaMetadataKey.width -> "com.google.android.gms.cast.metadata.WIDTH"
+//    }
+//}
 
 fun getMediaTrack(mediaTrack: PlatformBridgeApis.MediaTrack) : MediaTrack {
     val trackType = getTrackType(mediaTrack.trackType)

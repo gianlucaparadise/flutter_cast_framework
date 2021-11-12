@@ -46,42 +46,6 @@ public class PlatformBridgeApis {
     }
   }
 
-  public enum MediaMetadataKey {
-    albumArtist(0),
-    albumTitle(1),
-    artist(2),
-    bookTitle(3),
-    broadcastDate(4),
-    chapterNumber(5),
-    chapterTitle(6),
-    composer(7),
-    creationDate(8),
-    discNumber(9),
-    episodeNumber(10),
-    height(11),
-    locationLatitude(12),
-    locationLongitude(13),
-    locationName(14),
-    queueItemId(15),
-    releaseDate(16),
-    seasonNumber(17),
-    sectionDuration(18),
-    sectionStartAbsoluteTime(19),
-    sectionStartTimeInContainer(20),
-    sectionStartTimeInMedia(21),
-    seriesTitle(22),
-    studio(23),
-    subtitle(24),
-    title(25),
-    trackNumber(26),
-    width(27);
-
-    private int index;
-    private MediaMetadataKey(final int index) {
-      this.index = index;
-    }
-  }
-
   public enum TrackType {
     unknown(0),
     text(1),
@@ -209,10 +173,6 @@ public class PlatformBridgeApis {
     public MediaType getMediaType() { return mediaType; }
     public void setMediaType(MediaType setterArg) { this.mediaType = setterArg; }
 
-    private Map<MediaMetadataKey, String> strings;
-    public Map<MediaMetadataKey, String> getStrings() { return strings; }
-    public void setStrings(Map<MediaMetadataKey, String> setterArg) { this.strings = setterArg; }
-
     private List<WebImage> webImages;
     public List<WebImage> getWebImages() { return webImages; }
     public void setWebImages(List<WebImage> setterArg) { this.webImages = setterArg; }
@@ -220,7 +180,6 @@ public class PlatformBridgeApis {
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
       toMapResult.put("mediaType", mediaType.index);
-      toMapResult.put("strings", strings);
       toMapResult.put("webImages", webImages);
       return toMapResult;
     }
@@ -228,8 +187,6 @@ public class PlatformBridgeApis {
       MediaMetadata fromMapResult = new MediaMetadata();
       Object mediaType = map.get("mediaType");
       fromMapResult.mediaType = MediaType.values()[(int)mediaType];
-      Object strings = map.get("strings");
-      fromMapResult.strings = (Map<MediaMetadataKey, String>)strings;
       Object webImages = map.get("webImages");
       fromMapResult.webImages = (List<WebImage>)webImages;
       return fromMapResult;

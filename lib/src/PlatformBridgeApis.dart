@@ -25,37 +25,6 @@ enum MediaType {
   user,
 }
 
-enum MediaMetadataKey {
-  albumArtist,
-  albumTitle,
-  artist,
-  bookTitle,
-  broadcastDate,
-  chapterNumber,
-  chapterTitle,
-  composer,
-  creationDate,
-  discNumber,
-  episodeNumber,
-  height,
-  locationLatitude,
-  locationLongitude,
-  locationName,
-  queueItemId,
-  releaseDate,
-  seasonNumber,
-  sectionDuration,
-  sectionStartAbsoluteTime,
-  sectionStartTimeInContainer,
-  sectionStartTimeInMedia,
-  seriesTitle,
-  studio,
-  subtitle,
-  title,
-  trackNumber,
-  width,
-}
-
 enum TrackType {
   unknown,
   text,
@@ -137,13 +106,11 @@ class MediaInfo {
 
 class MediaMetadata {
   MediaType? mediaType;
-  Map<MediaMetadataKey?, String?>? strings;
   List<WebImage?>? webImages;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
     pigeonMap['mediaType'] = mediaType == null ? null : mediaType!.index;
-    pigeonMap['strings'] = strings;
     pigeonMap['webImages'] = webImages;
     return pigeonMap;
   }
@@ -154,7 +121,6 @@ class MediaMetadata {
       ..mediaType = pigeonMap['mediaType'] != null
           ? MediaType.values[pigeonMap['mediaType']! as int]
           : null
-      ..strings = (pigeonMap['strings'] as Map<Object?, Object?>?)?.cast<MediaMetadataKey?, String?>()
       ..webImages = (pigeonMap['webImages'] as List<Object?>?)?.cast<WebImage?>();
   }
 }

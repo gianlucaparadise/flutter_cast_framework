@@ -41,7 +41,7 @@ enum StreamType {
 /// Docs here: https://developers.google.com/android/reference/com/google/android/gms/cast/MediaMetadata
 class MediaMetadata {
   MediaType? mediaType;
-  Map<MediaMetadataKey?, String?>? strings;
+  // Map<MediaMetadataKey?, String?>? strings; // Can't uncomment this because of https://github.com/flutter/flutter/issues/93525
   List<WebImage?>? webImages;
 }
 

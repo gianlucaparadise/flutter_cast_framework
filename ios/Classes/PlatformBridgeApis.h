@@ -25,37 +25,6 @@ typedef NS_ENUM(NSUInteger, MediaType) {
   MediaTypeUser = 6,
 };
 
-typedef NS_ENUM(NSUInteger, MediaMetadataKey) {
-  MediaMetadataKeyAlbumArtist = 0,
-  MediaMetadataKeyAlbumTitle = 1,
-  MediaMetadataKeyArtist = 2,
-  MediaMetadataKeyBookTitle = 3,
-  MediaMetadataKeyBroadcastDate = 4,
-  MediaMetadataKeyChapterNumber = 5,
-  MediaMetadataKeyChapterTitle = 6,
-  MediaMetadataKeyComposer = 7,
-  MediaMetadataKeyCreationDate = 8,
-  MediaMetadataKeyDiscNumber = 9,
-  MediaMetadataKeyEpisodeNumber = 10,
-  MediaMetadataKeyHeight = 11,
-  MediaMetadataKeyLocationLatitude = 12,
-  MediaMetadataKeyLocationLongitude = 13,
-  MediaMetadataKeyLocationName = 14,
-  MediaMetadataKeyQueueItemId = 15,
-  MediaMetadataKeyReleaseDate = 16,
-  MediaMetadataKeySeasonNumber = 17,
-  MediaMetadataKeySectionDuration = 18,
-  MediaMetadataKeySectionStartAbsoluteTime = 19,
-  MediaMetadataKeySectionStartTimeInContainer = 20,
-  MediaMetadataKeySectionStartTimeInMedia = 21,
-  MediaMetadataKeySeriesTitle = 22,
-  MediaMetadataKeyStudio = 23,
-  MediaMetadataKeySubtitle = 24,
-  MediaMetadataKeyTitle = 25,
-  MediaMetadataKeyTrackNumber = 26,
-  MediaMetadataKeyWidth = 27,
-};
-
 typedef NS_ENUM(NSUInteger, TrackType) {
   TrackTypeUnknown = 0,
   TrackTypeText = 1,
@@ -98,7 +67,6 @@ typedef NS_ENUM(NSUInteger, TrackSubtype) {
 
 @interface MediaMetadata : NSObject
 @property(nonatomic, assign) MediaType mediaType;
-@property(nonatomic, strong, nullable) NSDictionary<MediaMetadataKey *, NSString *> * strings;
 @property(nonatomic, strong, nullable) NSArray<WebImage *> * webImages;
 @end
 
