@@ -129,7 +129,14 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     }
     
     public func loadMediaLoadRequestDataRequest(_ request: MediaLoadRequestData, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
-        // TODO
+        
+        let remoteMediaClient = castSession?.remoteMediaClient
+        if remoteMediaClient == nil {
+            return
+        }
+        
+        let mediaLoadRequest = getMediaLoadRequest(request: request)
+        remoteMediaClient?.loadMedia(with: mediaLoadRequest)
     }
     
     // MARK: - GCKSessionManagerListener
