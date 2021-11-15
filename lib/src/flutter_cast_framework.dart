@@ -37,47 +37,56 @@ class FlutterCastFramework extends CastFlutterApi {
   //region Session State handling
   @override
   void onSessionEnded() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_ended);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_ended);
   }
 
   @override
   void onSessionEnding() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_ending);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_ending);
   }
 
   @override
   void onSessionResumeFailed() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_resume_failed);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_resume_failed);
   }
 
   @override
   void onSessionResumed() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_resumed);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_resumed);
   }
 
   @override
   void onSessionResuming() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_resuming);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_resuming);
   }
 
   @override
   void onSessionStartFailed() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_start_failed);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_start_failed);
   }
 
   @override
   void onSessionStarted() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_started);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_started);
   }
 
   @override
   void onSessionStarting() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_starting);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_starting);
   }
 
   @override
   void onSessionSuspended() {
-    castContext.sessionManager.onSessionStateChanged(SessionState.session_suspended);
+    castContext.sessionManager
+        .onSessionStateChanged(SessionState.session_suspended);
   }
   //endregion
 

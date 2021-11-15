@@ -4,12 +4,12 @@ import 'SessionManager.dart';
 
 class CastContext {
   final ValueNotifier<CastState> state = ValueNotifier(CastState.unavailable);
-  final CastHostApi hostApi;
+  final CastHostApi _hostApi;
 
-  CastContext(this.hostApi);
+  CastContext(this._hostApi);
 
   void showCastChooserDialog() {
-    hostApi.showCastDialog();
+    _hostApi.showCastDialog();
   }
 
   void onCastStateChanged(int castState) {
@@ -20,7 +20,7 @@ class CastContext {
   SessionManager get sessionManager {
     var result = _sessionManager;
     if (result == null) {
-      _sessionManager = result = SessionManager(hostApi);
+      _sessionManager = result = SessionManager(_hostApi);
     }
     return result;
   }

@@ -72,8 +72,8 @@ Make sure that your application and your activity are using an `AppCompat` theme
 
 #### 1. Minimum iOS version
 
-Make sure you minimum iOS version is 9.0.
-Select *Runner* from left pane > *General* tab > *Deployment Info* > *Target*: set 9.0 or higher
+Make sure you minimum iOS version is 10.0.
+Select *Runner* from left pane > *General* tab > *Deployment Info* > *Target*: set 10.0 or higher
 
 #### 2. Install iOS dependencies
 
@@ -85,7 +85,7 @@ cd ios && pod install
 
 #### 3. Open project in Xcode
 
-To open your flutter project with Xcode running `open ios/Runner.xcworkspace`
+To open your flutter project with Xcode, from root folder run `open ios/Runner.xcworkspace`
 
 #### 4. Chromecast SDK setup
 

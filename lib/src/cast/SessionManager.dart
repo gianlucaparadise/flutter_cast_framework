@@ -3,9 +3,9 @@ import '../PlatformBridgeApis.dart';
 import 'RemoteMediaClient.dart';
 
 class SessionManager {
-  final CastHostApi hostApi;
+  final CastHostApi _hostApi;
 
-  SessionManager(this.hostApi);
+  SessionManager(this._hostApi);
 
   final ValueNotifier<SessionState> state = ValueNotifier(SessionState.idle);
 
@@ -44,14 +44,14 @@ class SessionManager {
     final castMessage = CastMessage();
     castMessage.namespace = namespace;
     castMessage.message = message;
-    hostApi.sendMessage(castMessage);
+    _hostApi.sendMessage(castMessage);
   }
 
   RemoteMediaClient? _remoteMediaClient;
   RemoteMediaClient get remoteMediaClient {
     var result = _remoteMediaClient;
     if (result == null) {
-      _remoteMediaClient = result = RemoteMediaClient(hostApi);
+      _remoteMediaClient = result = RemoteMediaClient(_hostApi);
     }
     return result;
   }

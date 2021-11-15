@@ -5,6 +5,7 @@ import '../../flutter_cast_framework.dart';
 import '../CastContext.dart';
 
 const Color _defaultIconColor = Color.fromARGB(255, 255, 255, 255); // white
+const Color _disabledIconColor = Color.fromARGB(255, 201, 201, 201); // gray
 
 class CastIcon extends StatefulWidget {
   final Color color;
@@ -58,7 +59,7 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     switch (_castState) {
       case CastState.unavailable:
-        return _getEmpty();
+        return _getButton("assets/ic_cast_24dp.svg", _disabledIconColor);
 
       case CastState.unconnected:
         return _getButton("assets/ic_cast_24dp.svg", widget.color);
@@ -72,7 +73,7 @@ class _CastIconState extends State<CastIcon> with TickerProviderStateMixin {
       case CastState.idle:
       default:
         debugPrint("State not handled: $_castState");
-        return _getEmpty();
+        return _getButton("assets/ic_cast_24dp.svg", _disabledIconColor);
     }
   }
 }
