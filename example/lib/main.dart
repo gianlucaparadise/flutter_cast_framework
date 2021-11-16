@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast.dart';
 import 'package:flutter_cast_framework/widgets.dart';
 
+import 'media_load_request_data_helper.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -18,7 +20,7 @@ class _MyAppState extends State<MyApp> {
 
   final textMessageController = TextEditingController();
 
-  final String castNamespace = 'urn:x-cast:cast-your-instructions';
+  final String castNamespace = 'urn:x-cast:flutter-cast-framework-demo';
 
   @override
   void initState() {
@@ -48,8 +50,7 @@ class _MyAppState extends State<MyApp> {
   void _onSessionStateChanged() {
     debugPrint("Session state changed from example");
     setState(() {
-      _sessionState =
-          castFramework.castContext.sessionManager.state.value;
+      _sessionState = castFramework.castContext.sessionManager.state.value;
     });
   }
 
@@ -64,6 +65,11 @@ class _MyAppState extends State<MyApp> {
     String message = this.textMessageController.text;
     castFramework.castContext.sessionManager
         .sendMessage(castNamespace, message);
+  }
+
+  void _onCastVideo() {
+    final request = getMediaLoadRequestData();
+    castFramework.castContext.sessionManager.remoteMediaClient.load(request);
   }
 
   @override
@@ -104,6 +110,10 @@ class _MyAppState extends State<MyApp> {
                 ],
               ),
               Text('Received Message: $_message'),
+              ElevatedButton(
+                child: Text('Cast video'),
+                onPressed: _onCastVideo,
+              )
             ],
           ),
         ),

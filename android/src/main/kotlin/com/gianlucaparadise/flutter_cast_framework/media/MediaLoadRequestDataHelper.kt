@@ -9,7 +9,7 @@ import com.google.android.gms.cast.MediaTrack
 import com.google.android.gms.common.images.WebImage
 import org.json.JSONObject
 
-fun getMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData) : MediaLoadRequestData {
+fun getMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData): MediaLoadRequestData {
     val mediaInfo = getMediaInfo(request.mediaInfo)
 
     return MediaLoadRequestData.Builder()
@@ -19,13 +19,13 @@ fun getMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData) : 
             .build()
 }
 
-fun getMediaInfo(mediaInfo: PlatformBridgeApis.MediaInfo?) : MediaInfo? {
+fun getMediaInfo(mediaInfo: PlatformBridgeApis.MediaInfo?): MediaInfo? {
     if (mediaInfo == null) return null
 
     val streamType = getStreamType(mediaInfo.streamType)
     val metadata = getMediaMetadata(mediaInfo.mediaMetadata)
     val mediaTracks = mediaInfo.mediaTracks.map { getMediaTrack(it) }
-    val customData = JSONObject(mediaInfo.customDataAsJson)
+    val customData = JSONObject(mediaInfo.customDataAsJson ?: "{}")
 
     return MediaInfo.Builder(mediaInfo.contentId)
             .setStreamType(streamType)
@@ -37,7 +37,7 @@ fun getMediaInfo(mediaInfo: PlatformBridgeApis.MediaInfo?) : MediaInfo? {
             .build()
 }
 
-fun getStreamType(streamType: PlatformBridgeApis.StreamType) : Int {
+fun getStreamType(streamType: PlatformBridgeApis.StreamType): Int {
     return when (streamType) {
         PlatformBridgeApis.StreamType.invalid -> -1
         PlatformBridgeApis.StreamType.none -> 0
@@ -46,7 +46,7 @@ fun getStreamType(streamType: PlatformBridgeApis.StreamType) : Int {
     }
 }
 
-fun getMediaMetadata(mediaMetadata: PlatformBridgeApis.MediaMetadata) : MediaMetadata {
+fun getMediaMetadata(mediaMetadata: PlatformBridgeApis.MediaMetadata): MediaMetadata {
     val mediaType = getMediaType(mediaMetadata.mediaType)
     val result = MediaMetadata(mediaType)
 
@@ -64,7 +64,7 @@ fun getMediaMetadata(mediaMetadata: PlatformBridgeApis.MediaMetadata) : MediaMet
     return result
 }
 
-fun getMediaType(mediaType: PlatformBridgeApis.MediaType) : Int {
+fun getMediaType(mediaType: PlatformBridgeApis.MediaType): Int {
     return when (mediaType) {
         PlatformBridgeApis.MediaType.generic -> 0
         PlatformBridgeApis.MediaType.movie -> 1
@@ -109,7 +109,7 @@ fun getMediaType(mediaType: PlatformBridgeApis.MediaType) : Int {
 //    }
 //}
 
-fun getMediaTrack(mediaTrack: PlatformBridgeApis.MediaTrack) : MediaTrack {
+fun getMediaTrack(mediaTrack: PlatformBridgeApis.MediaTrack): MediaTrack {
     val trackType = getTrackType(mediaTrack.trackType)
     val trackSubtype = getTrackSubtype(mediaTrack.trackSubtype)
 
@@ -120,7 +120,7 @@ fun getMediaTrack(mediaTrack: PlatformBridgeApis.MediaTrack) : MediaTrack {
             .build()
 }
 
-fun getTrackType(trackType: PlatformBridgeApis.TrackType) : Int {
+fun getTrackType(trackType: PlatformBridgeApis.TrackType): Int {
     return when (trackType) {
         PlatformBridgeApis.TrackType.unknown -> 0
         PlatformBridgeApis.TrackType.text -> 1
@@ -129,14 +129,14 @@ fun getTrackType(trackType: PlatformBridgeApis.TrackType) : Int {
     }
 }
 
-fun getTrackSubtype(trackSubtype: PlatformBridgeApis.TrackSubtype) : Int {
+fun getTrackSubtype(trackSubtype: PlatformBridgeApis.TrackSubtype): Int {
     return when (trackSubtype) {
         PlatformBridgeApis.TrackSubtype.unknown -> -1
-        PlatformBridgeApis.TrackSubtype.none ->  0
-        PlatformBridgeApis.TrackSubtype.subtitles ->  1
-        PlatformBridgeApis.TrackSubtype.captions ->  2
-        PlatformBridgeApis.TrackSubtype.descriptions ->  3
-        PlatformBridgeApis.TrackSubtype.chapters ->  4
-        PlatformBridgeApis.TrackSubtype.metadata ->  5
+        PlatformBridgeApis.TrackSubtype.none -> 0
+        PlatformBridgeApis.TrackSubtype.subtitles -> 1
+        PlatformBridgeApis.TrackSubtype.captions -> 2
+        PlatformBridgeApis.TrackSubtype.descriptions -> 3
+        PlatformBridgeApis.TrackSubtype.chapters -> 4
+        PlatformBridgeApis.TrackSubtype.metadata -> 5
     }
 }
