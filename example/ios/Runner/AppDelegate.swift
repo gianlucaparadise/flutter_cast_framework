@@ -4,7 +4,7 @@ import GoogleCast
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, GCKLoggerDelegate {
-    let kReceiverAppID = "4F8B3483"
+    let kReceiverAppID = "D6760CCD"
     let kDebugLoggingEnabled = true
     
     override func application(

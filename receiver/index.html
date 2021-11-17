@@ -1,0 +1,59 @@
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js">
+  </script>
+</head>
+
+<body>
+  <cast-media-player></cast-media-player>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    const namespace = "urn:x-cast:flutter-cast-framework-demo";
+    const context = cast.framework.CastReceiverContext.getInstance();
+    
+    const showMessage = (text) => {
+      if (!text) return;
+      
+      Toastify({
+        text: text,
+        duration: 3000,
+        gravity: "bottom",
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "#4496EC",
+        },
+      }).showToast();
+    }
+
+    const sendMessage = (senderId) => {
+      senderId = !senderId ? undefined : senderId; // When senderId is undefined, this broadcasts to all connected devices
+      const message = `Received text from ${senderId} at ${new Date().toISOString()}`
+      
+      console.log('Sending CustomMessage: ');
+      console.log(message);
+
+      context.sendCustomMessage(namespace, senderId, message);
+    }
+
+    const onCustomMessage = (event) => {
+      console.log('Received CustomMessage: ');
+      console.log(event);
+
+      const text = event?.data?.text;
+      showMessage(text);
+      
+      const senderId = event?.senderId;
+      sendMessage(senderId);
+    }
+
+    context.addCustomMessageListener(namespace, onCustomMessage)
+    
+    context.start();
+  </script>
+</body>
+
+</html>
