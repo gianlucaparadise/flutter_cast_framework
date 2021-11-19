@@ -241,4 +241,14 @@ abstract class CastFlutterApi {
   void onSessionResumeFailed();
   void onSessionSuspended();
   //endregion
+
+  //region RemoteMediaClient callbacks
+  void onStatusUpdated();
+  void onMetadataUpdated();
+  void onQueueStatusUpdated();
+  void onPreloadStatusUpdated();
+  void onSendingRemoteMediaRequest();
+  void onAdBreakStatusUpdated();
+  void onMediaError();
+  //endregion
 }

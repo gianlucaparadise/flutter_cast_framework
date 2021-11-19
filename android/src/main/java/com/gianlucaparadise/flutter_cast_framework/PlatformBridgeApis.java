@@ -559,6 +559,55 @@ public class PlatformBridgeApis {
         callback.reply(null);
       });
     }
+    public void onStatusUpdated(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onStatusUpdated", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void onMetadataUpdated(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onMetadataUpdated", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void onQueueStatusUpdated(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onQueueStatusUpdated", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void onPreloadStatusUpdated(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onPreloadStatusUpdated", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void onSendingRemoteMediaRequest(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onSendingRemoteMediaRequest", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void onAdBreakStatusUpdated(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onAdBreakStatusUpdated", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void onMediaError(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onMediaError", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
   }
   private static Map<String, Object> wrapError(Throwable exception) {
     Map<String, Object> errorMap = new HashMap<>();
