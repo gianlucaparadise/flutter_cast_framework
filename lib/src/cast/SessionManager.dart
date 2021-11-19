@@ -30,6 +30,14 @@ class SessionManager {
 
   MessageReceivedCallback? onMessageReceived;
 
+  VoidCallback? onStatusUpdated;
+  VoidCallback? onMetadataUpdated;
+  VoidCallback? onQueueStatusUpdated;
+  VoidCallback? onPreloadStatusUpdated;
+  VoidCallback? onSendingRemoteMediaRequest;
+  VoidCallback? onAdBreakStatusUpdated;
+  VoidCallback? onMediaError;
+
   void platformOnMessageReceived(CastMessage castMessage) {
     var thisOnMessageReceived = onMessageReceived;
 

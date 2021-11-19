@@ -31,6 +31,8 @@ class _MyAppState extends State<MyApp> {
         .addListener(_onSessionStateChanged);
     castFramework.castContext.sessionManager.onMessageReceived =
         _onMessageReceived;
+    castFramework.castContext.sessionManager.onStatusUpdated =
+        _onRemoteMediaClientStatusUpdated;
   }
 
   @override
@@ -59,6 +61,10 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _message = message;
     });
+  }
+
+  void _onRemoteMediaClientStatusUpdated() {
+    debugPrint("RemoteMediaClient status updated");
   }
 
   void _onSendMessage() {

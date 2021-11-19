@@ -90,5 +90,40 @@ class FlutterCastFramework extends CastFlutterApi {
   }
   //endregion
 
+  //region RemoteMediaClient
+  @override
+  void onAdBreakStatusUpdated() {
+    castContext.sessionManager.onAdBreakStatusUpdated?.call();
+  }
+
+  @override
+  void onMediaError() {
+    castContext.sessionManager.onMediaError?.call();
+  }
+
+  @override
+  void onMetadataUpdated() {
+    castContext.sessionManager.onMetadataUpdated?.call();
+  }
+
+  @override
+  void onPreloadStatusUpdated() {
+    castContext.sessionManager.onPreloadStatusUpdated?.call();
+  }
+
+  @override
+  void onQueueStatusUpdated() {
+    castContext.sessionManager.onQueueStatusUpdated?.call();
+  }
+
+  @override
+  void onSendingRemoteMediaRequest() {
+    castContext.sessionManager.onSendingRemoteMediaRequest?.call();
+  }
+
+  @override
+  void onStatusUpdated() {
+    castContext.sessionManager.onStatusUpdated?.call();
+  }
   //endregion
 }
