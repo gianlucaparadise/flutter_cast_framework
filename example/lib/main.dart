@@ -63,13 +63,24 @@ class _MyAppState extends State<MyApp> {
 
   void _onSendMessage() {
     String message = this.textMessageController.text;
+    String messageAsJson = "{\"text\": \"$message\"}";
     castFramework.castContext.sessionManager
-        .sendMessage(castNamespace, message);
+        .sendMessage(castNamespace, messageAsJson);
   }
 
   void _onCastVideo() {
     final request = getMediaLoadRequestData();
     castFramework.castContext.sessionManager.remoteMediaClient.load(request);
+  }
+
+  Widget _buildTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.headline6,
+      ),
+    );
   }
 
   @override
@@ -79,40 +90,48 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Cast plugin example app'),
         ),
-        body: Center(
+        body: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CastButton(
                 castFramework: castFramework,
                 color: Colors.blue,
               ),
-              Text(
-                'States',
-                style: Theme.of(context).textTheme.headline6,
-              ),
+              _buildTitle("States"),
               Text('Cast State: $_castState'),
               Text('Session State: $_sessionState'),
-              Text(
-                'Message',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: textMessageController,
+              _buildTitle("Message"),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: textMessageController,
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                    child: Text('Send'),
-                    onPressed: _onSendMessage,
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        child: Text('Send'),
+                        onPressed: _onSendMessage,
+                      ),
+                    )
+                  ],
+                ),
               ),
-              Text('Received Message: $_message'),
-              ElevatedButton(
-                child: Text('Cast video'),
-                onPressed: _onCastVideo,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Received Message: $_message'),
+              ),
+              _buildTitle("Video"),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  child: Text('Cast video'),
+                  onPressed: _onCastVideo,
+                ),
               )
             ],
           ),
