@@ -2,7 +2,7 @@ import Flutter
 import UIKit
 import GoogleCast
 
-public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastHostApi {
+public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastHostApi, GCKRemoteMediaClientListener {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let messenger : FlutterBinaryMessenger = registrar.messenger()
         let flutterApi = CastFlutterApi.init(binaryMessenger: messenger)
@@ -34,7 +34,9 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
             let newSession = newValue
             
             _castSession = newValue
-
+            
+            remoteMediaClient = newValue?.remoteMediaClient
+            
             flutterApi.getSessionMessageNamespaces { (namespaces, err) in
                 print("Updating castSession - getSessionMessageNamespaces success - param: \(namespaces.joined(separator: ", "))")
                 if (oldSession == nil && newSession == nil) {
@@ -58,6 +60,19 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
                     newSession?.add(castingChannel)
                 })
             }
+        }
+    }
+    
+    var _remoteMediaClient: GCKRemoteMediaClient?
+    var remoteMediaClient: GCKRemoteMediaClient? {
+        get { return _remoteMediaClient }
+        set {
+            print("Updating remoteMediaClient - remoteMediaClient changed: \(_remoteMediaClient != newValue)")
+            
+            _remoteMediaClient?.remove(self)
+            newValue?.add(self)
+            
+            _remoteMediaClient = newValue
         }
     }
     
@@ -204,6 +219,79 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
         print("SessionListener: didEnd")
         flutterApi.onSessionEnded { (_:Error?) in
+        }
+    }
+    
+    // onQueueStatusUpdated
+    public func remoteMediaClientDidUpdateQueue(_ client: GCKRemoteMediaClient) {
+        print("RemoteMediaClientListener: didUpdateQueue")
+        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        }
+    }
+    
+    // onPreloadStatusUpdated
+    public func remoteMediaClientDidUpdatePreloadStatus(_ client: GCKRemoteMediaClient) {
+        print("RemoteMediaClientListener: didUpdatePreloadStatus")
+        flutterApi.onPreloadStatusUpdated { (_:Error?) in
+        }
+    }
+    
+    // onStatusUpdated
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
+        print("RemoteMediaClientListener: didUpdate mediaStatus")
+        flutterApi.onStatusUpdated { (_:Error?) in
+        }
+    }
+    
+    // onAdBreakStatusUpdated - Can't find this on iOS
+    // onMediaError - Can't find this on iOS
+    
+    // onMetadataUpdated
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaMetadata: GCKMediaMetadata?) {
+        print("RemoteMediaClientListener: didUpdate mediaMetadata")
+        flutterApi.onMetadataUpdated { (_:Error?) in
+        }
+    }
+    
+    // onQueueStatusUpdated
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didReceive queueItems: [GCKMediaQueueItem]) {
+        print("RemoteMediaClientListener: didReceive queueItems")
+        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        }
+    }
+    
+    // onSendingRemoteMediaRequest
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didStartMediaSessionWithID sessionID: Int) {
+        print("RemoteMediaClientListener: didStartMediaSessionWithID")
+        flutterApi.onSendingRemoteMediaRequest { (_:Error?) in
+        }
+    }
+    
+    // onQueueStatusUpdated
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didReceiveQueueItemIDs queueItemIDs: [NSNumber]) {
+        print("RemoteMediaClientListener: didReceiveQueueItemIDs")
+        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        }
+    }
+    
+    // onQueueStatusUpdated
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdateQueueItemsWithIDs queueItemIDs: [NSNumber]) {
+        print("RemoteMediaClientListener: didUpdateQueueItemsWithIDs")
+        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        }
+    }
+    
+    // onQueueStatusUpdated
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didRemoveQueueItemsWithIDs queueItemIDs: [NSNumber]) {
+        print("RemoteMediaClientListener: didRemoveQueueItemsWithIDs")
+        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        }
+    }
+    
+    // onQueueStatusUpdated
+    public func remoteMediaClient(_ client: GCKRemoteMediaClient, didInsertQueueItemsWithIDs queueItemIDs: [NSNumber], beforeItemWithID beforeItemID: UInt) {
+        print("RemoteMediaClientListener: didInsertQueueItemsWithIDs")
+        flutterApi.onQueueStatusUpdated { (_:Error?) in
         }
     }
 }
