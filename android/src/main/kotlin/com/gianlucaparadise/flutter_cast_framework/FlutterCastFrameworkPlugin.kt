@@ -10,6 +10,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
+import com.google.android.gms.cast.MediaError
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
@@ -97,6 +98,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
     private lateinit var mSessionManager: SessionManager
     private val mSessionManagerListener = CastSessionManagerListener()
+    private val remoteMediaClientListener = RemoteMediaClientListener()
 
     private var castApi : PlatformBridgeApis.CastHostApi? = null
     private var flutterApi: PlatformBridgeApis.CastFlutterApi? = null
@@ -113,7 +115,18 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             val oldSession = field
             field = value
 
+            remoteMediaClient = value?.remoteMediaClient
             flutterApi?.getSessionMessageNamespaces(getOnNamespaceResult(oldSession, newSession = value))
+        }
+
+    private var remoteMediaClient: RemoteMediaClient? = null
+        set(value) {
+            Log.d(TAG, "Updating remoteMediaClient - remoteMediaClient changed: ${field != value}")
+
+            field?.unregisterCallback(remoteMediaClientListener)
+            value?.registerCallback(remoteMediaClientListener)
+
+            field = value
         }
 
     //region LifecycleObserver
@@ -154,6 +167,50 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         result.notImplemented()
     }
 
+    private inner class RemoteMediaClientListener : RemoteMediaClient.Callback() {
+        override fun onStatusUpdated() {
+            Log.d(TAG, "RemoteMediaClient - onStatusUpdated")
+            super.onStatusUpdated()
+            flutterApi?.onStatusUpdated {  }
+        }
+
+        override fun onMetadataUpdated() {
+            Log.d(TAG, "RemoteMediaClient - onMetadataUpdated")
+            super.onMetadataUpdated()
+            flutterApi?.onMetadataUpdated {  }
+        }
+
+        override fun onQueueStatusUpdated() {
+            Log.d(TAG, "RemoteMediaClient - onQueueStatusUpdated")
+            super.onQueueStatusUpdated()
+            flutterApi?.onQueueStatusUpdated {  }
+        }
+
+        override fun onPreloadStatusUpdated() {
+            Log.d(TAG, "RemoteMediaClient - onPreloadStatusUpdated")
+            super.onPreloadStatusUpdated()
+            flutterApi?.onPreloadStatusUpdated {  }
+        }
+
+        override fun onSendingRemoteMediaRequest() {
+            Log.d(TAG, "RemoteMediaClient - onSendingRemoteMediaRequest")
+            super.onSendingRemoteMediaRequest()
+            flutterApi?.onSendingRemoteMediaRequest {  }
+        }
+
+        override fun onAdBreakStatusUpdated() {
+            Log.d(TAG, "RemoteMediaClient - onAdBreakStatusUpdated")
+            super.onAdBreakStatusUpdated()
+            flutterApi?.onAdBreakStatusUpdated {  }
+        }
+
+        override fun onMediaError(error: MediaError?) {
+            Log.d(TAG, "RemoteMediaClient - onMediaError $error")
+            super.onMediaError(error)
+            flutterApi?.onMediaError {  }
+        }
+    }
+
     private inner class MyApi : PlatformBridgeApis.CastHostApi {
         override fun sendMessage(message: PlatformBridgeApis.CastMessage?) {
             mMessageCastingChannel?.sendMessage(mCastSession, message)
@@ -173,8 +230,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun loadMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData?) {
             if (request == null) return
 
-            val castSession: CastSession = mCastSession ?: return
-            val remoteMediaClient : RemoteMediaClient = castSession.remoteMediaClient ?: return
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
 
             val mediaLoadRequest = getMediaLoadRequestData(request)
             remoteMediaClient.load(mediaLoadRequest)
