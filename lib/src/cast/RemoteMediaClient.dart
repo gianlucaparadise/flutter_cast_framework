@@ -8,4 +8,8 @@ class RemoteMediaClient {
   void load(MediaLoadRequestData request) {
     _hostApi.loadMediaLoadRequestData(request);
   }
+
+  Future<MediaInfo> getMediaInfo() async {
+    return await _hostApi.getMediaInfo();
+  }
 }

@@ -5,7 +5,7 @@ import 'PlatformBridgeApis.dart';
 import 'cast/CastContext.dart';
 
 class FlutterCastFramework extends CastFlutterApi {
-  final hostApi = CastHostApi();
+  final _hostApi = CastHostApi();
   late CastContext castContext;
 
   /// List of namespaces to listen for custom messages
@@ -14,7 +14,7 @@ class FlutterCastFramework extends CastFlutterApi {
   FlutterCastFramework.create(List<String> namespaces) {
     debugPrint("FlutterCastFramework created!");
     this.namespaces = namespaces;
-    this.castContext = CastContext(hostApi);
+    this.castContext = CastContext(_hostApi);
     CastFlutterApi.setup(this);
   }
 

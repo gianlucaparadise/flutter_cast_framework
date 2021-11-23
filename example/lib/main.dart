@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast.dart';
 import 'package:flutter_cast_framework/widgets.dart';
@@ -79,6 +81,15 @@ class _MyAppState extends State<MyApp> {
     castFramework.castContext.sessionManager.remoteMediaClient.load(request);
   }
 
+  Future<void> _openExpandedControls() async {
+    final remoteMediaClient =
+        this.castFramework.castContext.sessionManager.remoteMediaClient;
+
+    final mediaInfo = await remoteMediaClient.getMediaInfo();
+    debugPrint("$mediaInfo");
+    inspect(mediaInfo);
+  }
+
   Widget _buildTitle(String text) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -137,6 +148,13 @@ class _MyAppState extends State<MyApp> {
                 child: ElevatedButton(
                   child: Text('Cast video'),
                   onPressed: _onCastVideo,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  child: Text('Expanded Controls'),
+                  onPressed: _openExpandedControls,
                 ),
               )
             ],
