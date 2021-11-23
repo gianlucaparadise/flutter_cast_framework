@@ -9,6 +9,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
+import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaInfo
 import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
 import com.google.android.gms.cast.MediaError
 import com.google.android.gms.cast.framework.CastContext
@@ -100,7 +101,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private val mSessionManagerListener = CastSessionManagerListener()
     private val remoteMediaClientListener = RemoteMediaClientListener()
 
-    private var castApi : PlatformBridgeApis.CastHostApi? = null
+    private var castApi: PlatformBridgeApis.CastHostApi? = null
     private var flutterApi: PlatformBridgeApis.CastFlutterApi? = null
     private var applicationContext: Context? = null
     private var activity: Activity? = null
@@ -171,43 +172,43 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun onStatusUpdated() {
             Log.d(TAG, "RemoteMediaClient - onStatusUpdated")
             super.onStatusUpdated()
-            flutterApi?.onStatusUpdated {  }
+            flutterApi?.onStatusUpdated { }
         }
 
         override fun onMetadataUpdated() {
             Log.d(TAG, "RemoteMediaClient - onMetadataUpdated")
             super.onMetadataUpdated()
-            flutterApi?.onMetadataUpdated {  }
+            flutterApi?.onMetadataUpdated { }
         }
 
         override fun onQueueStatusUpdated() {
             Log.d(TAG, "RemoteMediaClient - onQueueStatusUpdated")
             super.onQueueStatusUpdated()
-            flutterApi?.onQueueStatusUpdated {  }
+            flutterApi?.onQueueStatusUpdated { }
         }
 
         override fun onPreloadStatusUpdated() {
             Log.d(TAG, "RemoteMediaClient - onPreloadStatusUpdated")
             super.onPreloadStatusUpdated()
-            flutterApi?.onPreloadStatusUpdated {  }
+            flutterApi?.onPreloadStatusUpdated { }
         }
 
         override fun onSendingRemoteMediaRequest() {
             Log.d(TAG, "RemoteMediaClient - onSendingRemoteMediaRequest")
             super.onSendingRemoteMediaRequest()
-            flutterApi?.onSendingRemoteMediaRequest {  }
+            flutterApi?.onSendingRemoteMediaRequest { }
         }
 
         override fun onAdBreakStatusUpdated() {
             Log.d(TAG, "RemoteMediaClient - onAdBreakStatusUpdated")
             super.onAdBreakStatusUpdated()
-            flutterApi?.onAdBreakStatusUpdated {  }
+            flutterApi?.onAdBreakStatusUpdated { }
         }
 
         override fun onMediaError(error: MediaError?) {
             Log.d(TAG, "RemoteMediaClient - onMediaError $error")
             super.onMediaError(error)
-            flutterApi?.onMediaError {  }
+            flutterApi?.onMediaError { }
         }
     }
 
@@ -234,6 +235,15 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
             val mediaLoadRequest = getMediaLoadRequestData(request)
             remoteMediaClient.load(mediaLoadRequest)
+        }
+
+        override fun getMediaInfo(): PlatformBridgeApis.MediaInfo {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient
+                    ?: return PlatformBridgeApis.MediaInfo()
+
+            val hostMediaInfo = remoteMediaClient.mediaInfo ?: return PlatformBridgeApis.MediaInfo()
+
+            return getFlutterMediaInfo(hostMediaInfo)
         }
     }
 
