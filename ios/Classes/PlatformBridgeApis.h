@@ -95,6 +95,7 @@ NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 - (void)sendMessageMessage:(CastMessage *)message error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)showCastDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)loadMediaLoadRequestDataRequest:(MediaLoadRequestData *)request error:(FlutterError *_Nullable *_Nonnull)error;
+- (nullable MediaInfo *)getMediaInfoWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastHostApi> *_Nullable api);
