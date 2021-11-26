@@ -404,6 +404,7 @@ abstract class CastFlutterApi {
   void onSendingRemoteMediaRequest();
   void onAdBreakStatusUpdated();
   void onMediaError();
+  void onProgressUpdated(int progressMs, int durationMs);
   static void setup(CastFlutterApi? api) {
     {
       const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -654,6 +655,24 @@ abstract class CastFlutterApi {
         channel.setMessageHandler((Object? message) async {
           // ignore message
           api.onMediaError();
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.onProgressUpdated', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onProgressUpdated was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_progressMs = args[0] as int?;
+          assert(arg_progressMs != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onProgressUpdated was null, expected non-null int.');
+          final int? arg_durationMs = args[1] as int?;
+          assert(arg_durationMs != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onProgressUpdated was null, expected non-null int.');
+          api.onProgressUpdated(arg_progressMs!, arg_durationMs!);
           return;
         });
       }

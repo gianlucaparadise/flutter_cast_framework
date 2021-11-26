@@ -602,4 +602,14 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
     completion(nil);
   }];
 }
+- (void)onProgressUpdatedProgressMs:(NSNumber *)arg_progressMs durationMs:(NSNumber *)arg_durationMs completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.onProgressUpdated"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_progressMs, arg_durationMs] reply:^(id reply) {
+    completion(nil);
+  }];
+}
 @end

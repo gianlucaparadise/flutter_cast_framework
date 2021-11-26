@@ -251,5 +251,7 @@ abstract class CastFlutterApi {
   void onSendingRemoteMediaRequest();
   void onAdBreakStatusUpdated();
   void onMediaError();
+
+  void onProgressUpdated(int progressMs, int durationMs);
   //endregion
 }

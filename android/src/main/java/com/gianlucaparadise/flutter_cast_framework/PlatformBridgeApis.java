@@ -628,6 +628,13 @@ public class PlatformBridgeApis {
         callback.reply(null);
       });
     }
+    public void onProgressUpdated(Long progressMsArg, Long durationMsArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onProgressUpdated", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(progressMsArg, durationMsArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
   }
   private static Map<String, Object> wrapError(Throwable exception) {
     Map<String, Object> errorMap = new HashMap<>();
