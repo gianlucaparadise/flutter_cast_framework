@@ -127,6 +127,11 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             field?.unregisterCallback(remoteMediaClientListener)
             value?.registerCallback(remoteMediaClientListener)
 
+            // Amount of time in milliseconds between subsequent updates
+            val periodMs = 1000L
+            field?.removeProgressListener(remoteMediaClientListener)
+            value?.addProgressListener(remoteMediaClientListener, periodMs)
+
             field = value
         }
 
@@ -168,7 +173,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         result.notImplemented()
     }
 
-    private inner class RemoteMediaClientListener : RemoteMediaClient.Callback() {
+    private inner class RemoteMediaClientListener : RemoteMediaClient.Callback(), RemoteMediaClient.ProgressListener {
         override fun onStatusUpdated() {
             Log.d(TAG, "RemoteMediaClient - onStatusUpdated")
             super.onStatusUpdated()
@@ -209,6 +214,11 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             Log.d(TAG, "RemoteMediaClient - onMediaError $error")
             super.onMediaError(error)
             flutterApi?.onMediaError { }
+        }
+
+        override fun onProgressUpdated(progressMs: Long, durationMs: Long) {
+            Log.d(TAG, "RemoteMediaClient - onProgressUpdated progress: $progressMs duration: $durationMs")
+            flutterApi?.onProgressUpdated(progressMs, durationMs) { }
         }
     }
 
