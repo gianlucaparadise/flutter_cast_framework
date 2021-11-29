@@ -125,5 +125,11 @@ class FlutterCastFramework extends CastFlutterApi {
   void onStatusUpdated() {
     castContext.sessionManager.onStatusUpdated?.call();
   }
+
+  @override
+  void onProgressUpdated(int progressMs, int durationMs) {
+    castContext.sessionManager.remoteMediaClient.onProgressUpdated
+        ?.call(progressMs, durationMs);
+  }
   //endregion
 }
