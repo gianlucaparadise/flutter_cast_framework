@@ -19,6 +19,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     private let castContext: GCKCastContext
     private var castStateObserver: NSKeyValueObservation?
     private let flutterApi : CastFlutterApi
+    private var progressTimer: Timer?
     
     private let sessionManager: GCKSessionManager
     
@@ -132,6 +133,44 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     deinit {
         castStateObserver?.invalidate()
         castStateObserver = nil
+        stopProgressTImer()
+    }
+    
+    func startProgressTimer() {
+        if progressTimer != nil {
+            return
+        }
+        
+        if #available(iOS 10.0, *) {
+            debugPrint("ProgressTimer: creating progress timer")
+            let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: onProgressTimerFired)
+            RunLoop.current.add(timer, forMode: .common)
+            progressTimer = timer
+        } else {
+            debugPrint("ProgressTimer: can't create progress timer")
+        }
+    }
+    
+    private func onProgressTimerFired(t: Timer) {
+        let durationSecs = remoteMediaClient?.mediaStatus?.mediaInformation?.streamDuration ?? 0
+        let progressInterval = remoteMediaClient?.approximateStreamPosition() ?? 0
+        
+        let durationMs = Int(durationSecs * 1000)
+        let progressMs = Int(progressInterval * 1000)
+        
+        let nsDuration = NSNumber(value: durationMs)
+        let nsProgress = NSNumber(value: progressMs)
+        
+        DispatchQueue.main.async {
+            self.flutterApi.onProgressUpdatedProgressMs(nsProgress, durationMs: nsDuration) { (_:Error?) in
+            }
+        }
+    }
+    
+    func stopProgressTImer() {
+        debugPrint("ProgressTimer: stopping progress timer")
+        progressTimer?.invalidate()
+        progressTimer = nil
     }
     
     public func sendMessageMessage(_ message: CastMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
@@ -194,6 +233,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionEnding
     public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
         print("SessionListener: willEnd")
+        stopProgressTImer()
         flutterApi.onSessionEnding { (_:Error?) in
         }
     }
@@ -248,7 +288,30 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     
     // onStatusUpdated
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
-        print("RemoteMediaClientListener: didUpdate mediaStatus")
+        var playerState = ""
+        
+        switch mediaStatus?.playerState {
+        case .unknown:
+            playerState = "PlayerStateUnknown"
+        case .idle:
+            playerState = "PlayerStateIdle"
+        case .playing:
+            playerState = "PlayerStatePlaying"
+            startProgressTimer()
+        case .paused:
+            playerState = "PlayerStatePaused"
+            startProgressTimer()
+        case .buffering:
+            playerState = "PlayerStateBuffering"
+            startProgressTimer()
+        case .loading:
+            playerState = "PlayerStateLoading"
+            startProgressTimer()
+        default: break
+        }
+        
+        debugPrint("RemoteMediaClientListener: didUpdate mediaStatus - playerState: \(playerState)")
+        
         flutterApi.onStatusUpdated { (_:Error?) in
         }
     }

@@ -64,7 +64,7 @@ func getFlutterMediaTracks(mediaTracks: [GCKMediaTrack]?) -> [MediaTrack]? {
         result.append(resultTrack)
     })
     return result
-}x
+}
 
 func getFlutterMediaTrack(mediaTrack: GCKMediaTrack) -> MediaTrack {
     let result = MediaTrack()
