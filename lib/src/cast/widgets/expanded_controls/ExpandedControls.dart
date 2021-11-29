@@ -30,16 +30,44 @@ const _bottomUpBlackGradient = BoxDecoration(
   ),
 );
 
-class ExpandedControls extends StatelessWidget {
+class ExpandedControls extends StatefulWidget {
   final FlutterCastFramework castFramework;
   final String castingToText;
   final VoidCallback? onBackTapped;
+  final controller = ExpandedControlsProgressController();
 
   ExpandedControls({
     required this.castFramework,
     this.castingToText = "Casting to",
     this.onBackTapped,
   });
+
+  @override
+  State<ExpandedControls> createState() => _ExpandedControlsState();
+}
+
+class _ExpandedControlsState extends State<ExpandedControls> {
+  @override
+  void initState() {
+    final sessionManager = widget.castFramework.castContext.sessionManager;
+    sessionManager.remoteMediaClient.onProgressUpdated = _onProgressUpdated;
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    final sessionManager = widget.castFramework.castContext.sessionManager;
+    sessionManager.remoteMediaClient.onProgressUpdated = null;
+
+    widget.controller.dispose();
+
+    super.dispose();
+  }
+
+  void _onProgressUpdated(int progress, int duration) {
+    widget.controller.updateProgress(progress, duration);
+  }
 
   Widget _getDecoratedToolbar(MediaInfo? mediaInfo) {
     // Title and subtitle can't be retrieved at the moment
@@ -51,13 +79,15 @@ class ExpandedControls extends StatelessWidget {
     return Container(
       decoration: _topDownBlackGradient,
       child: ExpandedControlsToolbar(
+        castFramework: widget.castFramework,
         title: title,
         subtitle: subtitle,
+        onBackTapped: widget.onBackTapped,
       ),
     );
   }
 
-  Widget _getDecorateControls(BuildContext context) {
+  Widget _getDecoratedControls(BuildContext context, MediaInfo? mediaInfo) {
     final textStyle =
         Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.white);
 
@@ -67,11 +97,14 @@ class ExpandedControls extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("$castingToText $castDevice", style: textStyle),
+            child:
+                Text("${widget.castingToText} $castDevice", style: textStyle),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ExpandedControlsProgress(),
+            child: ExpandedControlsProgress(
+              controller: widget.controller,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -104,7 +137,7 @@ class ExpandedControls extends StatelessWidget {
         children: [
           _getDecoratedToolbar(mediaInfo),
           Spacer(),
-          _getDecorateControls(context),
+          _getDecoratedControls(context, mediaInfo),
         ],
       ),
     );
