@@ -42,13 +42,17 @@ class ExpandedControls extends StatelessWidget {
   });
 
   Widget _getDecoratedToolbar(MediaInfo? mediaInfo) {
+    // Title and subtitle can't be retrieved at the moment
+    // final title = mediaInfo?.mediaMetadata?.strings[MediaMetadataKey.title]
+    // final subtitle = mediaInfo?.mediaMetadata?.strings[MediaMetadataKey.subtitle]
+    final title = "";
+    final subtitle = "";
+
     return Container(
       decoration: _topDownBlackGradient,
       child: ExpandedControlsToolbar(
-        castFramework: castFramework,
-        title: "Title",
-        subtitle: "Subtitle",
-        onBackTapped: onBackTapped,
+        title: title,
+        subtitle: subtitle,
       ),
     );
   }
@@ -108,8 +112,33 @@ class ExpandedControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var remoteMediaClient =
+        this.widget.castFramework.castContext.sessionManager.remoteMediaClient;
+
     return SafeArea(
-      child: _getFullControls(context, null),
+      child: FutureBuilder(
+        future: remoteMediaClient.getMediaInfo(),
+        builder: (BuildContext context, AsyncSnapshot<MediaInfo> snapshot) {
+          if (snapshot.hasData) {
+            var mediaInfo = snapshot.data;
+            return _getFullControls(context, mediaInfo);
+          } else if (snapshot.hasError) {
+            return _getFullControls(context, null);
+          } else {
+            final controls = _getFullControls(context, null);
+            return Stack(
+              children: [
+                controls,
+                Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 }
