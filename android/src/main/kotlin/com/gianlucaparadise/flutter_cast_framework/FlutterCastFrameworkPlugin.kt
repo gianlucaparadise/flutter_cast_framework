@@ -255,6 +255,21 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
             return getFlutterMediaInfo(hostMediaInfo)
         }
+
+        override fun play() {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            remoteMediaClient.play()
+        }
+
+        override fun pause() {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            remoteMediaClient.pause()
+        }
+
+        override fun stop() {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            remoteMediaClient.stop()
+        }
     }
 
     private fun getOnNamespaceResult(oldSession: CastSession?, newSession: CastSession?) = PlatformBridgeApis.CastFlutterApi.Reply<MutableList<String>> { namespaces ->

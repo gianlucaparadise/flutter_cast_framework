@@ -13,6 +13,18 @@ class RemoteMediaClient {
     _hostApi.loadMediaLoadRequestData(request);
   }
 
+  void play() {
+    _hostApi.play();
+  }
+
+  void pause() {
+    _hostApi.pause();
+  }
+
+  void stop() {
+    _hostApi.stop();
+  }
+
   Future<MediaInfo> getMediaInfo() async {
     return await _hostApi.getMediaInfo();
   }

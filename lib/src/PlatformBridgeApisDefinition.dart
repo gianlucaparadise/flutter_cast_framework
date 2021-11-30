@@ -223,6 +223,9 @@ abstract class CastHostApi {
   void showCastDialog();
   void loadMediaLoadRequestData(MediaLoadRequestData request);
   MediaInfo getMediaInfo();
+  void play();
+  void pause();
+  void stop();
 }
 
 @FlutterApi()
