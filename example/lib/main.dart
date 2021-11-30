@@ -1,12 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast.dart';
 import 'package:flutter_cast_framework/widgets.dart';
+import 'package:flutter_cast_framework_example/expanded_controls_route.dart';
 
 import 'media_load_request_data_helper.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+      MaterialApp(
+        home: MyApp(),
+      ),
+    );
 
 class MyApp extends StatefulWidget {
   @override
@@ -82,12 +85,14 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _openExpandedControls() async {
-    final remoteMediaClient =
-        this.castFramework.castContext.sessionManager.remoteMediaClient;
-
-    final mediaInfo = await remoteMediaClient.getMediaInfo();
-    debugPrint("$mediaInfo");
-    inspect(mediaInfo);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpandedControlsRoute(
+          castFramework: castFramework,
+        ),
+      ),
+    );
   }
 
   Widget _buildTitle(String text) {
@@ -102,63 +107,61 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Cast plugin example app'),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CastButton(
-                castFramework: castFramework,
-                color: Colors.blue,
-              ),
-              _buildTitle("States"),
-              Text('Cast State: $_castState'),
-              Text('Session State: $_sessionState'),
-              _buildTitle("Message"),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: textMessageController,
-                      ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cast plugin example app'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CastButton(
+              castFramework: castFramework,
+              color: Colors.blue,
+            ),
+            _buildTitle("States"),
+            Text('Cast State: $_castState'),
+            Text('Session State: $_sessionState'),
+            _buildTitle("Message"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: textMessageController,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        child: Text('Send'),
-                        onPressed: _onSendMessage,
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      child: Text('Send'),
+                      onPressed: _onSendMessage,
+                    ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Received Message: $_message'),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Received Message: $_message'),
+            ),
+            _buildTitle("Video"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                child: Text('Cast video'),
+                onPressed: _onCastVideo,
               ),
-              _buildTitle("Video"),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  child: Text('Cast video'),
-                  onPressed: _onCastVideo,
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                child: Text('Expanded Controls'),
+                onPressed: _openExpandedControls,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  child: Text('Expanded Controls'),
-                  onPressed: _openExpandedControls,
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
