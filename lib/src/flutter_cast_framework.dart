@@ -122,8 +122,9 @@ class FlutterCastFramework extends CastFlutterApi {
   }
 
   @override
-  void onStatusUpdated() {
-    castContext.sessionManager.onStatusUpdated?.call();
+  void onStatusUpdated(int playerStateRaw) {
+    final playerState = PlayerState.values[playerStateRaw];
+    castContext.sessionManager.dispatchOnPlayerStateUpdated(playerState);
   }
 
   @override

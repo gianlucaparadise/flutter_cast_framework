@@ -7,7 +7,8 @@ class SessionManager {
 
   SessionManager(this._hostApi);
 
-  final ValueNotifier<SessionState> state = ValueNotifier(SessionState.idle);
+  final state = ValueNotifier(SessionState.idle);
+  final playerState = ValueNotifier(PlayerState.unknown);
 
   void onSessionStateChanged(SessionState sessionState) {
     switch (sessionState) {
@@ -28,9 +29,14 @@ class SessionManager {
     }
   }
 
+  void dispatchOnPlayerStateUpdated(PlayerState playerState) {
+    this.playerState.value = playerState;
+    onStatusUpdated?.call(playerState);
+  }
+
   MessageReceivedCallback? onMessageReceived;
 
-  VoidCallback? onStatusUpdated;
+  StatusUpdatedCallback? onStatusUpdated;
   VoidCallback? onMetadataUpdated;
   VoidCallback? onQueueStatusUpdated;
   VoidCallback? onPreloadStatusUpdated;
@@ -79,4 +85,15 @@ enum SessionState {
   session_resumed,
   session_resume_failed,
   session_suspended,
+}
+
+typedef StatusUpdatedCallback = void Function(PlayerState);
+
+enum PlayerState {
+  unknown, // 0
+  idle, // 1
+  playing, // 2
+  paused, // 3
+  buffering, // 4
+  loading, // 5
 }

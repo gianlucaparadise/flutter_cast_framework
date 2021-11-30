@@ -68,8 +68,8 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _onRemoteMediaClientStatusUpdated() {
-    debugPrint("RemoteMediaClient status updated");
+  void _onRemoteMediaClientStatusUpdated(PlayerState playerState) {
+    debugPrint("RemoteMediaClient status updated - playerState $playerState");
   }
 
   void _onSendMessage() {

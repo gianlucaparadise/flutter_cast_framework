@@ -12,6 +12,7 @@ import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaInfo
 import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
 import com.google.android.gms.cast.MediaError
+import com.google.android.gms.cast.MediaStatus.PLAYER_STATE_UNKNOWN
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
@@ -177,7 +178,8 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun onStatusUpdated() {
             Log.d(TAG, "RemoteMediaClient - onStatusUpdated")
             super.onStatusUpdated()
-            flutterApi?.onStatusUpdated { }
+            val playerStateRaw = remoteMediaClient?.playerState ?: PLAYER_STATE_UNKNOWN
+            flutterApi?.onStatusUpdated(playerStateRaw.toLong()) { }
         }
 
         override fun onMetadataUpdated() {
