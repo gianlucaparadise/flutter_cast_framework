@@ -120,7 +120,7 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (void)onSessionResumedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionResumeFailedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionSuspendedWithCompletion:(void(^)(NSError *_Nullable))completion;
-- (void)onStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onStatusUpdatedPlayerStateRaw:(NSNumber *)playerStateRaw completion:(void(^)(NSError *_Nullable))completion;
 - (void)onMetadataUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onQueueStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onPreloadStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;

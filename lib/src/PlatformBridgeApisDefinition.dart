@@ -247,7 +247,8 @@ abstract class CastFlutterApi {
   //endregion
 
   //region RemoteMediaClient callbacks
-  void onStatusUpdated();
+  // I can't use enum here because of: https://github.com/flutter/flutter/issues/87307
+  void onStatusUpdated(int playerStateRaw);
   void onMetadataUpdated();
   void onQueueStatusUpdated();
   void onPreloadStatusUpdated();

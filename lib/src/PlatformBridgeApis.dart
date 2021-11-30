@@ -466,7 +466,7 @@ abstract class CastFlutterApi {
   void onSessionResumed();
   void onSessionResumeFailed();
   void onSessionSuspended();
-  void onStatusUpdated();
+  void onStatusUpdated(int playerStateRaw);
   void onMetadataUpdated();
   void onQueueStatusUpdated();
   void onPreloadStatusUpdated();
@@ -644,8 +644,11 @@ abstract class CastFlutterApi {
         channel.setMessageHandler(null);
       } else {
         channel.setMessageHandler((Object? message) async {
-          // ignore message
-          api.onStatusUpdated();
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onStatusUpdated was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_playerStateRaw = args[0] as int?;
+          assert(arg_playerStateRaw != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onStatusUpdated was null, expected non-null int.');
+          api.onStatusUpdated(arg_playerStateRaw!);
           return;
         });
       }

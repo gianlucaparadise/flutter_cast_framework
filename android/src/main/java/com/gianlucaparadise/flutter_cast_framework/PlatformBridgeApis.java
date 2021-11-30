@@ -639,10 +639,10 @@ public class PlatformBridgeApis {
         callback.reply(null);
       });
     }
-    public void onStatusUpdated(Reply<Void> callback) {
+    public void onStatusUpdated(Long playerStateRawArg, Reply<Void> callback) {
       BasicMessageChannel<Object> channel =
           new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onStatusUpdated", getCodec());
-      channel.send(null, channelReply -> {
+      channel.send(new ArrayList<Object>(Arrays.asList(playerStateRawArg)), channelReply -> {
         callback.reply(null);
       });
     }
