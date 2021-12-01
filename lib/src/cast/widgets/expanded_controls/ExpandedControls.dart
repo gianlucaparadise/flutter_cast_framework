@@ -108,7 +108,9 @@ class _ExpandedControlsState extends State<ExpandedControls> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ExpandedControlsPlayer(),
+            child: ExpandedControlsPlayer(
+              castFramework: widget.castFramework,
+            ),
           ),
         ],
       ),

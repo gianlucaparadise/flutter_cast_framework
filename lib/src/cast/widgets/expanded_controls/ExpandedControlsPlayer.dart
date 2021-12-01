@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cast_framework/cast.dart';
 
 class ExpandedControlsPlayer extends StatelessWidget {
-  final VoidCallback? onClosedCaptionPressed;
-  final VoidCallback? onPrevPressed;
-  final VoidCallback? onPlayPausePressed;
-  final VoidCallback? onNextPressed;
-  final VoidCallback? onVolumePressed;
+  final FlutterCastFramework castFramework;
 
   ExpandedControlsPlayer({
-    this.onClosedCaptionPressed,
-    this.onPrevPressed,
-    this.onPlayPausePressed,
-    this.onNextPressed,
-    this.onVolumePressed,
+    required this.castFramework,
   });
+
+  void _onPlayClicked() {
+    final sessionManager = castFramework.castContext.sessionManager;
+    sessionManager.remoteMediaClient.play();
+  }
+
+  void _onPauseClicked() {
+    final sessionManager = castFramework.castContext.sessionManager;
+    sessionManager.remoteMediaClient.pause();
+  }
 
   Widget _getIconButton(IconData icon, VoidCallback? onPressed) {
     return IconButton(
@@ -31,19 +34,57 @@ class ExpandedControlsPlayer extends StatelessWidget {
     );
   }
 
+  Widget _getPlayPauseButton(PlayerState playerState) {
+    IconData icon;
+    VoidCallback? callback;
+
+    switch (playerState) {
+      case PlayerState.unknown:
+        icon = Icons.play_circle;
+        break;
+      case PlayerState.idle:
+        icon = Icons.play_circle;
+        break;
+      case PlayerState.playing:
+        icon = Icons.pause_circle;
+        callback = _onPauseClicked;
+        break;
+      case PlayerState.paused:
+        icon = Icons.play_circle;
+        callback = _onPlayClicked;
+        break;
+      case PlayerState.buffering:
+        icon = Icons.pause_circle;
+        callback = _onPauseClicked;
+        break;
+      case PlayerState.loading:
+        icon = Icons.play_circle;
+        break;
+    }
+
+    return _getBigIconButton(icon, callback);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final sessionManager = castFramework.castContext.sessionManager;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _getIconButton(Icons.closed_caption, onClosedCaptionPressed),
-          _getIconButton(Icons.skip_previous, onPrevPressed),
-          _getBigIconButton(Icons.pause_circle, onPlayPausePressed),
-          _getIconButton(Icons.skip_next, onNextPressed),
-          _getIconButton(Icons.volume_up, onVolumePressed),
-        ],
+      child: ValueListenableBuilder(
+        valueListenable: sessionManager.playerState,
+        builder: (context, value, child) {
+          final playerState = value as PlayerState;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _getIconButton(Icons.closed_caption, null),
+              _getIconButton(Icons.skip_previous, null),
+              _getPlayPauseButton(playerState),
+              _getIconButton(Icons.skip_next, null),
+              _getIconButton(Icons.volume_up, null),
+            ],
+          );
+        },
       ),
     );
   }
