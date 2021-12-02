@@ -31,7 +31,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_cast_framework: 2728e840a40f44fb3cbcedbcd2c8d3f4efd53839
+  flutter_cast_framework: 1a7183ed51a5af57cbec987d0c422086b4ac2c52
   google-cast-sdk-no-bluetooth: d5a60530c72b0907fb302d835952b6cb0ba5f128
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   Protobuf: e9b99dd5da72f665ec503b19191f245a22188b4d
