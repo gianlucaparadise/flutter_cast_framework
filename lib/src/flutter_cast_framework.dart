@@ -1,24 +1,51 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cast_framework/cast.dart';
+import 'package:flutter_cast_framework/src/cast/RemoteMediaClient.dart';
 
 import 'PlatformBridgeApis.dart';
 import 'cast/CastContext.dart';
 
-class FlutterCastFramework extends CastFlutterApi {
+/// Entrypoint for the Flutter Cast Framework
+class FlutterCastFramework {
   final _hostApi = CastHostApi();
-  late CastContext castContext;
+  late _CastFlutterApiImplementor _castFlutterApiImplementor;
 
-  /// List of namespaces to listen for custom messages
-  late List<String> namespaces = [];
+  /// Get the entrypoint for the Cast SDK. This is immutable and it is expected to never change.
+  CastContext get castContext => _castFlutterApiImplementor.castContext;
 
+  /// Create the Flutter Cast Framework.
+  /// namespaces is the list of namespaces to listen for custom messages.
   FlutterCastFramework.create(List<String> namespaces) {
     debugPrint("FlutterCastFramework created!");
-    this.namespaces = namespaces;
-    this.castContext = CastContext(_hostApi);
-    CastFlutterApi.setup(this);
+    final castContext = CastContext(_hostApi);
+    this._castFlutterApiImplementor = new _CastFlutterApiImplementor(
+      castContext: castContext,
+      namespaces: namespaces,
+    );
+
+    CastFlutterApi.setup(this._castFlutterApiImplementor);
+  }
+}
+
+/// This implements Pigeon's API called by the Host platform. This is implemented
+/// in a separate class to hide the methods
+class _CastFlutterApiImplementor extends CastFlutterApi {
+  final CastContext castContext;
+  final List<String> namespaces = [];
+
+  SessionManager get sessionManager => castContext.sessionManager;
+  RemoteMediaClient get remoteMediaClient =>
+      castContext.sessionManager.remoteMediaClient;
+
+  _CastFlutterApiImplementor({
+    required this.castContext,
+    List<String>? namespaces,
+  }) {
+    if (namespaces != null) {
+      this.namespaces.addAll(namespaces);
+    }
   }
 
-  //region CastFlutterApi implementation
   @override
   List<String?> getSessionMessageNamespaces() {
     return namespaces;
@@ -31,106 +58,96 @@ class FlutterCastFramework extends CastFlutterApi {
 
   @override
   void onMessageReceived(CastMessage castMessage) {
-    castContext.sessionManager.platformOnMessageReceived(castMessage);
+    sessionManager.platformOnMessageReceived(castMessage);
   }
 
   //region Session State handling
   @override
   void onSessionEnded() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_ended);
+    sessionManager.onSessionStateChanged(SessionState.ended);
   }
 
   @override
   void onSessionEnding() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_ending);
+    sessionManager.onSessionStateChanged(SessionState.ending);
   }
 
   @override
   void onSessionResumeFailed() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_resume_failed);
+    sessionManager.onSessionStateChanged(SessionState.resume_failed);
   }
 
   @override
   void onSessionResumed() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_resumed);
+    sessionManager.onSessionStateChanged(SessionState.resumed);
   }
 
   @override
   void onSessionResuming() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_resuming);
+    sessionManager.onSessionStateChanged(SessionState.resuming);
   }
 
   @override
   void onSessionStartFailed() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_start_failed);
+    sessionManager.onSessionStateChanged(SessionState.start_failed);
   }
 
   @override
   void onSessionStarted() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_started);
+    sessionManager.onSessionStateChanged(SessionState.started);
   }
 
   @override
   void onSessionStarting() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_starting);
+    sessionManager.onSessionStateChanged(SessionState.starting);
   }
 
   @override
   void onSessionSuspended() {
-    castContext.sessionManager
-        .onSessionStateChanged(SessionState.session_suspended);
+    sessionManager.onSessionStateChanged(SessionState.suspended);
   }
   //endregion
 
   //region RemoteMediaClient
   @override
   void onAdBreakStatusUpdated() {
-    castContext.sessionManager.onAdBreakStatusUpdated?.call();
+    remoteMediaClient.onAdBreakStatusUpdated?.call();
   }
 
   @override
   void onMediaError() {
-    castContext.sessionManager.onMediaError?.call();
+    remoteMediaClient.onMediaError?.call();
   }
 
   @override
   void onMetadataUpdated() {
-    castContext.sessionManager.onMetadataUpdated?.call();
+    remoteMediaClient.onMetadataUpdated?.call();
   }
 
   @override
   void onPreloadStatusUpdated() {
-    castContext.sessionManager.onPreloadStatusUpdated?.call();
+    remoteMediaClient.onPreloadStatusUpdated?.call();
   }
 
   @override
   void onQueueStatusUpdated() {
-    castContext.sessionManager.onQueueStatusUpdated?.call();
+    remoteMediaClient.onQueueStatusUpdated?.call();
   }
 
   @override
   void onSendingRemoteMediaRequest() {
-    castContext.sessionManager.onSendingRemoteMediaRequest?.call();
+    remoteMediaClient.onSendingRemoteMediaRequest?.call();
   }
 
   @override
   void onStatusUpdated(int playerStateRaw) {
     final playerState = PlayerState.values[playerStateRaw];
-    castContext.sessionManager.dispatchOnPlayerStateUpdated(playerState);
+    remoteMediaClient.dispatchPlayerStateUpdate(playerState);
   }
 
   @override
   void onProgressUpdated(int progressMs, int durationMs) {
-    castContext.sessionManager.remoteMediaClient.onProgressUpdated
-        ?.call(progressMs, durationMs);
+    remoteMediaClient.onProgressUpdated?.call(progressMs, durationMs);
   }
   //endregion
 }

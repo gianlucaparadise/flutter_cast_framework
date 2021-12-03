@@ -32,18 +32,27 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     castFramework = FlutterCastFramework.create([castNamespace]);
     castFramework.castContext.state.addListener(_onCastStateChanged);
-    castFramework.castContext.sessionManager.state
-        .addListener(_onSessionStateChanged);
-    castFramework.castContext.sessionManager.onMessageReceived =
-        _onMessageReceived;
-    castFramework.castContext.sessionManager.onStatusUpdated =
-        _onRemoteMediaClientStatusUpdated;
+
+    final sessionManager = castFramework.castContext.sessionManager;
+    sessionManager.state.addListener(_onSessionStateChanged);
+    sessionManager.onMessageReceived = _onMessageReceived;
+    sessionManager.remoteMediaClient.playerState
+        .addListener(_onRemoteMediaClientStatusUpdated);
   }
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     textMessageController.dispose();
+
+    castFramework.castContext.state.removeListener(_onCastStateChanged);
+
+    final sessionManager = castFramework.castContext.sessionManager;
+    sessionManager.state.removeListener(_onSessionStateChanged);
+    sessionManager.onMessageReceived = null;
+    sessionManager.remoteMediaClient.playerState
+        .removeListener(_onRemoteMediaClientStatusUpdated);
+
     super.dispose();
   }
 
@@ -68,7 +77,9 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _onRemoteMediaClientStatusUpdated(PlayerState playerState) {
+  void _onRemoteMediaClientStatusUpdated() {
+    final playerState = castFramework
+        .castContext.sessionManager.remoteMediaClient.playerState.value;
     debugPrint("RemoteMediaClient status updated - playerState $playerState");
   }
 

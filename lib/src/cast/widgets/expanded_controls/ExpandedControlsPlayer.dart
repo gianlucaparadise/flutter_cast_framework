@@ -71,7 +71,7 @@ class ExpandedControlsPlayer extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 0),
       child: ValueListenableBuilder(
-        valueListenable: sessionManager.playerState,
+        valueListenable: sessionManager.remoteMediaClient.playerState,
         builder: (context, value, child) {
           final playerState = value as PlayerState;
           return Row(

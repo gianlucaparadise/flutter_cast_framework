@@ -1,6 +1,8 @@
+.PHONY: pigeon deploy-receiver open-android open-ios run-all
+
 pigeon: # Generates the typesafe bridge between host and flutter
 	flutter pub run pigeon \
-	--input lib/src/PlatformBridgeApisDefinition.dart \
+	--input pigeon/PlatformBridgeApisDefinition.dart \
 	--dart_out lib/src/PlatformBridgeApis.dart \
 	--objc_header_out ios/Classes/PlatformBridgeApis.h \
 	--objc_source_out ios/Classes/PlatformBridgeApis.m \
@@ -9,3 +11,12 @@ pigeon: # Generates the typesafe bridge between host and flutter
 
 deploy-receiver:
 	surge receiver
+
+open-android:
+	studio example/android
+
+open-ios:
+	open example/ios/Runner.xcworkspace
+
+run-all:
+	cd example && flutter run -d all

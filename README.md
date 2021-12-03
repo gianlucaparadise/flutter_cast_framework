@@ -12,6 +12,9 @@ Currently only the following APIs are integrated (both Android and iOS):
 * Session state
 * Send custom message
 * Listen to received custom messages
+* Load RemoteMediaRequestData
+* Play, Pause, Stop media
+* Expanded controls
 * Cast Button
 * Chromecast connection
 
@@ -137,3 +140,13 @@ I used this project to test the capabilities of the following technologies:
 * Chromecast API (Sender - Android SDK)
 * Flutter
 * Flutter custom platform-specific code
+
+## Roadmap
+
+* Volume in Expanded Controls
+* Currently connected cast device name
+* CC in Expanded Controls
+* Handle Ad Break
+* Handle progress seek
+* Handle queue
+* Handle mini-player
