@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast.dart';
 
-class ExpandedControlsPlayer extends StatelessWidget {
+class ExpandedControlsPlayer extends StatefulWidget {
   final FlutterCastFramework castFramework;
 
   ExpandedControlsPlayer({
     required this.castFramework,
   });
 
+  @override
+  State<ExpandedControlsPlayer> createState() => _ExpandedControlsPlayerState();
+}
+
+class _ExpandedControlsPlayerState extends State<ExpandedControlsPlayer> {
+  bool isMute = false;
+
   void _onPlayClicked() {
-    final sessionManager = castFramework.castContext.sessionManager;
+    final sessionManager = widget.castFramework.castContext.sessionManager;
     sessionManager.remoteMediaClient.play();
   }
 
   void _onPauseClicked() {
-    final sessionManager = castFramework.castContext.sessionManager;
+    final sessionManager = widget.castFramework.castContext.sessionManager;
     sessionManager.remoteMediaClient.pause();
+  }
+
+  void _onVolumeClicked() {
+    final muted = !isMute;
+    final sessionManager = widget.castFramework.castContext.sessionManager;
+    sessionManager.setMute(muted);
+
+    setState(() {
+      if (!mounted) return;
+      isMute = muted;
+    });
   }
 
   Widget _getIconButton(IconData icon, VoidCallback? onPressed) {
@@ -65,9 +83,15 @@ class ExpandedControlsPlayer extends StatelessWidget {
     return _getBigIconButton(icon, callback);
   }
 
+  Widget _getVolumeButton(bool muted) {
+    final IconData icon = muted ? Icons.volume_off : Icons.volume_up;
+
+    return _getIconButton(icon, _onVolumeClicked);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final sessionManager = castFramework.castContext.sessionManager;
+    final sessionManager = widget.castFramework.castContext.sessionManager;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 0),
       child: ValueListenableBuilder(
@@ -81,7 +105,7 @@ class ExpandedControlsPlayer extends StatelessWidget {
               _getIconButton(Icons.skip_previous, null),
               _getPlayPauseButton(playerState),
               _getIconButton(Icons.skip_next, null),
-              _getIconButton(Icons.volume_up, null),
+              _getVolumeButton(this.isMute),
             ],
           );
         },

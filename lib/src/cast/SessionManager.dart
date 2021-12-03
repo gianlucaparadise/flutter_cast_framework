@@ -58,6 +58,11 @@ class SessionManager {
     _hostApi.sendMessage(castMessage);
   }
 
+  /// Toggles the stream muting.
+  void setMute(bool muted) {
+    _hostApi.setMute(muted);
+  }
+
   RemoteMediaClient? _remoteMediaClient;
 
   /// Returns the RemoteMediaClient for remote media control.
