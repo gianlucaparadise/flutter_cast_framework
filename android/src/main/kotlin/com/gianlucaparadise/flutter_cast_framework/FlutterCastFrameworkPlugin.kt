@@ -219,7 +219,6 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         }
 
         override fun onProgressUpdated(progressMs: Long, durationMs: Long) {
-            Log.d(TAG, "RemoteMediaClient - onProgressUpdated progress: $progressMs duration: $durationMs")
             flutterApi?.onProgressUpdated(progressMs, durationMs) { }
         }
     }
@@ -271,6 +270,12 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun stop() {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
             remoteMediaClient.stop()
+        }
+
+        override fun setMute(muted: Boolean?) {
+            if (muted == null) return
+            val castSession = mCastSession ?: return
+            castSession.isMute = muted
         }
     }
 

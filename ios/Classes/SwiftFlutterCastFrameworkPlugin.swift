@@ -215,6 +215,14 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         remoteMediaClient?.stop()
     }
     
+    public func setMuteMuted(_ muted: NSNumber, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        if (castSession == nil) {
+            return
+        }
+        let isMuted = muted == 1
+        castSession?.setDeviceMuted(isMuted)
+    }
+    
     // MARK: - GCKSessionManagerListener
     
     // onSessionSuspended

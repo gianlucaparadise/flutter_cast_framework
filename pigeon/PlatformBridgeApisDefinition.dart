@@ -221,11 +221,15 @@ class CastMessage {
 abstract class CastHostApi {
   void sendMessage(CastMessage message);
   void showCastDialog();
+  void setMute(bool muted);
+
+  //region RemoteMediaClient
   void loadMediaLoadRequestData(MediaLoadRequestData request);
   MediaInfo getMediaInfo();
   void play();
   void pause();
   void stop();
+  //endregion
 }
 
 @FlutterApi()
