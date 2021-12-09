@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/src/cast/widgets/expanded_controls/ExpandedControlsToolbar.dart';
 
 import '../../../../cast.dart';
+import 'ExpandedControlsConnectedDeviceLabel.dart';
 import 'ExpandedControlsPlayer.dart';
 import 'ExpandedControlsProgress.dart';
-
-// TODO call framework to get cast device
-const String castDevice = "cast device";
 
 const _topDownBlackGradient = BoxDecoration(
   gradient: LinearGradient(
@@ -32,13 +30,13 @@ const _bottomUpBlackGradient = BoxDecoration(
 
 class ExpandedControls extends StatefulWidget {
   final FlutterCastFramework castFramework;
-  final String castingToText;
+  final String? castingToText;
   final VoidCallback? onBackTapped;
   final controller = ExpandedControlsProgressController();
 
   ExpandedControls({
     required this.castFramework,
-    this.castingToText = "Casting to",
+    this.castingToText,
     this.onBackTapped,
   });
 
@@ -88,17 +86,15 @@ class _ExpandedControlsState extends State<ExpandedControls> {
   }
 
   Widget _getDecoratedControls(BuildContext context, MediaInfo? mediaInfo) {
-    final textStyle =
-        Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.white);
-
     return Container(
       decoration: _bottomUpBlackGradient,
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child:
-                Text("${widget.castingToText} $castDevice", style: textStyle),
+            child: ExpandedControlsConnectedDeviceLabel(
+              castFramework: widget.castFramework,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

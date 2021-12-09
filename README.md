@@ -143,10 +143,9 @@ I used this project to test the capabilities of the following technologies:
 
 ## Roadmap
 
-* Volume in Expanded Controls
-* Currently connected cast device name
 * CC in Expanded Controls
 * Handle Ad Break
 * Handle progress seek
 * Handle queue
 * Handle mini-player
+* Produce HTML docs
