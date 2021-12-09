@@ -47,6 +47,7 @@ typedef NS_ENUM(NSUInteger, TrackSubtype) {
 @class MediaMetadata;
 @class WebImage;
 @class MediaTrack;
+@class CastDevice;
 @class CastMessage;
 
 @interface MediaLoadRequestData : NSObject
@@ -83,6 +84,12 @@ typedef NS_ENUM(NSUInteger, TrackSubtype) {
 @property(nonatomic, copy, nullable) NSString * language;
 @end
 
+@interface CastDevice : NSObject
+@property(nonatomic, copy, nullable) NSString * deviceId;
+@property(nonatomic, copy, nullable) NSString * friendlyName;
+@property(nonatomic, copy, nullable) NSString * modelName;
+@end
+
 @interface CastMessage : NSObject
 @property(nonatomic, copy, nullable) NSString * namespace;
 @property(nonatomic, copy, nullable) NSString * message;
@@ -95,6 +102,7 @@ NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 - (void)sendMessageMessage:(CastMessage *)message error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)showCastDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)setMuteMuted:(NSNumber *)muted error:(FlutterError *_Nullable *_Nonnull)error;
+- (nullable CastDevice *)getCastDeviceWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)loadMediaLoadRequestDataRequest:(MediaLoadRequestData *)request error:(FlutterError *_Nullable *_Nonnull)error;
 - (nullable MediaInfo *)getMediaInfoWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)playWithError:(FlutterError *_Nullable *_Nonnull)error;

@@ -250,7 +250,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
         override fun getMediaInfo(): PlatformBridgeApis.MediaInfo {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient
-                    ?: return PlatformBridgeApis.MediaInfo()
+                    ?:  throw IllegalStateException("Missing cast session")
 
             val hostMediaInfo = remoteMediaClient.mediaInfo ?: return PlatformBridgeApis.MediaInfo()
 
@@ -276,6 +276,18 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             if (muted == null) return
             val castSession = mCastSession ?: return
             castSession.isMute = muted
+        }
+
+        override fun getCastDevice(): PlatformBridgeApis.CastDevice {
+            val castSession = mCastSession ?: throw IllegalStateException("Missing cast session")
+
+            val castDevice = castSession.castDevice
+
+            return PlatformBridgeApis.CastDevice().apply {
+                deviceId = castDevice.deviceId
+                friendlyName = castDevice.friendlyName
+                modelName = castDevice.modelName
+            }
         }
     }
 

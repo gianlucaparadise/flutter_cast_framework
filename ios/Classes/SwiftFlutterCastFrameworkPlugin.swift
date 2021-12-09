@@ -223,6 +223,22 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         castSession?.setDeviceMuted(isMuted)
     }
     
+    public func getCastDeviceWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> CastDevice? {
+        let castDevice = castSession?.device
+        
+        if (castDevice == nil) {
+            return CastDevice()
+        }
+        
+        let result = CastDevice()
+        
+        result.deviceId = castDevice?.deviceID
+        result.friendlyName = castDevice?.friendlyName
+        result.modelName = castDevice?.modelName
+        
+        return result
+    }
+    
     // MARK: - GCKSessionManagerListener
     
     // onSessionSuspended

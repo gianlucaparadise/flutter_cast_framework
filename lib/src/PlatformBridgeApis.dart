@@ -176,6 +176,28 @@ class MediaTrack {
   }
 }
 
+class CastDevice {
+  String? deviceId;
+  String? friendlyName;
+  String? modelName;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['deviceId'] = deviceId;
+    pigeonMap['friendlyName'] = friendlyName;
+    pigeonMap['modelName'] = modelName;
+    return pigeonMap;
+  }
+
+  static CastDevice decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return CastDevice()
+      ..deviceId = pigeonMap['deviceId'] as String?
+      ..friendlyName = pigeonMap['friendlyName'] as String?
+      ..modelName = pigeonMap['modelName'] as String?;
+  }
+}
+
 class CastMessage {
   String? namespace;
   String? message;
@@ -199,28 +221,32 @@ class _CastHostApiCodec extends StandardMessageCodec {
   const _CastHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is CastMessage) {
+    if (value is CastDevice) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaInfo) {
+    if (value is CastMessage) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaLoadRequestData) {
+    if (value is MediaInfo) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaMetadata) {
+    if (value is MediaLoadRequestData) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaTrack) {
+    if (value is MediaMetadata) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else 
-    if (value is WebImage) {
+    if (value is MediaTrack) {
       buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is WebImage) {
+      buffer.putUint8(134);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -231,21 +257,24 @@ class _CastHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return CastMessage.decode(readValue(buffer)!);
+        return CastDevice.decode(readValue(buffer)!);
       
       case 129:       
-        return MediaInfo.decode(readValue(buffer)!);
+        return CastMessage.decode(readValue(buffer)!);
       
       case 130:       
-        return MediaLoadRequestData.decode(readValue(buffer)!);
+        return MediaInfo.decode(readValue(buffer)!);
       
       case 131:       
-        return MediaMetadata.decode(readValue(buffer)!);
+        return MediaLoadRequestData.decode(readValue(buffer)!);
       
       case 132:       
-        return MediaTrack.decode(readValue(buffer)!);
+        return MediaMetadata.decode(readValue(buffer)!);
       
       case 133:       
+        return MediaTrack.decode(readValue(buffer)!);
+      
+      case 134:       
         return WebImage.decode(readValue(buffer)!);
       
       default:      
@@ -331,6 +360,29 @@ class CastHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<CastDevice> getCastDevice() async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.CastHostApi.getCastDevice', codec, binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(null) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+        details: null,
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else {
+      return (replyMap['result'] as CastDevice?)!;
     }
   }
 

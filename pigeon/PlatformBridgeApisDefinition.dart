@@ -212,6 +212,12 @@ enum TrackSubtype {
 
 //#endregion
 
+class CastDevice {
+  String? deviceId;
+  String? friendlyName;
+  String? modelName;
+}
+
 class CastMessage {
   String? namespace;
   String? message;
@@ -222,6 +228,7 @@ abstract class CastHostApi {
   void sendMessage(CastMessage message);
   void showCastDialog();
   void setMute(bool muted);
+  CastDevice getCastDevice();
 
   //region RemoteMediaClient
   void loadMediaLoadRequestData(MediaLoadRequestData request);

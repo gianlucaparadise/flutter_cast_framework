@@ -42,6 +42,10 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 + (MediaTrack *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
 @end
+@interface CastDevice ()
++ (CastDevice *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
 @interface CastMessage ()
 + (CastMessage *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
@@ -161,6 +165,28 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 }
 @end
 
+@implementation CastDevice
++ (CastDevice *)fromMap:(NSDictionary *)dict {
+  CastDevice *result = [[CastDevice alloc] init];
+  result.deviceId = dict[@"deviceId"];
+  if ((NSNull *)result.deviceId == [NSNull null]) {
+    result.deviceId = nil;
+  }
+  result.friendlyName = dict[@"friendlyName"];
+  if ((NSNull *)result.friendlyName == [NSNull null]) {
+    result.friendlyName = nil;
+  }
+  result.modelName = dict[@"modelName"];
+  if ((NSNull *)result.modelName == [NSNull null]) {
+    result.modelName = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.deviceId ? self.deviceId : [NSNull null]), @"deviceId", (self.friendlyName ? self.friendlyName : [NSNull null]), @"friendlyName", (self.modelName ? self.modelName : [NSNull null]), @"modelName", nil];
+}
+@end
+
 @implementation CastMessage
 + (CastMessage *)fromMap:(NSDictionary *)dict {
   CastMessage *result = [[CastMessage alloc] init];
@@ -186,21 +212,24 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 {
   switch (type) {
     case 128:     
-      return [CastMessage fromMap:[self readValue]];
+      return [CastDevice fromMap:[self readValue]];
     
     case 129:     
-      return [MediaInfo fromMap:[self readValue]];
+      return [CastMessage fromMap:[self readValue]];
     
     case 130:     
-      return [MediaLoadRequestData fromMap:[self readValue]];
+      return [MediaInfo fromMap:[self readValue]];
     
     case 131:     
-      return [MediaMetadata fromMap:[self readValue]];
+      return [MediaLoadRequestData fromMap:[self readValue]];
     
     case 132:     
-      return [MediaTrack fromMap:[self readValue]];
+      return [MediaMetadata fromMap:[self readValue]];
     
     case 133:     
+      return [MediaTrack fromMap:[self readValue]];
+    
+    case 134:     
       return [WebImage fromMap:[self readValue]];
     
     default:    
@@ -215,28 +244,32 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 @implementation CastHostApiCodecWriter
 - (void)writeValue:(id)value 
 {
-  if ([value isKindOfClass:[CastMessage class]]) {
+  if ([value isKindOfClass:[CastDevice class]]) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaInfo class]]) {
+  if ([value isKindOfClass:[CastMessage class]]) {
     [self writeByte:129];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaLoadRequestData class]]) {
+  if ([value isKindOfClass:[MediaInfo class]]) {
     [self writeByte:130];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaMetadata class]]) {
+  if ([value isKindOfClass:[MediaLoadRequestData class]]) {
     [self writeByte:131];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaTrack class]]) {
+  if ([value isKindOfClass:[MediaMetadata class]]) {
     [self writeByte:132];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[WebImage class]]) {
+  if ([value isKindOfClass:[MediaTrack class]]) {
     [self writeByte:133];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[WebImage class]]) {
+    [self writeByte:134];
     [self writeValue:[value toMap]];
   } else 
 {
@@ -320,6 +353,24 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
         FlutterError *error;
         [api setMuteMuted:arg_muted error:&error];
         callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.CastHostApi.getCastDevice"
+        binaryMessenger:binaryMessenger
+        codec:CastHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(getCastDeviceWithError:)], @"CastHostApi api (%@) doesn't respond to @selector(getCastDeviceWithError:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        CastDevice *output = [api getCastDeviceWithError:&error];
+        callback(wrapResult(output, error));
       }];
     }
     else {

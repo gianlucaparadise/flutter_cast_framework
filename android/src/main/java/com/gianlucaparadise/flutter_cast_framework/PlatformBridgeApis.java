@@ -267,6 +267,39 @@ public class PlatformBridgeApis {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static class CastDevice {
+    private String deviceId;
+    public String getDeviceId() { return deviceId; }
+    public void setDeviceId(String setterArg) { this.deviceId = setterArg; }
+
+    private String friendlyName;
+    public String getFriendlyName() { return friendlyName; }
+    public void setFriendlyName(String setterArg) { this.friendlyName = setterArg; }
+
+    private String modelName;
+    public String getModelName() { return modelName; }
+    public void setModelName(String setterArg) { this.modelName = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("deviceId", deviceId);
+      toMapResult.put("friendlyName", friendlyName);
+      toMapResult.put("modelName", modelName);
+      return toMapResult;
+    }
+    static CastDevice fromMap(Map<String, Object> map) {
+      CastDevice fromMapResult = new CastDevice();
+      Object deviceId = map.get("deviceId");
+      fromMapResult.deviceId = (String)deviceId;
+      Object friendlyName = map.get("friendlyName");
+      fromMapResult.friendlyName = (String)friendlyName;
+      Object modelName = map.get("modelName");
+      fromMapResult.modelName = (String)modelName;
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static class CastMessage {
     private String namespace;
     public String getNamespace() { return namespace; }
@@ -298,21 +331,24 @@ public class PlatformBridgeApis {
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
       switch (type) {
         case (byte)128:         
-          return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
+          return CastDevice.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)129:         
-          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
+          return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)130:         
-          return MediaLoadRequestData.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)131:         
-          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaLoadRequestData.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)132:         
-          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)133:         
+          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)134:         
           return WebImage.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
@@ -322,28 +358,32 @@ public class PlatformBridgeApis {
     }
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value)     {
-      if (value instanceof CastMessage) {
+      if (value instanceof CastDevice) {
         stream.write(128);
+        writeValue(stream, ((CastDevice) value).toMap());
+      } else 
+      if (value instanceof CastMessage) {
+        stream.write(129);
         writeValue(stream, ((CastMessage) value).toMap());
       } else 
       if (value instanceof MediaInfo) {
-        stream.write(129);
+        stream.write(130);
         writeValue(stream, ((MediaInfo) value).toMap());
       } else 
       if (value instanceof MediaLoadRequestData) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((MediaLoadRequestData) value).toMap());
       } else 
       if (value instanceof MediaMetadata) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((MediaMetadata) value).toMap());
       } else 
       if (value instanceof MediaTrack) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((MediaTrack) value).toMap());
       } else 
       if (value instanceof WebImage) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((WebImage) value).toMap());
       } else 
 {
@@ -357,6 +397,7 @@ public class PlatformBridgeApis {
     void sendMessage(CastMessage message);
     void showCastDialog();
     void setMute(Boolean muted);
+    CastDevice getCastDevice();
     void loadMediaLoadRequestData(MediaLoadRequestData request);
     MediaInfo getMediaInfo();
     void play();
@@ -427,6 +468,25 @@ public class PlatformBridgeApis {
               }
               api.setMute(mutedArg);
               wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.getCastDevice", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              CastDevice output = api.getCastDevice();
+              wrapped.put("result", output);
             }
             catch (Error | RuntimeException exception) {
               wrapped.put("error", wrapError(exception));

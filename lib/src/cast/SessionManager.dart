@@ -63,6 +63,11 @@ class SessionManager {
     _hostApi.setMute(muted);
   }
 
+  /// Returns the currently connected cast device
+  Future<CastDevice> getCastDevice() async {
+    return await _hostApi.getCastDevice();
+  }
+
   RemoteMediaClient? _remoteMediaClient;
 
   /// Returns the RemoteMediaClient for remote media control.
