@@ -3,6 +3,7 @@ package com.gianlucaparadise.flutter_cast_framework
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -18,6 +19,7 @@ import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
 import com.google.android.gms.cast.framework.SessionManagerListener
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
+import com.google.android.gms.cast.framework.media.TracksChooserDialogFragment
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -250,7 +252,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
         override fun getMediaInfo(): PlatformBridgeApis.MediaInfo {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient
-                    ?:  throw IllegalStateException("Missing cast session")
+                    ?: throw IllegalStateException("Missing cast session")
 
             val hostMediaInfo = remoteMediaClient.mediaInfo ?: return PlatformBridgeApis.MediaInfo()
 
@@ -270,6 +272,22 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun stop() {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
             remoteMediaClient.stop()
+        }
+
+        override fun showTracksChooserDialog() {
+            if (activity !is FragmentActivity) {
+                Log.e(TAG, "Error: no_fragment_activity, FlutterCastFramework requires activity to be a FragmentActivity.")
+                return
+            }
+
+            val activity = activity as? FragmentActivity
+            if (activity == null) {
+                Log.d(TAG, "showTracksChooserDialog - missing context")
+                return
+            }
+
+            TracksChooserDialogFragment.newInstance()
+                    .show(activity.supportFragmentManager, "FlutterCastFrameworkTracksChooserDialog")
         }
 
         override fun setMute(muted: Boolean?) {

@@ -49,4 +49,7 @@ dependencies {
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
+    // To open TracksChooserDialogFragment
+    implementation "androidx.activity:activity-ktx:1.3.1"
 }
