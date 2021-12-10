@@ -36,6 +36,11 @@ class _ExpandedControlsPlayerState extends State<ExpandedControlsPlayer> {
     });
   }
 
+  void _onClosedCaptionClicked() {
+    final sessionManager = widget.castFramework.castContext.sessionManager;
+    sessionManager.remoteMediaClient.showTracksChooserDialog();
+  }
+
   Widget _getIconButton(IconData icon, VoidCallback? onPressed) {
     return IconButton(
       padding: EdgeInsets.zero,
@@ -101,7 +106,7 @@ class _ExpandedControlsPlayerState extends State<ExpandedControlsPlayer> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _getIconButton(Icons.closed_caption, null),
+              _getIconButton(Icons.closed_caption, _onClosedCaptionClicked),
               _getIconButton(Icons.skip_previous, null),
               _getPlayPauseButton(playerState),
               _getIconButton(Icons.skip_next, null),

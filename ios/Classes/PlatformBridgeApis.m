@@ -469,6 +469,24 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.CastHostApi.showTracksChooserDialog"
+        binaryMessenger:binaryMessenger
+        codec:CastHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(showTracksChooserDialogWithError:)], @"CastHostApi api (%@) doesn't respond to @selector(showTracksChooserDialogWithError:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        [api showTracksChooserDialogWithError:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface CastFlutterApiCodecReader : FlutterStandardReader
 @end

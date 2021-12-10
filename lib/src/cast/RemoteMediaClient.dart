@@ -64,6 +64,11 @@ class RemoteMediaClient {
     return await _hostApi.getMediaInfo();
   }
 
+  /// A Dialog to show the available tracks (Text and Audio) for user to select.
+  void showTracksChooserDialog() {
+    _hostApi.showTracksChooserDialog();
+  }
+
   /// Internal method that shouldn't be visible
   @internal
   void dispatchPlayerStateUpdate(PlayerState playerState) {

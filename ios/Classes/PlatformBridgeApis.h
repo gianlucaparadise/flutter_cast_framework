@@ -108,6 +108,7 @@ NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 - (void)playWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)pauseWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)stopWithError:(FlutterError *_Nullable *_Nonnull)error;
+- (void)showTracksChooserDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastHostApi> *_Nullable api);
