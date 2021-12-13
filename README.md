@@ -143,7 +143,7 @@ I used this project to test the capabilities of the following technologies:
 
 ## Roadmap
 
-* CC in Expanded Controls
+* CC in Expanded Controls (iOS)
 * Handle Ad Break
 * Handle progress seek
 * Handle queue

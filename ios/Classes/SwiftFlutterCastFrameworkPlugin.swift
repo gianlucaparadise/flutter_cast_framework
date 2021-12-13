@@ -239,6 +239,25 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         return result
     }
     
+    public func showTracksChooserDialogWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        // let dialog = GCKUIMediaTrackSelectionViewController.init()
+        // let rootViewController = UIApplication.shared.keyWindow?.rootViewController
+        //
+        // if (rootViewController is UINavigationController) {
+        //     debugPrint("showTracksChooserDialog: rootViewController is UINavigationController")
+        //     (rootViewController as! UINavigationController).pushViewController(dialog,animated:true)
+        // } else if rootViewController != nil {
+        //     debugPrint("showTracksChooserDialog: rootViewController is UINavigationController")
+        //     let navigationController = UINavigationController(rootViewController:dialog)
+        //     rootViewController?.present(navigationController, animated:true, completion:nil)
+        // }
+        // else {
+        //     debugPrint("showTracksChooserDialog: missing rootViewController")
+        // }
+        // TODO: implement this feature
+        print("showTracksChooserDialog: unsupported feature")
+    }
+    
     // MARK: - GCKSessionManagerListener
     
     // onSessionSuspended
