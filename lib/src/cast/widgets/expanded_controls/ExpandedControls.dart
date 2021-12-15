@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cast_framework/src/cast/widgets/expanded_controls/ExpandedControlsToolbar.dart';
 
 import '../../../../cast.dart';
 import 'ExpandedControlsConnectedDeviceLabel.dart';
 import 'ExpandedControlsPlayer.dart';
 import 'ExpandedControlsProgress.dart';
+import 'ExpandedControlsToolbar.dart';
 
 const _topDownBlackGradient = BoxDecoration(
   gradient: LinearGradient(
@@ -31,13 +31,15 @@ const _bottomUpBlackGradient = BoxDecoration(
 class ExpandedControls extends StatefulWidget {
   final FlutterCastFramework castFramework;
   final String? castingToText;
-  final VoidCallback? onBackTapped;
+
+  /// This is called when the back button is tapped or when the session is closed
+  final VoidCallback? onCloseRequested;
   final controller = ExpandedControlsProgressController();
 
   ExpandedControls({
     required this.castFramework,
     this.castingToText,
-    this.onBackTapped,
+    this.onCloseRequested,
   });
 
   @override
@@ -48,6 +50,9 @@ class _ExpandedControlsState extends State<ExpandedControls> {
   @override
   void initState() {
     final sessionManager = widget.castFramework.castContext.sessionManager;
+    sessionManager.state.addListener(_onSessionStateChanged);
+    sessionManager.remoteMediaClient.playerState
+        .addListener(_onPlayerStateChanged);
     sessionManager.remoteMediaClient.onProgressUpdated = _onProgressUpdated;
 
     super.initState();
@@ -56,11 +61,41 @@ class _ExpandedControlsState extends State<ExpandedControls> {
   @override
   void dispose() {
     final sessionManager = widget.castFramework.castContext.sessionManager;
+    sessionManager.state.removeListener(_onSessionStateChanged);
+    sessionManager.remoteMediaClient.playerState
+        .removeListener(_onPlayerStateChanged);
     sessionManager.remoteMediaClient.onProgressUpdated = null;
 
     widget.controller.dispose();
 
     super.dispose();
+  }
+
+  void _onPlayerStateChanged() {
+    final sessionManager = widget.castFramework.castContext.sessionManager;
+    final state = sessionManager.remoteMediaClient.playerState.value;
+    switch (state) {
+      case PlayerState.idle:
+        widget.onCloseRequested?.call();
+        break;
+      default:
+        // unhandled
+        break;
+    }
+  }
+
+  void _onSessionStateChanged() {
+    final sessionManager = widget.castFramework.castContext.sessionManager;
+    final state = sessionManager.state.value;
+    switch (state) {
+      case SessionState.idle:
+      case SessionState.ended:
+        widget.onCloseRequested?.call();
+        break;
+      default:
+        // unhandled
+        break;
+    }
   }
 
   void _onProgressUpdated(int progress, int duration) {
@@ -80,7 +115,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
         castFramework: widget.castFramework,
         title: title,
         subtitle: subtitle,
-        onBackTapped: widget.onBackTapped,
+        onBackTapped: widget.onCloseRequested,
       ),
     );
   }

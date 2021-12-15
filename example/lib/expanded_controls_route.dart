@@ -14,7 +14,7 @@ class ExpandedControlsRoute extends StatelessWidget {
     return Scaffold(
       body: ExpandedControls(
         castFramework: castFramework,
-        onBackTapped: () => Navigator.pop(context),
+        onCloseRequested: () => Navigator.pop(context),
       ),
     );
   }
