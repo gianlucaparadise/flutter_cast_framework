@@ -30,6 +30,8 @@ const _bottomUpBlackGradient = BoxDecoration(
 
 class ExpandedControls extends StatefulWidget {
   final FlutterCastFramework castFramework;
+
+  /// Label to introduce cast device. Default is "Casting to {{device_name}}", where {{device_name}} is replaced with the device name
   final String? castingToText;
 
   /// This is called when the back button is tapped or when the session is closed
@@ -129,6 +131,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
             padding: const EdgeInsets.all(8.0),
             child: ExpandedControlsConnectedDeviceLabel(
               castFramework: widget.castFramework,
+              castingToText: widget.castingToText,
             ),
           ),
           Padding(
