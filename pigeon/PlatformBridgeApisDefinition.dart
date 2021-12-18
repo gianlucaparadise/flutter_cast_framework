@@ -223,6 +223,7 @@ class CastMessage {
   String? message;
 }
 
+/// APIs for Flutter-to-Host comunication
 @HostApi()
 abstract class CastHostApi {
   void sendMessage(CastMessage message);
@@ -240,6 +241,7 @@ abstract class CastHostApi {
   //endregion
 }
 
+/// APIs for Host-to-Flutter comunication
 @FlutterApi()
 abstract class CastFlutterApi {
   List<String> getSessionMessageNamespaces();
@@ -269,5 +271,12 @@ abstract class CastFlutterApi {
   void onMediaError();
 
   void onProgressUpdated(int progressMs, int durationMs);
+  void onAdBreakClipProgressUpdated(
+    String adBreakId,
+    String adBreakClipId,
+    int progressMs,
+    int durationMs,
+    int whenSkippableMs,
+  );
   //endregion
 }

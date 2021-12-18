@@ -755,4 +755,14 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
     completion(nil);
   }];
 }
+- (void)onAdBreakClipProgressUpdatedAdBreakId:(NSString *)arg_adBreakId adBreakClipId:(NSString *)arg_adBreakClipId progressMs:(NSNumber *)arg_progressMs durationMs:(NSNumber *)arg_durationMs whenSkippableMs:(NSNumber *)arg_whenSkippableMs completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_adBreakId, arg_adBreakClipId, arg_progressMs, arg_durationMs, arg_whenSkippableMs] reply:^(id reply) {
+    completion(nil);
+  }];
+}
 @end

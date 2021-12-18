@@ -138,5 +138,6 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (void)onAdBreakStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onMediaErrorWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onProgressUpdatedProgressMs:(NSNumber *)progressMs durationMs:(NSNumber *)durationMs completion:(void(^)(NSError *_Nullable))completion;
+- (void)onAdBreakClipProgressUpdatedAdBreakId:(NSString *)adBreakId adBreakClipId:(NSString *)adBreakClipId progressMs:(NSNumber *)progressMs durationMs:(NSNumber *)durationMs whenSkippableMs:(NSNumber *)whenSkippableMs completion:(void(^)(NSError *_Nullable))completion;
 @end
 NS_ASSUME_NONNULL_END

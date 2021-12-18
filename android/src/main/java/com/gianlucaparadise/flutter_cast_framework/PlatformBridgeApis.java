@@ -800,6 +800,13 @@ public class PlatformBridgeApis {
         callback.reply(null);
       });
     }
+    public void onAdBreakClipProgressUpdated(String adBreakIdArg, String adBreakClipIdArg, Long progressMsArg, Long durationMsArg, Long whenSkippableMsArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(adBreakIdArg, adBreakClipIdArg, progressMsArg, durationMsArg, whenSkippableMsArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
   }
   private static Map<String, Object> wrapError(Throwable exception) {
     Map<String, Object> errorMap = new HashMap<>();

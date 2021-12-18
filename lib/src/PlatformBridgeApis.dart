@@ -572,6 +572,7 @@ abstract class CastFlutterApi {
   void onAdBreakStatusUpdated();
   void onMediaError();
   void onProgressUpdated(int progressMs, int durationMs);
+  void onAdBreakClipProgressUpdated(String adBreakId, String adBreakClipId, int progressMs, int durationMs, int whenSkippableMs);
   static void setup(CastFlutterApi? api) {
     {
       const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -843,6 +844,30 @@ abstract class CastFlutterApi {
           final int? arg_durationMs = args[1] as int?;
           assert(arg_durationMs != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onProgressUpdated was null, expected non-null int.');
           api.onProgressUpdated(arg_progressMs!, arg_durationMs!);
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_adBreakId = args[0] as String?;
+          assert(arg_adBreakId != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated was null, expected non-null String.');
+          final String? arg_adBreakClipId = args[1] as String?;
+          assert(arg_adBreakClipId != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated was null, expected non-null String.');
+          final int? arg_progressMs = args[2] as int?;
+          assert(arg_progressMs != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated was null, expected non-null int.');
+          final int? arg_durationMs = args[3] as int?;
+          assert(arg_durationMs != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated was null, expected non-null int.');
+          final int? arg_whenSkippableMs = args[4] as int?;
+          assert(arg_whenSkippableMs != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated was null, expected non-null int.');
+          api.onAdBreakClipProgressUpdated(arg_adBreakId!, arg_adBreakClipId!, arg_progressMs!, arg_durationMs!, arg_whenSkippableMs!);
           return;
         });
       }
