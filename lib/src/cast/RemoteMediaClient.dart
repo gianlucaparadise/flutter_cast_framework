@@ -5,6 +5,13 @@ import '../../cast.dart';
 import '../PlatformBridgeApis.dart';
 
 typedef ProgressListener = void Function(int progressMs, int durationMs);
+typedef AdBreakClipProgressListener = void Function(
+  String adBreakId,
+  String adBreakClipId,
+  int progressMs,
+  int durationMs,
+  int whenSkippableMs,
+);
 
 /// Class for controlling a media player application running on a receiver.
 class RemoteMediaClient {
@@ -37,6 +44,9 @@ class RemoteMediaClient {
 
   /// Called when receiving media error message.
   VoidCallback? onMediaError;
+
+  /// Callback to get updates on the progess of the currently playing ad break clip
+  AdBreakClipProgressListener? onAdBreakClipProgressUpdated;
 
   /// Loads a new media item with specified options.
   void load(MediaLoadRequestData request) {

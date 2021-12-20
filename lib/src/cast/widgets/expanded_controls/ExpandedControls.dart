@@ -56,6 +56,8 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     sessionManager.remoteMediaClient.playerState
         .addListener(_onPlayerStateChanged);
     sessionManager.remoteMediaClient.onProgressUpdated = _onProgressUpdated;
+    sessionManager.remoteMediaClient.onAdBreakClipProgressUpdated =
+        _onAdBreakClipProgressUpdated;
 
     super.initState();
   }
@@ -67,6 +69,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     sessionManager.remoteMediaClient.playerState
         .removeListener(_onPlayerStateChanged);
     sessionManager.remoteMediaClient.onProgressUpdated = null;
+    sessionManager.remoteMediaClient.onAdBreakClipProgressUpdated = null;
 
     widget.controller.dispose();
 
@@ -102,6 +105,16 @@ class _ExpandedControlsState extends State<ExpandedControls> {
 
   void _onProgressUpdated(int progress, int duration) {
     widget.controller.updateProgress(progress, duration);
+  }
+
+  void _onAdBreakClipProgressUpdated(
+    String adBreakId,
+    String adBreakClipId,
+    int progressMs,
+    int durationMs,
+    int whenSkippableMs,
+  ) {
+    widget.controller.updateProgress(progressMs, durationMs);
   }
 
   Widget _getDecoratedToolbar(MediaInfo? mediaInfo) {
