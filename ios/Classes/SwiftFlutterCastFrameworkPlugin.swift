@@ -133,7 +133,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     deinit {
         castStateObserver?.invalidate()
         castStateObserver = nil
-        stopProgressTImer()
+        stopProgressTimer()
     }
     
     func startProgressTimer() {
@@ -152,6 +152,71 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     }
     
     private func onProgressTimerFired(t: Timer) {
+        let adBreakStatus = remoteMediaClient?.mediaStatus?.adBreakStatus
+        let adBreakId = adBreakStatus?.adBreakID
+        let adBreakClipId = adBreakStatus?.adBreakClipID
+        
+        if (adBreakId?.isEmpty == false || adBreakClipId?.isEmpty == false) {
+            // There is an ad ongoing
+            fireAdBreakProgressUpdate()
+        }
+        else {
+            currentAdBreakClipProgress = -1
+            currentAdBreakClipId = ""
+            fireMediaProgressUpdate()
+        }
+    }
+    
+    private var currentAdBreakClipProgress = -1 // in seconds
+    private var currentAdBreakClipId = ""
+    
+    private func calculateCurrentAdBreakClipProgress(adBreakClipId: String) -> Int {
+        if currentAdBreakClipProgress < 0 || currentAdBreakClipId != adBreakClipId {
+            // In this case, the ad break clip has just started
+            currentAdBreakClipId = adBreakClipId
+        }
+        
+        currentAdBreakClipProgress += 1
+        return currentAdBreakClipProgress
+    }
+    
+    private func fireAdBreakProgressUpdate() {
+        let mediaStatus = remoteMediaClient?.mediaStatus
+        let adBreakStatus = mediaStatus?.adBreakStatus
+        if (adBreakStatus == nil) {
+            return
+        }
+        
+        let adBreakId = adBreakStatus?.adBreakID ?? ""
+        let adBreakClipId = adBreakStatus?.adBreakClipID ?? ""
+        let adBreakClipProgressSecs = calculateCurrentAdBreakClipProgress(adBreakClipId: adBreakClipId)
+        let whenSkippableSecs = adBreakStatus?.whenSkippable ?? 0
+        
+        let adBreakClip = mediaStatus?.mediaInformation?.adBreakClips?.first(where: { (ad:GCKAdBreakClipInfo) -> Bool in
+            ad.adBreakClipID == adBreakClipId
+        })
+        
+        if (adBreakClip == nil) {
+            return
+        }
+        
+        let adBreakClipDurationSecs = adBreakClip?.duration ?? 0
+        
+        let adBreakClipProgressMs = adBreakClipProgressSecs * 1000
+        let whenSkippableMs = Int(whenSkippableSecs * 1000)
+        let adBreakClipDurationMs = Int(adBreakClipDurationSecs * 1000)
+        
+        let nsAdBreakClipProgress = NSNumber(value: adBreakClipProgressMs)
+        let nsWhenSkippable = NSNumber(value: whenSkippableMs)
+        let nsAdBreakClipDuration = NSNumber(value: adBreakClipDurationMs)
+        
+        DispatchQueue.main.async {
+            self.flutterApi.onAdBreakClipProgressUpdatedAdBreakId(adBreakId, adBreakClipId: adBreakClipId, progressMs: nsAdBreakClipProgress, durationMs: nsAdBreakClipDuration, whenSkippableMs: nsWhenSkippable) { (_:Error?) in
+            }
+        }
+    }
+    
+    private func fireMediaProgressUpdate() {
         let durationSecs = remoteMediaClient?.mediaStatus?.mediaInformation?.streamDuration ?? 0
         let progressInterval = remoteMediaClient?.approximateStreamPosition() ?? 0
         
@@ -167,7 +232,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         }
     }
     
-    func stopProgressTImer() {
+    func stopProgressTimer() {
         debugPrint("ProgressTimer: stopping progress timer")
         progressTimer?.invalidate()
         progressTimer = nil
@@ -288,7 +353,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionEnding
     public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
         debugPrint("SessionListener: willEnd")
-        stopProgressTImer()
+        stopProgressTimer()
         flutterApi.onSessionEnding { (_:Error?) in
         }
     }
@@ -355,10 +420,10 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
             startProgressTimer()
         case .paused:
             playerStateLabel = "PlayerStatePaused"
-            startProgressTimer()
+            stopProgressTimer()
         case .buffering:
             playerStateLabel = "PlayerStateBuffering"
-            startProgressTimer()
+            stopProgressTimer()
         case .loading:
             playerStateLabel = "PlayerStateLoading"
             startProgressTimer()
