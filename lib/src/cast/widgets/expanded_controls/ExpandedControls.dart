@@ -114,6 +114,8 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     int durationMs,
     int whenSkippableMs,
   ) {
+    debugPrint(
+        "adBreakId: $adBreakId adBreakClipId: $adBreakClipId progress: $progressMs duration: $durationMs whenSkip: $whenSkippableMs");
     widget.controller.updateProgress(progressMs, durationMs);
   }
 
@@ -165,7 +167,12 @@ class _ExpandedControlsState extends State<ExpandedControls> {
   }
 
   DecorationImage? _getBackgroundImage(MediaInfo? mediaInfo) {
-    final imgUrl = mediaInfo?.mediaMetadata?.webImages?.first?.url;
+    final webImages = mediaInfo?.mediaMetadata?.webImages;
+    if (webImages?.isEmpty == true) {
+      return null;
+    }
+
+    final imgUrl = webImages?.first?.url;
     if (imgUrl == null || imgUrl.isEmpty) {
       return null;
     }
@@ -173,6 +180,8 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     return DecorationImage(
       image: NetworkImage(imgUrl),
       fit: BoxFit.cover,
+      onError: (exception, stackTrace) => debugPrint(
+          "ExpandedControls: error while retrieving image with url: $imgUrl"),
     );
   }
 
