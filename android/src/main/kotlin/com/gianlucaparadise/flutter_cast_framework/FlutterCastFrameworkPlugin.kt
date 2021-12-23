@@ -13,7 +13,7 @@ import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaInfo
 import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
 import com.google.android.gms.cast.MediaError
-import com.google.android.gms.cast.MediaStatus.PLAYER_STATE_UNKNOWN
+import com.google.android.gms.cast.MediaStatus.*
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
@@ -73,7 +73,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         Log.d(TAG, "onDetachedFromEngine")
-        applicationContext = null;
+        applicationContext = null
         mMessageCastingChannel = null
     }
     //endregion
@@ -178,9 +178,18 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
     private inner class RemoteMediaClientListener : RemoteMediaClient.Callback(), RemoteMediaClient.ProgressListener {
         override fun onStatusUpdated() {
-            Log.d(TAG, "RemoteMediaClient - onStatusUpdated")
-            super.onStatusUpdated()
             val playerStateRaw = remoteMediaClient?.playerState ?: PLAYER_STATE_UNKNOWN
+            val playerStateLabel = when (playerStateRaw) {
+                PLAYER_STATE_UNKNOWN -> "unknown"
+                PLAYER_STATE_BUFFERING -> "buffering"
+                PLAYER_STATE_IDLE -> "idle"
+                PLAYER_STATE_LOADING -> "loading"
+                PLAYER_STATE_PAUSED -> "paused"
+                PLAYER_STATE_PLAYING -> "playing"
+                else -> "unknown-else"
+            }
+            Log.d(TAG, "RemoteMediaClient - onStatusUpdated: $playerStateLabel")
+            super.onStatusUpdated()
             flutterApi?.onStatusUpdated(playerStateRaw.toLong()) { }
         }
 
@@ -209,7 +218,8 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         }
 
         override fun onAdBreakStatusUpdated() {
-            Log.d(TAG, "RemoteMediaClient - onAdBreakStatusUpdated")
+            val isPlayingAd = remoteMediaClient?.mediaStatus?.isPlayingAd
+            Log.d(TAG, "RemoteMediaClient - onAdBreakStatusUpdated - isPlayingAd: $isPlayingAd")
             super.onAdBreakStatusUpdated()
             flutterApi?.onAdBreakStatusUpdated { }
         }
@@ -221,7 +231,35 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         }
 
         override fun onProgressUpdated(progressMs: Long, durationMs: Long) {
-            flutterApi?.onProgressUpdated(progressMs, durationMs) { }
+            val isPlayingAd = remoteMediaClient?.mediaStatus?.isPlayingAd ?: false
+            if (isPlayingAd) {
+                fireAdBreakClipProgress()
+            }
+            else {
+                flutterApi?.onProgressUpdated(progressMs, durationMs) { }
+            }
+        }
+
+        fun fireAdBreakClipProgress() {
+            val mediaStatus = remoteMediaClient?.mediaStatus ?: return
+            val currentAdBreakClip = mediaStatus.currentAdBreakClip ?: return
+
+            val adBreakId = mediaStatus.currentAdBreak?.id ?: ""
+            val adBreakClipId = currentAdBreakClip.id ?: ""
+            val adBreakClipProgressMs = remoteMediaClient?.approximateAdBreakClipPositionMs
+                    ?: 0
+            val adBreakClipDurationMs = currentAdBreakClip.durationInMs
+            if (adBreakClipDurationMs <= 0) return
+
+            val whenSkippableMs = currentAdBreakClip.whenSkippableInMs
+
+            flutterApi?.onAdBreakClipProgressUpdated(
+                    adBreakId,
+                    adBreakClipId,
+                    adBreakClipProgressMs,
+                    adBreakClipDurationMs,
+                    whenSkippableMs,
+            ) { }
         }
     }
 
