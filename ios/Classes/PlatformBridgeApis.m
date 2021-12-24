@@ -42,6 +42,14 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 + (MediaTrack *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
 @end
+@interface MediaStatus ()
++ (MediaStatus *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
+@interface AdBreakStatus ()
++ (AdBreakStatus *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
 @interface CastDevice ()
 + (CastDevice *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
@@ -162,6 +170,51 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 }
 - (NSDictionary *)toMap {
   return [NSDictionary dictionaryWithObjectsAndKeys:(self.id ? self.id : [NSNull null]), @"id", @(self.trackType), @"trackType", (self.name ? self.name : [NSNull null]), @"name", @(self.trackSubtype), @"trackSubtype", (self.contentId ? self.contentId : [NSNull null]), @"contentId", (self.language ? self.language : [NSNull null]), @"language", nil];
+}
+@end
+
+@implementation MediaStatus
++ (MediaStatus *)fromMap:(NSDictionary *)dict {
+  MediaStatus *result = [[MediaStatus alloc] init];
+  result.playerState = [dict[@"playerState"] integerValue];
+  result.isPlayingAd = dict[@"isPlayingAd"];
+  if ((NSNull *)result.isPlayingAd == [NSNull null]) {
+    result.isPlayingAd = nil;
+  }
+  result.mediaInfo = [MediaInfo fromMap:dict[@"mediaInfo"]];
+  if ((NSNull *)result.mediaInfo == [NSNull null]) {
+    result.mediaInfo = nil;
+  }
+  result.adBreakStatus = [AdBreakStatus fromMap:dict[@"adBreakStatus"]];
+  if ((NSNull *)result.adBreakStatus == [NSNull null]) {
+    result.adBreakStatus = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:@(self.playerState), @"playerState", (self.isPlayingAd ? self.isPlayingAd : [NSNull null]), @"isPlayingAd", (self.mediaInfo ? [self.mediaInfo toMap] : [NSNull null]), @"mediaInfo", (self.adBreakStatus ? [self.adBreakStatus toMap] : [NSNull null]), @"adBreakStatus", nil];
+}
+@end
+
+@implementation AdBreakStatus
++ (AdBreakStatus *)fromMap:(NSDictionary *)dict {
+  AdBreakStatus *result = [[AdBreakStatus alloc] init];
+  result.adBreakId = dict[@"adBreakId"];
+  if ((NSNull *)result.adBreakId == [NSNull null]) {
+    result.adBreakId = nil;
+  }
+  result.adBreakClipId = dict[@"adBreakClipId"];
+  if ((NSNull *)result.adBreakClipId == [NSNull null]) {
+    result.adBreakClipId = nil;
+  }
+  result.whenSkippableMs = dict[@"whenSkippableMs"];
+  if ((NSNull *)result.whenSkippableMs == [NSNull null]) {
+    result.whenSkippableMs = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.adBreakId ? self.adBreakId : [NSNull null]), @"adBreakId", (self.adBreakClipId ? self.adBreakClipId : [NSNull null]), @"adBreakClipId", (self.whenSkippableMs ? self.whenSkippableMs : [NSNull null]), @"whenSkippableMs", nil];
 }
 @end
 
@@ -495,7 +548,25 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
 {
   switch (type) {
     case 128:     
+      return [AdBreakStatus fromMap:[self readValue]];
+    
+    case 129:     
       return [CastMessage fromMap:[self readValue]];
+    
+    case 130:     
+      return [MediaInfo fromMap:[self readValue]];
+    
+    case 131:     
+      return [MediaMetadata fromMap:[self readValue]];
+    
+    case 132:     
+      return [MediaStatus fromMap:[self readValue]];
+    
+    case 133:     
+      return [MediaTrack fromMap:[self readValue]];
+    
+    case 134:     
+      return [WebImage fromMap:[self readValue]];
     
     default:    
       return [super readValueOfType:type];
@@ -509,8 +580,32 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
 @implementation CastFlutterApiCodecWriter
 - (void)writeValue:(id)value 
 {
-  if ([value isKindOfClass:[CastMessage class]]) {
+  if ([value isKindOfClass:[AdBreakStatus class]]) {
     [self writeByte:128];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[CastMessage class]]) {
+    [self writeByte:129];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaInfo class]]) {
+    [self writeByte:130];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaMetadata class]]) {
+    [self writeByte:131];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaStatus class]]) {
+    [self writeByte:132];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[MediaTrack class]]) {
+    [self writeByte:133];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[WebImage class]]) {
+    [self writeByte:134];
     [self writeValue:[value toMap]];
   } else 
 {
@@ -675,13 +770,13 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
     completion(nil);
   }];
 }
-- (void)onStatusUpdatedPlayerStateRaw:(NSNumber *)arg_playerStateRaw completion:(void(^)(NSError *_Nullable))completion {
+- (void)onStatusUpdatedMediaStatus:(MediaStatus *)arg_mediaStatus completion:(void(^)(NSError *_Nullable))completion {
   FlutterBasicMessageChannel *channel =
     [FlutterBasicMessageChannel
       messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.onStatusUpdated"
       binaryMessenger:self.binaryMessenger
       codec:CastFlutterApiGetCodec()];
-  [channel sendMessage:@[arg_playerStateRaw] reply:^(id reply) {
+  [channel sendMessage:@[arg_mediaStatus] reply:^(id reply) {
     completion(nil);
   }];
 }
@@ -725,13 +820,13 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
     completion(nil);
   }];
 }
-- (void)onAdBreakStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion {
+- (void)onAdBreakStatusUpdatedMediaStatus:(MediaStatus *)arg_mediaStatus completion:(void(^)(NSError *_Nullable))completion {
   FlutterBasicMessageChannel *channel =
     [FlutterBasicMessageChannel
       messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.onAdBreakStatusUpdated"
       binaryMessenger:self.binaryMessenger
       codec:CastFlutterApiGetCodec()];
-  [channel sendMessage:nil reply:^(id reply) {
+  [channel sendMessage:@[arg_mediaStatus] reply:^(id reply) {
     completion(nil);
   }];
 }

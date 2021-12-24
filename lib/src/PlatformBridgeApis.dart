@@ -42,6 +42,15 @@ enum TrackSubtype {
   metadata,
 }
 
+enum PlayerState {
+  unknown,
+  idle,
+  playing,
+  paused,
+  buffering,
+  loading,
+}
+
 class MediaLoadRequestData {
   bool? shouldAutoplay;
   int? currentTime;
@@ -173,6 +182,59 @@ class MediaTrack {
           : null
       ..contentId = pigeonMap['contentId'] as String?
       ..language = pigeonMap['language'] as String?;
+  }
+}
+
+class MediaStatus {
+  PlayerState? playerState;
+  bool? isPlayingAd;
+  MediaInfo? mediaInfo;
+  AdBreakStatus? adBreakStatus;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['playerState'] = playerState == null ? null : playerState!.index;
+    pigeonMap['isPlayingAd'] = isPlayingAd;
+    pigeonMap['mediaInfo'] = mediaInfo == null ? null : mediaInfo!.encode();
+    pigeonMap['adBreakStatus'] = adBreakStatus == null ? null : adBreakStatus!.encode();
+    return pigeonMap;
+  }
+
+  static MediaStatus decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return MediaStatus()
+      ..playerState = pigeonMap['playerState'] != null
+          ? PlayerState.values[pigeonMap['playerState']! as int]
+          : null
+      ..isPlayingAd = pigeonMap['isPlayingAd'] as bool?
+      ..mediaInfo = pigeonMap['mediaInfo'] != null
+          ? MediaInfo.decode(pigeonMap['mediaInfo']!)
+          : null
+      ..adBreakStatus = pigeonMap['adBreakStatus'] != null
+          ? AdBreakStatus.decode(pigeonMap['adBreakStatus']!)
+          : null;
+  }
+}
+
+class AdBreakStatus {
+  String? adBreakId;
+  String? adBreakClipId;
+  int? whenSkippableMs;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['adBreakId'] = adBreakId;
+    pigeonMap['adBreakClipId'] = adBreakClipId;
+    pigeonMap['whenSkippableMs'] = whenSkippableMs;
+    return pigeonMap;
+  }
+
+  static AdBreakStatus decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return AdBreakStatus()
+      ..adBreakId = pigeonMap['adBreakId'] as String?
+      ..adBreakClipId = pigeonMap['adBreakClipId'] as String?
+      ..whenSkippableMs = pigeonMap['whenSkippableMs'] as int?;
   }
 }
 
@@ -529,8 +591,32 @@ class _CastFlutterApiCodec extends StandardMessageCodec {
   const _CastFlutterApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is CastMessage) {
+    if (value is AdBreakStatus) {
       buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is CastMessage) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is MediaInfo) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is MediaMetadata) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is MediaStatus) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is MediaTrack) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is WebImage) {
+      buffer.putUint8(134);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -541,7 +627,25 @@ class _CastFlutterApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
+        return AdBreakStatus.decode(readValue(buffer)!);
+      
+      case 129:       
         return CastMessage.decode(readValue(buffer)!);
+      
+      case 130:       
+        return MediaInfo.decode(readValue(buffer)!);
+      
+      case 131:       
+        return MediaMetadata.decode(readValue(buffer)!);
+      
+      case 132:       
+        return MediaStatus.decode(readValue(buffer)!);
+      
+      case 133:       
+        return MediaTrack.decode(readValue(buffer)!);
+      
+      case 134:       
+        return WebImage.decode(readValue(buffer)!);
       
       default:      
         return super.readValueOfType(type, buffer);
@@ -564,12 +668,12 @@ abstract class CastFlutterApi {
   void onSessionResumed();
   void onSessionResumeFailed();
   void onSessionSuspended();
-  void onStatusUpdated(int playerStateRaw);
+  void onStatusUpdated(MediaStatus mediaStatus);
   void onMetadataUpdated();
   void onQueueStatusUpdated();
   void onPreloadStatusUpdated();
   void onSendingRemoteMediaRequest();
-  void onAdBreakStatusUpdated();
+  void onAdBreakStatusUpdated(MediaStatus mediaStatus);
   void onMediaError();
   void onProgressUpdated(int progressMs, int durationMs);
   void onAdBreakClipProgressUpdated(String adBreakId, String adBreakClipId, int progressMs, int durationMs, int whenSkippableMs);
@@ -745,9 +849,9 @@ abstract class CastFlutterApi {
         channel.setMessageHandler((Object? message) async {
           assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onStatusUpdated was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final int? arg_playerStateRaw = args[0] as int?;
-          assert(arg_playerStateRaw != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onStatusUpdated was null, expected non-null int.');
-          api.onStatusUpdated(arg_playerStateRaw!);
+          final MediaStatus? arg_mediaStatus = args[0] as MediaStatus?;
+          assert(arg_mediaStatus != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onStatusUpdated was null, expected non-null MediaStatus.');
+          api.onStatusUpdated(arg_mediaStatus!);
           return;
         });
       }
@@ -811,8 +915,11 @@ abstract class CastFlutterApi {
         channel.setMessageHandler(null);
       } else {
         channel.setMessageHandler((Object? message) async {
-          // ignore message
-          api.onAdBreakStatusUpdated();
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakStatusUpdated was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final MediaStatus? arg_mediaStatus = args[0] as MediaStatus?;
+          assert(arg_mediaStatus != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakStatusUpdated was null, expected non-null MediaStatus.');
+          api.onAdBreakStatusUpdated(arg_mediaStatus!);
           return;
         });
       }

@@ -42,11 +42,22 @@ typedef NS_ENUM(NSUInteger, TrackSubtype) {
   TrackSubtypeMetadata = 6,
 };
 
+typedef NS_ENUM(NSUInteger, PlayerState) {
+  PlayerStateUnknown = 0,
+  PlayerStateIdle = 1,
+  PlayerStatePlaying = 2,
+  PlayerStatePaused = 3,
+  PlayerStateBuffering = 4,
+  PlayerStateLoading = 5,
+};
+
 @class MediaLoadRequestData;
 @class MediaInfo;
 @class MediaMetadata;
 @class WebImage;
 @class MediaTrack;
+@class MediaStatus;
+@class AdBreakStatus;
 @class CastDevice;
 @class CastMessage;
 
@@ -82,6 +93,19 @@ typedef NS_ENUM(NSUInteger, TrackSubtype) {
 @property(nonatomic, assign) TrackSubtype trackSubtype;
 @property(nonatomic, copy, nullable) NSString * contentId;
 @property(nonatomic, copy, nullable) NSString * language;
+@end
+
+@interface MediaStatus : NSObject
+@property(nonatomic, assign) PlayerState playerState;
+@property(nonatomic, strong, nullable) NSNumber * isPlayingAd;
+@property(nonatomic, strong, nullable) MediaInfo * mediaInfo;
+@property(nonatomic, strong, nullable) AdBreakStatus * adBreakStatus;
+@end
+
+@interface AdBreakStatus : NSObject
+@property(nonatomic, copy, nullable) NSString * adBreakId;
+@property(nonatomic, copy, nullable) NSString * adBreakClipId;
+@property(nonatomic, strong, nullable) NSNumber * whenSkippableMs;
 @end
 
 @interface CastDevice : NSObject
@@ -130,12 +154,12 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (void)onSessionResumedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionResumeFailedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSessionSuspendedWithCompletion:(void(^)(NSError *_Nullable))completion;
-- (void)onStatusUpdatedPlayerStateRaw:(NSNumber *)playerStateRaw completion:(void(^)(NSError *_Nullable))completion;
+- (void)onStatusUpdatedMediaStatus:(MediaStatus *)mediaStatus completion:(void(^)(NSError *_Nullable))completion;
 - (void)onMetadataUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onQueueStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onPreloadStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onSendingRemoteMediaRequestWithCompletion:(void(^)(NSError *_Nullable))completion;
-- (void)onAdBreakStatusUpdatedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)onAdBreakStatusUpdatedMediaStatus:(MediaStatus *)mediaStatus completion:(void(^)(NSError *_Nullable))completion;
 - (void)onMediaErrorWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onProgressUpdatedProgressMs:(NSNumber *)progressMs durationMs:(NSNumber *)durationMs completion:(void(^)(NSError *_Nullable))completion;
 - (void)onAdBreakClipProgressUpdatedAdBreakId:(NSString *)adBreakId adBreakClipId:(NSString *)adBreakClipId progressMs:(NSNumber *)progressMs durationMs:(NSNumber *)durationMs whenSkippableMs:(NSNumber *)whenSkippableMs completion:(void(^)(NSError *_Nullable))completion;

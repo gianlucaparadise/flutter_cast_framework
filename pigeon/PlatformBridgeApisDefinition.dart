@@ -210,6 +210,35 @@ enum TrackSubtype {
   metadata,
 }
 
+/// State of the remote media player
+enum PlayerState {
+  /// Constant indicating unknown player state.
+  unknown, // 0
+  /// Constant indicating that the media player is idle.
+  idle, // 1
+  /// Constant indicating that the media player is playing.
+  playing, // 2
+  /// Constant indicating that the media player is paused.
+  paused, // 3
+  /// Constant indicating that the media player is buffering.
+  buffering, // 4
+  /// Constant indicating that the media player is loading.
+  loading, // 5
+}
+
+class MediaStatus {
+  PlayerState? playerState;
+  bool? isPlayingAd;
+  MediaInfo? mediaInfo;
+  AdBreakStatus? adBreakStatus;
+}
+
+class AdBreakStatus {
+  String? adBreakId;
+  String? adBreakClipId;
+  int? whenSkippableMs;
+}
+
 //#endregion
 
 class CastDevice {
@@ -261,13 +290,12 @@ abstract class CastFlutterApi {
   //endregion
 
   //region RemoteMediaClient callbacks
-  // I can't use enum here because of: https://github.com/flutter/flutter/issues/87307
-  void onStatusUpdated(int playerStateRaw);
+  void onStatusUpdated(MediaStatus mediaStatus);
   void onMetadataUpdated();
   void onQueueStatusUpdated();
   void onPreloadStatusUpdated();
   void onSendingRemoteMediaRequest();
-  void onAdBreakStatusUpdated();
+  void onAdBreakStatusUpdated(MediaStatus mediaStatus);
   void onMediaError();
 
   void onProgressUpdated(int progressMs, int durationMs);

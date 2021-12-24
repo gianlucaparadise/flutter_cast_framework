@@ -73,6 +73,20 @@ public class PlatformBridgeApis {
     }
   }
 
+  public enum PlayerState {
+    unknown(0),
+    idle(1),
+    playing(2),
+    paused(3),
+    buffering(4),
+    loading(5);
+
+    private int index;
+    private PlayerState(final int index) {
+      this.index = index;
+    }
+  }
+
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class MediaLoadRequestData {
     private Boolean shouldAutoplay;
@@ -262,6 +276,79 @@ public class PlatformBridgeApis {
       fromMapResult.contentId = (String)contentId;
       Object language = map.get("language");
       fromMapResult.language = (String)language;
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class MediaStatus {
+    private PlayerState playerState;
+    public PlayerState getPlayerState() { return playerState; }
+    public void setPlayerState(PlayerState setterArg) { this.playerState = setterArg; }
+
+    private Boolean isPlayingAd;
+    public Boolean getIsPlayingAd() { return isPlayingAd; }
+    public void setIsPlayingAd(Boolean setterArg) { this.isPlayingAd = setterArg; }
+
+    private MediaInfo mediaInfo;
+    public MediaInfo getMediaInfo() { return mediaInfo; }
+    public void setMediaInfo(MediaInfo setterArg) { this.mediaInfo = setterArg; }
+
+    private AdBreakStatus adBreakStatus;
+    public AdBreakStatus getAdBreakStatus() { return adBreakStatus; }
+    public void setAdBreakStatus(AdBreakStatus setterArg) { this.adBreakStatus = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("playerState", playerState.index);
+      toMapResult.put("isPlayingAd", isPlayingAd);
+      toMapResult.put("mediaInfo", (mediaInfo == null) ? null : mediaInfo.toMap());
+      toMapResult.put("adBreakStatus", (adBreakStatus == null) ? null : adBreakStatus.toMap());
+      return toMapResult;
+    }
+    static MediaStatus fromMap(Map<String, Object> map) {
+      MediaStatus fromMapResult = new MediaStatus();
+      Object playerState = map.get("playerState");
+      fromMapResult.playerState = PlayerState.values()[(int)playerState];
+      Object isPlayingAd = map.get("isPlayingAd");
+      fromMapResult.isPlayingAd = (Boolean)isPlayingAd;
+      Object mediaInfo = map.get("mediaInfo");
+      fromMapResult.mediaInfo = MediaInfo.fromMap((Map)mediaInfo);
+      Object adBreakStatus = map.get("adBreakStatus");
+      fromMapResult.adBreakStatus = AdBreakStatus.fromMap((Map)adBreakStatus);
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class AdBreakStatus {
+    private String adBreakId;
+    public String getAdBreakId() { return adBreakId; }
+    public void setAdBreakId(String setterArg) { this.adBreakId = setterArg; }
+
+    private String adBreakClipId;
+    public String getAdBreakClipId() { return adBreakClipId; }
+    public void setAdBreakClipId(String setterArg) { this.adBreakClipId = setterArg; }
+
+    private Long whenSkippableMs;
+    public Long getWhenSkippableMs() { return whenSkippableMs; }
+    public void setWhenSkippableMs(Long setterArg) { this.whenSkippableMs = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("adBreakId", adBreakId);
+      toMapResult.put("adBreakClipId", adBreakClipId);
+      toMapResult.put("whenSkippableMs", whenSkippableMs);
+      return toMapResult;
+    }
+    static AdBreakStatus fromMap(Map<String, Object> map) {
+      AdBreakStatus fromMapResult = new AdBreakStatus();
+      Object adBreakId = map.get("adBreakId");
+      fromMapResult.adBreakId = (String)adBreakId;
+      Object adBreakClipId = map.get("adBreakClipId");
+      fromMapResult.adBreakClipId = (String)adBreakClipId;
+      Object whenSkippableMs = map.get("whenSkippableMs");
+      fromMapResult.whenSkippableMs = (whenSkippableMs == null) ? null : ((whenSkippableMs instanceof Integer) ? (Integer)whenSkippableMs : (Long)whenSkippableMs);
       return fromMapResult;
     }
   }
@@ -626,7 +713,25 @@ public class PlatformBridgeApis {
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
       switch (type) {
         case (byte)128:         
+          return AdBreakStatus.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)129:         
           return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)130:         
+          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)131:         
+          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)132:         
+          return MediaStatus.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)133:         
+          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)134:         
+          return WebImage.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
           return super.readValueOfType(type, buffer);
@@ -635,9 +740,33 @@ public class PlatformBridgeApis {
     }
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value)     {
-      if (value instanceof CastMessage) {
+      if (value instanceof AdBreakStatus) {
         stream.write(128);
+        writeValue(stream, ((AdBreakStatus) value).toMap());
+      } else 
+      if (value instanceof CastMessage) {
+        stream.write(129);
         writeValue(stream, ((CastMessage) value).toMap());
+      } else 
+      if (value instanceof MediaInfo) {
+        stream.write(130);
+        writeValue(stream, ((MediaInfo) value).toMap());
+      } else 
+      if (value instanceof MediaMetadata) {
+        stream.write(131);
+        writeValue(stream, ((MediaMetadata) value).toMap());
+      } else 
+      if (value instanceof MediaStatus) {
+        stream.write(132);
+        writeValue(stream, ((MediaStatus) value).toMap());
+      } else 
+      if (value instanceof MediaTrack) {
+        stream.write(133);
+        writeValue(stream, ((MediaTrack) value).toMap());
+      } else 
+      if (value instanceof WebImage) {
+        stream.write(134);
+        writeValue(stream, ((WebImage) value).toMap());
       } else 
 {
         super.writeValue(stream, value);
@@ -744,10 +873,10 @@ public class PlatformBridgeApis {
         callback.reply(null);
       });
     }
-    public void onStatusUpdated(Long playerStateRawArg, Reply<Void> callback) {
+    public void onStatusUpdated(MediaStatus mediaStatusArg, Reply<Void> callback) {
       BasicMessageChannel<Object> channel =
           new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onStatusUpdated", getCodec());
-      channel.send(new ArrayList<Object>(Arrays.asList(playerStateRawArg)), channelReply -> {
+      channel.send(new ArrayList<Object>(Arrays.asList(mediaStatusArg)), channelReply -> {
         callback.reply(null);
       });
     }
@@ -779,10 +908,10 @@ public class PlatformBridgeApis {
         callback.reply(null);
       });
     }
-    public void onAdBreakStatusUpdated(Reply<Void> callback) {
+    public void onAdBreakStatusUpdated(MediaStatus mediaStatusArg, Reply<Void> callback) {
       BasicMessageChannel<Object> channel =
           new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.onAdBreakStatusUpdated", getCodec());
-      channel.send(null, channelReply -> {
+      channel.send(new ArrayList<Object>(Arrays.asList(mediaStatusArg)), channelReply -> {
         callback.reply(null);
       });
     }
