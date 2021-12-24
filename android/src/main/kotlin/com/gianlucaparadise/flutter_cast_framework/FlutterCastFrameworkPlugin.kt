@@ -11,8 +11,10 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaInfo
+import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaStatus
 import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
 import com.google.android.gms.cast.MediaError
+import com.google.android.gms.cast.MediaStatus
 import com.google.android.gms.cast.MediaStatus.*
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
@@ -178,8 +180,10 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
     private inner class RemoteMediaClientListener : RemoteMediaClient.Callback(), RemoteMediaClient.ProgressListener {
         override fun onStatusUpdated() {
-            val playerStateRaw = remoteMediaClient?.playerState ?: PLAYER_STATE_UNKNOWN
-            val playerStateLabel = when (playerStateRaw) {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            val mediaStatus = remoteMediaClient.mediaStatus ?: return
+
+            val playerStateLabel = when (remoteMediaClient.playerState) {
                 PLAYER_STATE_UNKNOWN -> "unknown"
                 PLAYER_STATE_BUFFERING -> "buffering"
                 PLAYER_STATE_IDLE -> "idle"
@@ -190,7 +194,9 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             }
             Log.d(TAG, "RemoteMediaClient - onStatusUpdated: $playerStateLabel")
             super.onStatusUpdated()
-            flutterApi?.onStatusUpdated(playerStateRaw.toLong()) { }
+
+            val flutterMediaStatus = getFlutterMediaStatus(mediaStatus)
+            flutterApi?.onStatusUpdated(flutterMediaStatus) { }
         }
 
         override fun onMetadataUpdated() {
@@ -218,10 +224,14 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         }
 
         override fun onAdBreakStatusUpdated() {
-            val isPlayingAd = remoteMediaClient?.mediaStatus?.isPlayingAd
+            val mediaStatus = remoteMediaClient?.mediaStatus ?: return
+
+            val isPlayingAd = mediaStatus.isPlayingAd
             Log.d(TAG, "RemoteMediaClient - onAdBreakStatusUpdated - isPlayingAd: $isPlayingAd")
             super.onAdBreakStatusUpdated()
-            flutterApi?.onAdBreakStatusUpdated { }
+
+            val flutterMediaStatus = getFlutterMediaStatus(mediaStatus)
+            flutterApi?.onAdBreakStatusUpdated(flutterMediaStatus) { }
         }
 
         override fun onMediaError(error: MediaError?) {

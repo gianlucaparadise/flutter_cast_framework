@@ -1,10 +1,41 @@
 package com.gianlucaparadise.flutter_cast_framework.media
 
 import com.gianlucaparadise.flutter_cast_framework.PlatformBridgeApis
-import com.google.android.gms.cast.MediaInfo
-import com.google.android.gms.cast.MediaMetadata
-import com.google.android.gms.cast.MediaTrack
+import com.google.android.gms.cast.*
 import com.google.android.gms.common.images.WebImage
+
+fun getFlutterMediaStatus(mediaStatus: MediaStatus): PlatformBridgeApis.MediaStatus {
+    val flutterMediaInfo = getFlutterMediaInfo(mediaStatus.mediaInfo)
+    val flutterPlayerState = getFlutterPlayerState(mediaStatus.playerState)
+    val flutterAdBreakStatus = getFlutterAdBreakStatus(mediaStatus.adBreakStatus)
+
+    return PlatformBridgeApis.MediaStatus().apply {
+        isPlayingAd = mediaStatus.isPlayingAd
+        mediaInfo = flutterMediaInfo
+        playerState = flutterPlayerState
+        adBreakStatus = flutterAdBreakStatus
+    }
+}
+
+fun getFlutterAdBreakStatus(adBreakStatus: AdBreakStatus?): PlatformBridgeApis.AdBreakStatus {
+    return PlatformBridgeApis.AdBreakStatus().apply {
+        adBreakId = adBreakStatus?.breakId ?: ""
+        adBreakClipId = adBreakStatus?.breakClipId ?: ""
+        whenSkippableMs = adBreakStatus?.whenSkippableInMs ?: -1
+    }
+}
+
+fun getFlutterPlayerState(playerStateRaw: Int): PlatformBridgeApis.PlayerState {
+    return when (playerStateRaw) {
+        MediaStatus.PLAYER_STATE_UNKNOWN -> PlatformBridgeApis.PlayerState.unknown
+        MediaStatus.PLAYER_STATE_BUFFERING -> PlatformBridgeApis.PlayerState.buffering
+        MediaStatus.PLAYER_STATE_IDLE -> PlatformBridgeApis.PlayerState.idle
+        MediaStatus.PLAYER_STATE_LOADING -> PlatformBridgeApis.PlayerState.loading
+        MediaStatus.PLAYER_STATE_PAUSED -> PlatformBridgeApis.PlayerState.paused
+        MediaStatus.PLAYER_STATE_PLAYING -> PlatformBridgeApis.PlayerState.playing
+        else -> PlatformBridgeApis.PlayerState.unknown
+    }
+}
 
 fun getFlutterMediaInfo(mediaInfo: MediaInfo): PlatformBridgeApis.MediaInfo {
     val flutterMediaMetadata = getFlutterMediaMetadata(mediaInfo.metadata)
