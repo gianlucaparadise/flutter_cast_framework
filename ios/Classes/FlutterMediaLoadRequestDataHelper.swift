@@ -8,6 +8,61 @@
 import Foundation
 import GoogleCast
 
+func getFlutterMediaStatus(mediaStatus: GCKMediaStatus?) -> MediaStatus {
+    let result = MediaStatus()
+    
+    if (mediaStatus == nil) {
+        return result
+    }
+    
+    result.isPlayingAd = NSNumber(value: mediaStatus?.playingAd ?? false)
+    result.mediaInfo = getFlutterMediaInfo(mediaInfo: mediaStatus?.mediaInformation)
+    result.playerState = getFlutterPlayerState(playerState: mediaStatus?.playerState)
+    result.adBreakStatus = getFlutterAdBreakStatus(adBreakStatus: mediaStatus?.adBreakStatus)
+    
+    return result
+}
+
+func getFlutterAdBreakStatus(adBreakStatus: GCKAdBreakStatus?) -> AdBreakStatus {
+    let result = AdBreakStatus()
+    
+    if (adBreakStatus == nil) {
+        return result
+    }
+    
+    result.adBreakId = adBreakStatus?.adBreakID
+    result.adBreakClipId = adBreakStatus?.adBreakClipID
+    result.whenSkippableMs = getFlutterWhenSkippableMs(whenSkippable: adBreakStatus?.whenSkippable)
+    
+    return result
+}
+
+func getFlutterWhenSkippableMs(whenSkippable: TimeInterval?) -> NSNumber {
+    let whenSkippableSecs = whenSkippable ?? 0
+    let whenSkippableMs = Int(whenSkippableSecs * 1000)
+    
+    return NSNumber(value: whenSkippableMs)
+}
+
+func getFlutterPlayerState(playerState: GCKMediaPlayerState?) -> PlayerState {
+    switch playerState {
+    case .unknown:
+        return PlayerState.unknown
+    case .idle:
+        return PlayerState.idle
+    case .playing:
+        return PlayerState.playing
+    case .paused:
+        return PlayerState.paused
+    case .buffering:
+        return PlayerState.buffering
+    case .loading:
+        return PlayerState.loading
+    default:
+        return PlayerState.unknown
+    }
+}
+
 func getFlutterMediaInfo(mediaInfo: GCKMediaInformation?) -> MediaInfo {
     let result = MediaInfo()
     

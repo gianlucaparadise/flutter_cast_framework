@@ -431,9 +431,10 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         }
         
         debugPrint("RemoteMediaClientListener: didUpdate mediaStatus - playerState: \(playerStateLabel)")
-        let playerState = mediaStatus?.playerState ?? GCKMediaPlayerState.unknown
-        let nsPlayerState = NSNumber(value: playerState.rawValue)
-        flutterApi.onStatusUpdatedPlayerStateRaw(nsPlayerState) { (_:Error?) in
+        let flutterMediaStatus = getFlutterMediaStatus(mediaStatus: mediaStatus)
+        flutterApi.onStatusUpdatedMediaStatus(flutterMediaStatus) { (_:Error?) in
+        }
+        flutterApi.onAdBreakStatusUpdatedMediaStatus(flutterMediaStatus) { (_:Error?) in
         }
     }
     
