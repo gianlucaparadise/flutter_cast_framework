@@ -85,19 +85,3 @@ class RemoteMediaClient {
     this._playerStateNotifier.value = playerState;
   }
 }
-
-/// State of the remote media player
-enum PlayerState {
-  /// Constant indicating unknown player state.
-  unknown, // 0
-  /// Constant indicating that the media player is idle.
-  idle, // 1
-  /// Constant indicating that the media player is playing.
-  playing, // 2
-  /// Constant indicating that the media player is paused.
-  paused, // 3
-  /// Constant indicating that the media player is buffering.
-  buffering, // 4
-  /// Constant indicating that the media player is loading.
-  loading, // 5
-}
