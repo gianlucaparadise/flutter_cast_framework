@@ -4,13 +4,13 @@ import com.gianlucaparadise.flutter_cast_framework.PlatformBridgeApis
 import com.google.android.gms.cast.*
 import com.google.android.gms.common.images.WebImage
 
-fun getFlutterMediaStatus(mediaStatus: MediaStatus): PlatformBridgeApis.MediaStatus {
-    val flutterMediaInfo = getFlutterMediaInfo(mediaStatus.mediaInfo)
-    val flutterPlayerState = getFlutterPlayerState(mediaStatus.playerState)
-    val flutterAdBreakStatus = getFlutterAdBreakStatus(mediaStatus.adBreakStatus)
+fun getFlutterMediaStatus(mediaStatus: MediaStatus?): PlatformBridgeApis.MediaStatus {
+    val flutterMediaInfo = getFlutterMediaInfo(mediaStatus?.mediaInfo)
+    val flutterPlayerState = getFlutterPlayerState(mediaStatus?.playerState)
+    val flutterAdBreakStatus = getFlutterAdBreakStatus(mediaStatus?.adBreakStatus)
 
     return PlatformBridgeApis.MediaStatus().apply {
-        isPlayingAd = mediaStatus.isPlayingAd
+        isPlayingAd = mediaStatus?.isPlayingAd ?: false
         mediaInfo = flutterMediaInfo
         playerState = flutterPlayerState
         adBreakStatus = flutterAdBreakStatus
@@ -25,7 +25,7 @@ fun getFlutterAdBreakStatus(adBreakStatus: AdBreakStatus?): PlatformBridgeApis.A
     }
 }
 
-fun getFlutterPlayerState(playerStateRaw: Int): PlatformBridgeApis.PlayerState {
+fun getFlutterPlayerState(playerStateRaw: Int?): PlatformBridgeApis.PlayerState {
     return when (playerStateRaw) {
         MediaStatus.PLAYER_STATE_UNKNOWN -> PlatformBridgeApis.PlayerState.unknown
         MediaStatus.PLAYER_STATE_BUFFERING -> PlatformBridgeApis.PlayerState.buffering
@@ -37,23 +37,23 @@ fun getFlutterPlayerState(playerStateRaw: Int): PlatformBridgeApis.PlayerState {
     }
 }
 
-fun getFlutterMediaInfo(mediaInfo: MediaInfo): PlatformBridgeApis.MediaInfo {
-    val flutterMediaMetadata = getFlutterMediaMetadata(mediaInfo.metadata)
-    val flutterMediaTracks = getFlutterMediaTracks(mediaInfo.mediaTracks)
-    val flutterStreamType = getFlutterStreamType(mediaInfo.streamType)
+fun getFlutterMediaInfo(mediaInfo: MediaInfo?): PlatformBridgeApis.MediaInfo {
+    val flutterMediaMetadata = getFlutterMediaMetadata(mediaInfo?.metadata)
+    val flutterMediaTracks = getFlutterMediaTracks(mediaInfo?.mediaTracks)
+    val flutterStreamType = getFlutterStreamType(mediaInfo?.streamType)
 
     return PlatformBridgeApis.MediaInfo().apply {
-        contentId = mediaInfo.contentId
-        contentType = mediaInfo.contentType
-        customDataAsJson = mediaInfo.customData?.toString()
+        contentId = mediaInfo?.contentId ?: ""
+        contentType = mediaInfo?.contentType ?: ""
+        customDataAsJson = mediaInfo?.customData?.toString()
         mediaMetadata = flutterMediaMetadata
         mediaTracks = flutterMediaTracks
-        streamDuration = mediaInfo.streamDuration
+        streamDuration = mediaInfo?.streamDuration ?: 0
         streamType = flutterStreamType
     }
 }
 
-fun getFlutterStreamType(streamType: Int): PlatformBridgeApis.StreamType {
+fun getFlutterStreamType(streamType: Int?): PlatformBridgeApis.StreamType {
     return when (streamType) {
         -1 -> PlatformBridgeApis.StreamType.invalid
         0 -> PlatformBridgeApis.StreamType.none
@@ -63,27 +63,27 @@ fun getFlutterStreamType(streamType: Int): PlatformBridgeApis.StreamType {
     }
 }
 
-fun getFlutterMediaTracks(mediaTracks: List<MediaTrack>): List<PlatformBridgeApis.MediaTrack> {
-    return mediaTracks.map {
+fun getFlutterMediaTracks(mediaTracks: List<MediaTrack>?): List<PlatformBridgeApis.MediaTrack> {
+    return mediaTracks?.map {
         getFlutterMediaTrack(it)
-    }
+    } ?: emptyList()
 }
 
-fun getFlutterMediaTrack(mediaTrack: MediaTrack): PlatformBridgeApis.MediaTrack {
-    val flutterSubtype = getFlutterSubtype(mediaTrack.subtype)
-    val flutterType = getFlutterType(mediaTrack.type)
+fun getFlutterMediaTrack(mediaTrack: MediaTrack?): PlatformBridgeApis.MediaTrack {
+    val flutterSubtype = getFlutterSubtype(mediaTrack?.subtype)
+    val flutterType = getFlutterType(mediaTrack?.type)
 
     return PlatformBridgeApis.MediaTrack().apply {
-        contentId = mediaTrack.contentId
-        id = mediaTrack.id
-        language = mediaTrack.language
-        name = mediaTrack.name
+        contentId = mediaTrack?.contentId ?: ""
+        id = mediaTrack?.id ?: -1
+        language = mediaTrack?.language ?: ""
+        name = mediaTrack?.name ?: ""
         trackSubtype = flutterSubtype
         trackType = flutterType
     }
 }
 
-fun getFlutterType(type: Int): PlatformBridgeApis.TrackType {
+fun getFlutterType(type: Int?): PlatformBridgeApis.TrackType {
     return when (type) {
         0 -> PlatformBridgeApis.TrackType.unknown
         1 -> PlatformBridgeApis.TrackType.text
@@ -93,7 +93,7 @@ fun getFlutterType(type: Int): PlatformBridgeApis.TrackType {
     }
 }
 
-fun getFlutterSubtype(subtype: Int): PlatformBridgeApis.TrackSubtype {
+fun getFlutterSubtype(subtype: Int?): PlatformBridgeApis.TrackSubtype {
     return when (subtype) {
         -1 -> PlatformBridgeApis.TrackSubtype.unknown
         0 -> PlatformBridgeApis.TrackSubtype.none
@@ -106,9 +106,9 @@ fun getFlutterSubtype(subtype: Int): PlatformBridgeApis.TrackSubtype {
     }
 }
 
-fun getFlutterMediaMetadata(mediaMetadata: MediaMetadata): PlatformBridgeApis.MediaMetadata {
-    val flutterMediaType = getFlutterMediaType(mediaMetadata.mediaType)
-    val flutterWebImages = getFlutterWebImages(mediaMetadata.images)
+fun getFlutterMediaMetadata(mediaMetadata: MediaMetadata?): PlatformBridgeApis.MediaMetadata {
+    val flutterMediaType = getFlutterMediaType(mediaMetadata?.mediaType)
+    val flutterWebImages = getFlutterWebImages(mediaMetadata?.images)
 
     return PlatformBridgeApis.MediaMetadata().apply {
         mediaType = flutterMediaType
@@ -116,15 +116,15 @@ fun getFlutterMediaMetadata(mediaMetadata: MediaMetadata): PlatformBridgeApis.Me
     }
 }
 
-fun getFlutterWebImages(images: List<WebImage>): List<PlatformBridgeApis.WebImage> {
-    return images.map {
+fun getFlutterWebImages(images: List<WebImage>?): List<PlatformBridgeApis.WebImage> {
+    return images?.map {
         PlatformBridgeApis.WebImage().apply {
             url = it.url.toString()
         }
-    }
+    } ?: emptyList()
 }
 
-fun getFlutterMediaType(mediaType: Int): PlatformBridgeApis.MediaType {
+fun getFlutterMediaType(mediaType: Int?): PlatformBridgeApis.MediaType {
     return when (mediaType) {
         0 -> PlatformBridgeApis.MediaType.generic
         1 -> PlatformBridgeApis.MediaType.movie

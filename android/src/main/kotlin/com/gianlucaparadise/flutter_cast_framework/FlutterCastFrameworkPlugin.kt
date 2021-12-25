@@ -302,9 +302,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient
                     ?: throw IllegalStateException("Missing cast session")
 
-            val hostMediaInfo = remoteMediaClient.mediaInfo ?: return PlatformBridgeApis.MediaInfo()
-
-            return getFlutterMediaInfo(hostMediaInfo)
+            return getFlutterMediaInfo(remoteMediaClient.mediaInfo)
         }
 
         override fun play() {
