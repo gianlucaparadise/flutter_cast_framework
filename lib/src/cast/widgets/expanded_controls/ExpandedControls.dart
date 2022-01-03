@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cast_framework/src/cast/widgets/expanded_controls/ExpandedControlsAdSkipBox.dart';
 
 import '../../../../cast.dart';
-import 'ExpandedControlsBasicButton.dart';
 import 'ExpandedControlsConnectedDeviceLabel.dart';
 import 'ExpandedControlsHighlightedText.dart';
 import 'ExpandedControlsInfoTextBox.dart';
@@ -34,16 +34,28 @@ const _bottomUpBlackGradient = BoxDecoration(
 class ExpandedControls extends StatefulWidget {
   final FlutterCastFramework castFramework;
 
-  /// Label to introduce cast device. Default is "Casting to {{device_name}}", where {{device_name}} is replaced with the device name
+  /// Label to introduce cast device. Default is "Casting to {{cast_device_name}}", where {{cast_device_name}} is replaced with the device name
+  /// {{cast_device_name}} can be found in the constant CAST_DEVICE_NAME_PLACEHOLDER.
   final String? castingToText;
+
+  /// Label to indicate remaining time for ad. Default is "You can skip this ad in {{skip_remaining_time}}...",
+  /// where {{skip_remaining_time}} is replaced with the remaining time.
+  /// {{skip_remaining_time}} can be found in the constant SKIP_AD_TIMER_PLACEHOLDER.
+  final String? skipAdTimerText;
+
+  /// Label for the Skip Ad button. Default is "Skip Ad".
+  final String? skipAdButtonText;
 
   /// This is called when the back button is tapped or when the session is closed
   final VoidCallback? onCloseRequested;
-  final controller = ExpandedControlsProgressController();
+  final progressController = ExpandedControlsProgressController();
+  final adSkipBoxController = ExpandedControlsAdSkipBoxController();
 
   ExpandedControls({
     required this.castFramework,
     this.castingToText,
+    this.skipAdTimerText,
+    this.skipAdButtonText,
     this.onCloseRequested,
   });
 
@@ -74,7 +86,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     sessionManager.remoteMediaClient.onProgressUpdated = null;
     sessionManager.remoteMediaClient.onAdBreakClipProgressUpdated = null;
 
-    widget.controller.dispose();
+    widget.progressController.dispose();
 
     super.dispose();
   }
@@ -107,7 +119,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
   }
 
   void _onProgressUpdated(int progress, int duration) {
-    widget.controller.updateProgress(progress, duration);
+    widget.progressController.updateProgress(progress, duration);
   }
 
   void _onAdBreakClipProgressUpdated(
@@ -117,9 +129,8 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     int durationMs,
     int whenSkippableMs,
   ) {
-    debugPrint(
-        "adBreakId: $adBreakId adBreakClipId: $adBreakClipId progress: $progressMs duration: $durationMs whenSkip: $whenSkippableMs");
-    widget.controller.updateProgress(progressMs, durationMs);
+    widget.adSkipBoxController
+        .updateProgress(progressMs, durationMs, whenSkippableMs);
   }
 
   Widget _getDecoratedToolbar(MediaInfo? mediaInfo) {
@@ -155,7 +166,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ExpandedControlsProgress(
-              controller: widget.controller,
+              controller: widget.progressController,
             ),
           ),
           Padding(
@@ -202,9 +213,11 @@ class _ExpandedControlsState extends State<ExpandedControls> {
         ),
       ),
       const Spacer(flex: 1),
-      ExpandedControlsBasicButton(
-        text: "Skip Ad", // TODO: localize label
-        onPressed: () {/* TODO: skip ad */},
+      ExpandedControlsAdSkipBox(
+        controller: widget.adSkipBoxController,
+        skipAdButtonText: widget.skipAdButtonText,
+        skipAdTimerText: widget.skipAdTimerText,
+        onSkipPressed: () {/* TODO: skip ad */},
       ),
     ];
   }
