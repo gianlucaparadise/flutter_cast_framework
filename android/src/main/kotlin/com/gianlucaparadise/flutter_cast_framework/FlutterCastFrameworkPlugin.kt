@@ -336,6 +336,11 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     .show(activity.supportFragmentManager, "FlutterCastFrameworkTracksChooserDialog")
         }
 
+        override fun skipAd() {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            remoteMediaClient.skipAd()
+        }
+
         override fun setMute(muted: Boolean?) {
             if (muted == null) return
             val castSession = mCastSession ?: return

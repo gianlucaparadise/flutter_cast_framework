@@ -267,6 +267,7 @@ abstract class CastHostApi {
   void pause();
   void stop();
   void showTracksChooserDialog();
+  void skipAd();
   //endregion
 }
 

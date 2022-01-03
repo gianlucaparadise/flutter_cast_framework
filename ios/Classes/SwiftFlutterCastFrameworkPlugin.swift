@@ -323,6 +323,9 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         print("showTracksChooserDialog: unsupported feature")
     }
     
+    public func skipAdWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        remoteMediaClient?.skipAd()
+    }
     // MARK: - GCKSessionManagerListener
     
     // onSessionSuspended

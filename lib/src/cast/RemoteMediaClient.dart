@@ -79,6 +79,11 @@ class RemoteMediaClient {
     _hostApi.showTracksChooserDialog();
   }
 
+  /// Skips the playing ad.
+  void skipAd() {
+    _hostApi.skipAd();
+  }
+
   /// Internal method that shouldn't be visible
   @internal
   void dispatchPlayerStateUpdate(PlayerState playerState) {

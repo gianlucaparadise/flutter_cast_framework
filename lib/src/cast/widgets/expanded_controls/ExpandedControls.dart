@@ -137,6 +137,11 @@ class _ExpandedControlsState extends State<ExpandedControls> {
         .updateProgress(progressMs, durationMs, whenSkippableMs);
   }
 
+  void _onSkipAd() {
+    final sessionManager = widget.castFramework.castContext.sessionManager;
+    sessionManager.remoteMediaClient.skipAd();
+  }
+
   Widget _getDecoratedToolbar(MediaInfo? mediaInfo) {
     // Title and subtitle can't be retrieved at the moment
     // final title = mediaInfo?.mediaMetadata?.strings[MediaMetadataKey.title]
@@ -221,7 +226,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
         controller: widget.adSkipBoxController,
         skipAdButtonText: widget.skipAdButtonText,
         skipAdTimerText: widget.skipAdTimerText,
-        onSkipPressed: () {/* TODO: skip ad */},
+        onSkipPressed: _onSkipAd,
       ),
     ];
   }

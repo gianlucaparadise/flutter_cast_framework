@@ -491,6 +491,7 @@ public class PlatformBridgeApis {
     void pause();
     void stop();
     void showTracksChooserDialog();
+    void skipAd();
 
     /** The codec used by CastHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -693,6 +694,25 @@ public class PlatformBridgeApis {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               api.showTracksChooserDialog();
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.skipAd", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              api.skipAd();
               wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {

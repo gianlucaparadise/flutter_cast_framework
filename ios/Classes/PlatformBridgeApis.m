@@ -540,6 +540,24 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.CastHostApi.skipAd"
+        binaryMessenger:binaryMessenger
+        codec:CastHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(skipAdWithError:)], @"CastHostApi api (%@) doesn't respond to @selector(skipAdWithError:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        [api skipAdWithError:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface CastFlutterApiCodecReader : FlutterStandardReader
 @end
