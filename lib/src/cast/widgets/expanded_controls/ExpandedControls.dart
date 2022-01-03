@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../cast.dart';
+import 'ExpandedControlsBasicButton.dart';
 import 'ExpandedControlsConnectedDeviceLabel.dart';
+import 'ExpandedControlsHighlightedText.dart';
+import 'ExpandedControlsInfoTextBox.dart';
 import 'ExpandedControlsPlayer.dart';
 import 'ExpandedControlsProgress.dart';
 import 'ExpandedControlsToolbar.dart';
@@ -185,6 +188,27 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     );
   }
 
+  List<Widget> _getAdInfoBox() {
+    return [
+      const Spacer(flex: 2),
+      const ExpandedControlsHighlightedText(
+        text: "Ad Title", // TODO: retrieve ad title from API
+      ),
+      const SizedBox(height: 8),
+      const Expanded(
+        flex: 8,
+        child: ExpandedControlsInfoTextBox(
+          text: "Ad in progress...", // TODO: localize label
+        ),
+      ),
+      const Spacer(flex: 1),
+      ExpandedControlsBasicButton(
+        text: "Skip Ad", // TODO: localize label
+        onPressed: () {/* TODO: skip ad */},
+      ),
+    ];
+  }
+
   Widget _getFullControls(BuildContext context, MediaInfo? mediaInfo) {
     return Container(
       decoration: BoxDecoration(
@@ -194,7 +218,7 @@ class _ExpandedControlsState extends State<ExpandedControls> {
       child: Column(
         children: [
           _getDecoratedToolbar(mediaInfo),
-          Spacer(),
+          ..._getAdInfoBox(), // TODO: check if is playing ad, otherwise -> Spacer(),
           _getDecoratedControls(context, mediaInfo),
         ],
       ),
