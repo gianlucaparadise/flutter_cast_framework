@@ -4,6 +4,11 @@
 
 Flutter Cast Framework is a POC of a flutter plugin that lets you use Chromecast API in a flutter app.
 
+## Useful links
+
+* [Repository](https://github.com/gianlucaparadise/flutter_cast_framework)
+* [API Docs](https://gianlucaparadise.github.io/flutter_cast_framework/api/)
+
 ## Exposed APIs
 
 Currently only the following APIs are integrated (both Android and iOS):
@@ -144,7 +149,7 @@ I used this project to test the capabilities of the following technologies:
 ## Roadmap
 
 * CC in Expanded Controls (iOS)
-* Handle Ad Break
+* Handle Ad Break (ad skip, ad UI, ad countdown)
 * Handle progress seek
 * Handle queue
 * Handle mini-player
