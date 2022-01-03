@@ -46,6 +46,9 @@ class ExpandedControls extends StatefulWidget {
   /// Label for the Skip Ad button. Default is "Skip Ad".
   final String? skipAdButtonText;
 
+  /// Label for the Ad Info box. Default is "Ad in progress...".
+  final String adInfoBoxText;
+
   /// This is called when the back button is tapped or when the session is closed
   final VoidCallback? onCloseRequested;
   final progressController = ExpandedControlsProgressController();
@@ -56,6 +59,7 @@ class ExpandedControls extends StatefulWidget {
     this.castingToText,
     this.skipAdTimerText,
     this.skipAdButtonText,
+    this.adInfoBoxText = "Ad in progress...",
     this.onCloseRequested,
   });
 
@@ -206,10 +210,10 @@ class _ExpandedControlsState extends State<ExpandedControls> {
         text: "Ad Title", // TODO: retrieve ad title from API
       ),
       const SizedBox(height: 8),
-      const Expanded(
+      Expanded(
         flex: 8,
         child: ExpandedControlsInfoTextBox(
-          text: "Ad in progress...", // TODO: localize label
+          text: widget.adInfoBoxText,
         ),
       ),
       const Spacer(flex: 1),
