@@ -148,4 +148,3 @@ I used this project to test the capabilities of the following technologies:
 * Handle progress seek
 * Handle queue
 * Handle mini-player
-* Produce HTML docs

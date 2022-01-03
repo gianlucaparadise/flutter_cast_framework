@@ -20,3 +20,6 @@ open-ios:
 
 run-all:
 	cd example && flutter run -d all
+
+docs:
+	flutter pub run dartdoc --output docs/api

@@ -1,7 +1,7 @@
 name: flutter_cast_framework
 description: A new flutter plugin project.
 version: 0.0.1
-homepage:
+homepage: https://gianlucaparadise.github.io/flutter_cast_framework/
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -13,6 +13,7 @@ dependencies:
   meta: ^1.7.0
 
 dev_dependencies:
+  dartdoc: ^4.1.0
   flutter_test:
     sdk: flutter
   pigeon: ^1.0.8
