@@ -12,6 +12,7 @@ typedef AdBreakClipProgressListener = void Function(
   int durationMs,
   int whenSkippableMs,
 );
+typedef MediaStatusListener = void Function(MediaStatus mediaStatus);
 
 /// Class for controlling a media player application running on a receiver.
 class RemoteMediaClient {
@@ -40,7 +41,7 @@ class RemoteMediaClient {
   VoidCallback? onSendingRemoteMediaRequest;
 
   /// Called when updated ad break status information is received.
-  VoidCallback? onAdBreakStatusUpdated;
+  MediaStatusListener? onAdBreakStatusUpdated;
 
   /// Called when receiving media error message.
   VoidCallback? onMediaError;

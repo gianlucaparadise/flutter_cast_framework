@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cast_framework/src/cast/widgets/expanded_controls/ExpandedControlsAdSkipBox.dart';
 
 import '../../../../cast.dart';
 import 'ExpandedControlsConnectedDeviceLabel.dart';
-import 'ExpandedControlsHighlightedText.dart';
-import 'ExpandedControlsInfoTextBox.dart';
+import 'ExpandedControlsAdInfoControls.dart';
+import 'ExpandedControlsAdSkipBox.dart';
 import 'ExpandedControlsPlayer.dart';
 import 'ExpandedControlsProgress.dart';
 import 'ExpandedControlsToolbar.dart';
@@ -137,11 +136,6 @@ class _ExpandedControlsState extends State<ExpandedControls> {
         .updateProgress(progressMs, durationMs, whenSkippableMs);
   }
 
-  void _onSkipAd() {
-    final sessionManager = widget.castFramework.castContext.sessionManager;
-    sessionManager.remoteMediaClient.skipAd();
-  }
-
   Widget _getDecoratedToolbar(MediaInfo? mediaInfo) {
     // Title and subtitle can't be retrieved at the moment
     // final title = mediaInfo?.mediaMetadata?.strings[MediaMetadataKey.title]
@@ -208,29 +202,6 @@ class _ExpandedControlsState extends State<ExpandedControls> {
     );
   }
 
-  List<Widget> _getAdInfoBox() {
-    return [
-      const Spacer(flex: 2),
-      const ExpandedControlsHighlightedText(
-        text: "Ad Title", // TODO: retrieve ad title from API
-      ),
-      const SizedBox(height: 8),
-      Expanded(
-        flex: 8,
-        child: ExpandedControlsInfoTextBox(
-          text: widget.adInfoBoxText,
-        ),
-      ),
-      const Spacer(flex: 1),
-      ExpandedControlsAdSkipBox(
-        controller: widget.adSkipBoxController,
-        skipAdButtonText: widget.skipAdButtonText,
-        skipAdTimerText: widget.skipAdTimerText,
-        onSkipPressed: _onSkipAd,
-      ),
-    ];
-  }
-
   Widget _getFullControls(BuildContext context, MediaInfo? mediaInfo) {
     return Container(
       decoration: BoxDecoration(
@@ -240,7 +211,13 @@ class _ExpandedControlsState extends State<ExpandedControls> {
       child: Column(
         children: [
           _getDecoratedToolbar(mediaInfo),
-          ..._getAdInfoBox(), // TODO: check if is playing ad, otherwise -> Spacer(),
+          ExpandedControlsAdInfoControls(
+            adSkipBoxController: widget.adSkipBoxController,
+            castFramework: widget.castFramework,
+            adInfoBoxText: widget.adInfoBoxText,
+            skipAdButtonText: widget.skipAdButtonText,
+            skipAdTimerText: widget.skipAdTimerText,
+          ),
           _getDecoratedControls(context, mediaInfo),
         ],
       ),
