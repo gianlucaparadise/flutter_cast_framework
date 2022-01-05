@@ -6,7 +6,13 @@ import 'SessionManager.dart';
 
 /// Class wrapping the global context fot the Cast SDK
 class CastContext {
-  CastContext(this._hostApi);
+  CastContext(this._hostApi) {
+    this.sessionManager = SessionManager(_hostApi);
+  }
+
+  void dispose() {
+    this.sessionManager.dispose();
+  }
 
   final CastHostApi _hostApi;
 
@@ -25,16 +31,8 @@ class CastContext {
     _stateNotifier.value = CastState.values[castState];
   }
 
-  SessionManager? _sessionManager;
-
   /// Returns the SessionManager.
-  SessionManager get sessionManager {
-    var result = _sessionManager;
-    if (result == null) {
-      _sessionManager = result = SessionManager(_hostApi);
-    }
-    return result;
-  }
+  late SessionManager sessionManager;
 }
 
 /// The possible casting states.

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
@@ -16,7 +18,13 @@ typedef MediaStatusListener = void Function(MediaStatus mediaStatus);
 
 /// Class for controlling a media player application running on a receiver.
 class RemoteMediaClient {
-  RemoteMediaClient(this._hostApi);
+  RemoteMediaClient(this._hostApi) {
+    this.mediaStatusStream = this._mediaStatusStreamController.stream;
+  }
+
+  void dispose() {
+    this._mediaStatusStreamController.close();
+  }
 
   final CastHostApi _hostApi;
 
@@ -39,6 +47,10 @@ class RemoteMediaClient {
 
   /// Called when there is an outgoing request to the receiver.
   VoidCallback? onSendingRemoteMediaRequest;
+
+  final _mediaStatusStreamController =
+      StreamController<MediaStatus>.broadcast();
+  late Stream<MediaStatus> mediaStatusStream;
 
   /// Called when updated ad break status information is received.
   MediaStatusListener? onAdBreakStatusUpdated;
@@ -89,5 +101,11 @@ class RemoteMediaClient {
   @internal
   void dispatchPlayerStateUpdate(PlayerState playerState) {
     this._playerStateNotifier.value = playerState;
+  }
+
+  /// Internal method that shouldn't be visible
+  @internal
+  void dispatchMediaStatusUpdate(MediaStatus mediaStatus) {
+    this._mediaStatusStreamController.add(mediaStatus);
   }
 }

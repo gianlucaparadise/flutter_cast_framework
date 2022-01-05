@@ -230,12 +230,12 @@ class _ExpandedControlsState extends State<ExpandedControls> {
         this.widget.castFramework.castContext.sessionManager.remoteMediaClient;
 
     return SafeArea(
-      child: FutureBuilder(
-        future: remoteMediaClient.getMediaInfo(),
-        builder: (BuildContext context, AsyncSnapshot<MediaInfo> snapshot) {
-          if (snapshot.hasData) {
-            var mediaInfo = snapshot.data;
-            return _getFullControls(context, mediaInfo);
+      child: StreamBuilder<MediaStatus>(
+        stream: remoteMediaClient.mediaStatusStream,
+        builder: (BuildContext context, AsyncSnapshot<MediaStatus> snapshot) {
+          if (snapshot.hasData && snapshot.data?.mediaInfo != null) {
+            var mediaStatus = snapshot.data;
+            return _getFullControls(context, mediaStatus?.mediaInfo);
           } else if (snapshot.hasError) {
             return _getFullControls(context, null);
           } else {

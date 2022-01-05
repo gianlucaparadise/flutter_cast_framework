@@ -6,7 +6,13 @@ import 'RemoteMediaClient.dart';
 /// A class that manages Session instances. The application can attach a
 /// listeners to be notified of session events.
 class SessionManager {
-  SessionManager(this._hostApi);
+  SessionManager(this._hostApi) {
+    this.remoteMediaClient = RemoteMediaClient(_hostApi);
+  }
+
+  void dispose() {
+    this.remoteMediaClient.dispose();
+  }
 
   final CastHostApi _hostApi;
 
@@ -68,16 +74,8 @@ class SessionManager {
     return await _hostApi.getCastDevice();
   }
 
-  RemoteMediaClient? _remoteMediaClient;
-
   /// Returns the RemoteMediaClient for remote media control.
-  RemoteMediaClient get remoteMediaClient {
-    var result = _remoteMediaClient;
-    if (result == null) {
-      _remoteMediaClient = result = RemoteMediaClient(_hostApi);
-    }
-    return result;
-  }
+  late RemoteMediaClient remoteMediaClient;
 }
 
 typedef MessageReceivedCallback = void Function(

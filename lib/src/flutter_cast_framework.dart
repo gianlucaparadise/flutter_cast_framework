@@ -111,7 +111,8 @@ class _CastFlutterApiImplementor extends CastFlutterApi {
   //region RemoteMediaClient
   @override
   void onAdBreakStatusUpdated(MediaStatus mediaStatus) {
-    remoteMediaClient.onAdBreakStatusUpdated?.call();
+    remoteMediaClient.onAdBreakStatusUpdated?.call(mediaStatus);
+    remoteMediaClient.dispatchMediaStatusUpdate(mediaStatus);
   }
 
   @override
@@ -143,6 +144,7 @@ class _CastFlutterApiImplementor extends CastFlutterApi {
   void onStatusUpdated(MediaStatus mediaStatus) {
     final playerState = mediaStatus.playerState ?? PlayerState.unknown;
     remoteMediaClient.dispatchPlayerStateUpdate(playerState);
+    remoteMediaClient.dispatchMediaStatusUpdate(mediaStatus);
   }
 
   @override
