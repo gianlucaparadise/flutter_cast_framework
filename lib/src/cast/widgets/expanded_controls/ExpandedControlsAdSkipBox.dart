@@ -81,7 +81,7 @@ class _ExpandedControlsAdSkipBoxState extends State<ExpandedControlsAdSkipBox> {
 
   @override
   Widget build(BuildContext context) {
-    final canSkip = progress > whenSkippable;
+    final canSkip = progress >= whenSkippable;
     if (canSkip) {
       return ExpandedControlsBasicButton(
         text: widget.skipAdButtonText ?? widget._defaultSkipAdButtonText,

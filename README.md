@@ -149,7 +149,8 @@ I used this project to test the capabilities of the following technologies:
 ## Roadmap
 
 * CC in Expanded Controls (iOS)
-* Handle Ad Break (ad skip, ad UI, ad countdown)
-* Handle progress seek
+* Handle Ad Break (ad title)
 * Handle queue
 * Handle mini-player
+* Handle progress seek
+* Understand if it is better to refactor using streams instead of listeners

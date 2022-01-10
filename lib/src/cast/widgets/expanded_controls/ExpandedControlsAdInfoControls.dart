@@ -5,7 +5,7 @@ import 'ExpandedControlsAdSkipBox.dart';
 import 'ExpandedControlsHighlightedText.dart';
 import 'ExpandedControlsInfoTextBox.dart';
 
-class ExpandedControlsAdInfoControls extends StatefulWidget {
+class ExpandedControlsAdInfoControls extends StatelessWidget {
   final FlutterCastFramework castFramework;
 
   final ExpandedControlsAdSkipBoxController adSkipBoxController;
@@ -22,51 +22,20 @@ class ExpandedControlsAdInfoControls extends StatefulWidget {
     this.skipAdTimerText,
   }) : super(key: key);
 
-  @override
-  _ExpandedControlsAdInfoBoxState createState() =>
-      _ExpandedControlsAdInfoBoxState();
-}
-
-class _ExpandedControlsAdInfoBoxState
-    extends State<ExpandedControlsAdInfoControls> {
-  bool isPlayingAd = false;
-
-  @override
-  void initState() {
-    final sessionManager = widget.castFramework.castContext.sessionManager;
-    sessionManager.remoteMediaClient.onAdBreakStatusUpdated =
-        _onAdBreakStatusUpdated;
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    final sessionManager = widget.castFramework.castContext.sessionManager;
-    sessionManager.remoteMediaClient.onAdBreakStatusUpdated = null;
-
-    super.dispose();
-  }
-
-  void _onAdBreakStatusUpdated(MediaStatus mediaStatus) {
-    if (!mounted || mediaStatus.isPlayingAd == null) return;
-
-    if (mediaStatus.isPlayingAd != this.isPlayingAd) {
-      setState(() {
-        if (!mounted) return;
-        this.isPlayingAd = mediaStatus.isPlayingAd ?? false;
-      });
-    }
-  }
-
   void _onSkipAd() {
-    final sessionManager = widget.castFramework.castContext.sessionManager;
+    final sessionManager = castFramework.castContext.sessionManager;
     sessionManager.remoteMediaClient.skipAd();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (!isPlayingAd) {
+  Widget _getAdControls(MediaStatus? mediaStatus) {
+    final adBreakStatus = mediaStatus?.adBreakStatus;
+    final adBreakId = adBreakStatus?.adBreakId;
+    final adBreakClipId = adBreakStatus?.adBreakClipId;
+
+    final hasAdBreakInfo =
+        adBreakId?.isEmpty == false || adBreakClipId?.isEmpty == false;
+
+    if (mediaStatus?.isPlayingAd != true && !hasAdBreakInfo) {
       return Spacer();
     }
 
@@ -81,18 +50,54 @@ class _ExpandedControlsAdInfoBoxState
           Expanded(
             flex: 8,
             child: ExpandedControlsInfoTextBox(
-              text: widget.adInfoBoxText,
+              text: adInfoBoxText,
             ),
           ),
           const Spacer(flex: 1),
           ExpandedControlsAdSkipBox(
-            controller: widget.adSkipBoxController,
-            skipAdButtonText: widget.skipAdButtonText,
-            skipAdTimerText: widget.skipAdTimerText,
+            controller: adSkipBoxController,
+            skipAdButtonText: skipAdButtonText,
+            skipAdTimerText: skipAdTimerText,
             onSkipPressed: _onSkipAd,
           ),
         ],
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final remoteMediaClient =
+        this.castFramework.castContext.sessionManager.remoteMediaClient;
+
+    return StreamBuilder<MediaStatus>(
+      stream:
+          remoteMediaClient.mediaStatusStream.distinct(didChangeAdBreakStatus),
+      builder: (BuildContext context, AsyncSnapshot<MediaStatus> snapshot) {
+        if (snapshot.hasData && snapshot.data?.mediaInfo != null) {
+          var mediaStatus = snapshot.data;
+          return _getAdControls(mediaStatus);
+        } else if (snapshot.hasError) {
+          return Spacer();
+        } else {
+          return Spacer();
+        }
+      },
+    );
+  }
+}
+
+bool didChangeAdBreakStatus(MediaStatus oldStatus, MediaStatus newStatus) {
+  if (oldStatus.isPlayingAd != newStatus.isPlayingAd) return false;
+
+  final oldAdBreakStatus = oldStatus.adBreakStatus;
+  final newAdBreakStatus = newStatus.adBreakStatus;
+
+  if (oldAdBreakStatus?.adBreakClipId != newAdBreakStatus?.adBreakClipId ||
+      oldAdBreakStatus?.adBreakId != newAdBreakStatus?.adBreakId ||
+      oldAdBreakStatus?.whenSkippableMs != newAdBreakStatus?.whenSkippableMs) {
+    return false;
+  }
+
+  return true;
 }
