@@ -39,12 +39,16 @@ class ExpandedControlsAdInfoControls extends StatelessWidget {
       return Spacer();
     }
 
+    final adBreakClipInfo = mediaStatus?.mediaInfo?.adBreakClips
+        ?.firstWhere((a) => a?.id == adBreakClipId, orElse: () => null);
+    final adTitle = adBreakClipInfo?.title ?? "";
+
     return Expanded(
       child: Column(
         children: [
           const Spacer(flex: 2),
-          const ExpandedControlsHighlightedText(
-            text: "Ad Title", // TODO: retrieve ad title from API
+          ExpandedControlsHighlightedText(
+            text: adTitle,
           ),
           const SizedBox(height: 8),
           Expanded(
