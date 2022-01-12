@@ -50,6 +50,10 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 + (AdBreakStatus *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
 @end
+@interface AdBreakClipInfo ()
++ (AdBreakClipInfo *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
 @interface CastDevice ()
 + (CastDevice *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
@@ -105,6 +109,10 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
   if ((NSNull *)result.streamDuration == [NSNull null]) {
     result.streamDuration = nil;
   }
+  result.adBreakClips = dict[@"adBreakClips"];
+  if ((NSNull *)result.adBreakClips == [NSNull null]) {
+    result.adBreakClips = nil;
+  }
   result.customDataAsJson = dict[@"customDataAsJson"];
   if ((NSNull *)result.customDataAsJson == [NSNull null]) {
     result.customDataAsJson = nil;
@@ -112,7 +120,7 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
   return result;
 }
 - (NSDictionary *)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.contentId ? self.contentId : [NSNull null]), @"contentId", @(self.streamType), @"streamType", (self.contentType ? self.contentType : [NSNull null]), @"contentType", (self.mediaMetadata ? [self.mediaMetadata toMap] : [NSNull null]), @"mediaMetadata", (self.mediaTracks ? self.mediaTracks : [NSNull null]), @"mediaTracks", (self.streamDuration ? self.streamDuration : [NSNull null]), @"streamDuration", (self.customDataAsJson ? self.customDataAsJson : [NSNull null]), @"customDataAsJson", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.contentId ? self.contentId : [NSNull null]), @"contentId", @(self.streamType), @"streamType", (self.contentType ? self.contentType : [NSNull null]), @"contentType", (self.mediaMetadata ? [self.mediaMetadata toMap] : [NSNull null]), @"mediaMetadata", (self.mediaTracks ? self.mediaTracks : [NSNull null]), @"mediaTracks", (self.streamDuration ? self.streamDuration : [NSNull null]), @"streamDuration", (self.adBreakClips ? self.adBreakClips : [NSNull null]), @"adBreakClips", (self.customDataAsJson ? self.customDataAsJson : [NSNull null]), @"customDataAsJson", nil];
 }
 @end
 
@@ -218,6 +226,52 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 }
 @end
 
+@implementation AdBreakClipInfo
++ (AdBreakClipInfo *)fromMap:(NSDictionary *)dict {
+  AdBreakClipInfo *result = [[AdBreakClipInfo alloc] init];
+  result.id = dict[@"id"];
+  if ((NSNull *)result.id == [NSNull null]) {
+    result.id = nil;
+  }
+  result.title = dict[@"title"];
+  if ((NSNull *)result.title == [NSNull null]) {
+    result.title = nil;
+  }
+  result.contentId = dict[@"contentId"];
+  if ((NSNull *)result.contentId == [NSNull null]) {
+    result.contentId = nil;
+  }
+  result.contentUrl = dict[@"contentUrl"];
+  if ((NSNull *)result.contentUrl == [NSNull null]) {
+    result.contentUrl = nil;
+  }
+  result.clickThroughUrl = dict[@"clickThroughUrl"];
+  if ((NSNull *)result.clickThroughUrl == [NSNull null]) {
+    result.clickThroughUrl = nil;
+  }
+  result.durationMs = dict[@"durationMs"];
+  if ((NSNull *)result.durationMs == [NSNull null]) {
+    result.durationMs = nil;
+  }
+  result.imageUrl = dict[@"imageUrl"];
+  if ((NSNull *)result.imageUrl == [NSNull null]) {
+    result.imageUrl = nil;
+  }
+  result.mimeType = dict[@"mimeType"];
+  if ((NSNull *)result.mimeType == [NSNull null]) {
+    result.mimeType = nil;
+  }
+  result.whenSkippableMs = dict[@"whenSkippableMs"];
+  if ((NSNull *)result.whenSkippableMs == [NSNull null]) {
+    result.whenSkippableMs = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.id ? self.id : [NSNull null]), @"id", (self.title ? self.title : [NSNull null]), @"title", (self.contentId ? self.contentId : [NSNull null]), @"contentId", (self.contentUrl ? self.contentUrl : [NSNull null]), @"contentUrl", (self.clickThroughUrl ? self.clickThroughUrl : [NSNull null]), @"clickThroughUrl", (self.durationMs ? self.durationMs : [NSNull null]), @"durationMs", (self.imageUrl ? self.imageUrl : [NSNull null]), @"imageUrl", (self.mimeType ? self.mimeType : [NSNull null]), @"mimeType", (self.whenSkippableMs ? self.whenSkippableMs : [NSNull null]), @"whenSkippableMs", nil];
+}
+@end
+
 @implementation CastDevice
 + (CastDevice *)fromMap:(NSDictionary *)dict {
   CastDevice *result = [[CastDevice alloc] init];
@@ -265,24 +319,27 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 {
   switch (type) {
     case 128:     
-      return [CastDevice fromMap:[self readValue]];
+      return [AdBreakClipInfo fromMap:[self readValue]];
     
     case 129:     
-      return [CastMessage fromMap:[self readValue]];
+      return [CastDevice fromMap:[self readValue]];
     
     case 130:     
-      return [MediaInfo fromMap:[self readValue]];
+      return [CastMessage fromMap:[self readValue]];
     
     case 131:     
-      return [MediaLoadRequestData fromMap:[self readValue]];
+      return [MediaInfo fromMap:[self readValue]];
     
     case 132:     
-      return [MediaMetadata fromMap:[self readValue]];
+      return [MediaLoadRequestData fromMap:[self readValue]];
     
     case 133:     
-      return [MediaTrack fromMap:[self readValue]];
+      return [MediaMetadata fromMap:[self readValue]];
     
     case 134:     
+      return [MediaTrack fromMap:[self readValue]];
+    
+    case 135:     
       return [WebImage fromMap:[self readValue]];
     
     default:    
@@ -297,32 +354,36 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 @implementation CastHostApiCodecWriter
 - (void)writeValue:(id)value 
 {
-  if ([value isKindOfClass:[CastDevice class]]) {
+  if ([value isKindOfClass:[AdBreakClipInfo class]]) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[CastMessage class]]) {
+  if ([value isKindOfClass:[CastDevice class]]) {
     [self writeByte:129];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaInfo class]]) {
+  if ([value isKindOfClass:[CastMessage class]]) {
     [self writeByte:130];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaLoadRequestData class]]) {
+  if ([value isKindOfClass:[MediaInfo class]]) {
     [self writeByte:131];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaMetadata class]]) {
+  if ([value isKindOfClass:[MediaLoadRequestData class]]) {
     [self writeByte:132];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaTrack class]]) {
+  if ([value isKindOfClass:[MediaMetadata class]]) {
     [self writeByte:133];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[WebImage class]]) {
+  if ([value isKindOfClass:[MediaTrack class]]) {
     [self writeByte:134];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[WebImage class]]) {
+    [self writeByte:135];
     [self writeValue:[value toMap]];
   } else 
 {
@@ -566,24 +627,27 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
 {
   switch (type) {
     case 128:     
-      return [AdBreakStatus fromMap:[self readValue]];
+      return [AdBreakClipInfo fromMap:[self readValue]];
     
     case 129:     
-      return [CastMessage fromMap:[self readValue]];
+      return [AdBreakStatus fromMap:[self readValue]];
     
     case 130:     
-      return [MediaInfo fromMap:[self readValue]];
+      return [CastMessage fromMap:[self readValue]];
     
     case 131:     
-      return [MediaMetadata fromMap:[self readValue]];
+      return [MediaInfo fromMap:[self readValue]];
     
     case 132:     
-      return [MediaStatus fromMap:[self readValue]];
+      return [MediaMetadata fromMap:[self readValue]];
     
     case 133:     
-      return [MediaTrack fromMap:[self readValue]];
+      return [MediaStatus fromMap:[self readValue]];
     
     case 134:     
+      return [MediaTrack fromMap:[self readValue]];
+    
+    case 135:     
       return [WebImage fromMap:[self readValue]];
     
     default:    
@@ -598,32 +662,36 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
 @implementation CastFlutterApiCodecWriter
 - (void)writeValue:(id)value 
 {
-  if ([value isKindOfClass:[AdBreakStatus class]]) {
+  if ([value isKindOfClass:[AdBreakClipInfo class]]) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[CastMessage class]]) {
+  if ([value isKindOfClass:[AdBreakStatus class]]) {
     [self writeByte:129];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaInfo class]]) {
+  if ([value isKindOfClass:[CastMessage class]]) {
     [self writeByte:130];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaMetadata class]]) {
+  if ([value isKindOfClass:[MediaInfo class]]) {
     [self writeByte:131];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaStatus class]]) {
+  if ([value isKindOfClass:[MediaMetadata class]]) {
     [self writeByte:132];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaTrack class]]) {
+  if ([value isKindOfClass:[MediaStatus class]]) {
     [self writeByte:133];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[WebImage class]]) {
+  if ([value isKindOfClass:[MediaTrack class]]) {
     [self writeByte:134];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[WebImage class]]) {
+    [self writeByte:135];
     [self writeValue:[value toMap]];
   } else 
 {

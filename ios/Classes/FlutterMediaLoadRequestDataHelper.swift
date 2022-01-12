@@ -38,6 +38,10 @@ func getFlutterAdBreakStatus(adBreakStatus: GCKAdBreakStatus?) -> AdBreakStatus 
 }
 
 func getFlutterWhenSkippableMs(whenSkippable: TimeInterval?) -> NSNumber {
+    if (whenSkippable == nil || whenSkippable?.isNaN == true || whenSkippable?.isInfinite == true) {
+        return 0
+    }
+    
     let whenSkippableSecs = whenSkippable ?? 0
     let whenSkippableMs = Int(whenSkippableSecs * 1000)
     
@@ -77,12 +81,13 @@ func getFlutterMediaInfo(mediaInfo: GCKMediaInformation?) -> MediaInfo {
     result.mediaTracks = getFlutterMediaTracks(mediaTracks: mediaInfo?.mediaTracks)
     result.streamDuration = getStreamDuration(streamDuration: mediaInfo?.streamDuration)
     result.streamType = getFlutterStreamType(streamType: mediaInfo?.streamType)
+    result.adBreakClips = getFlutterAdBreakClips(adBreakClips: mediaInfo?.adBreakClips)
     
     return result
 }
 
 func getStreamDuration(streamDuration: TimeInterval?) -> NSNumber {
-    if (streamDuration == nil) {
+    if (streamDuration == nil || streamDuration?.isNaN == true || streamDuration?.isInfinite == true) {
         return 0
     }
     
@@ -130,6 +135,35 @@ func getFlutterMediaTrack(mediaTrack: GCKMediaTrack) -> MediaTrack {
     result.name = mediaTrack.name
     result.trackType = getFlutterTrackType(trackType: mediaTrack.type)
     result.trackSubtype = getFlutterTrackSubtype(trackSubtype: mediaTrack.textSubtype)
+    
+    return result
+}
+
+func getFlutterAdBreakClips(adBreakClips: [GCKAdBreakClipInfo]?) -> [AdBreakClipInfo]? {
+    if (adBreakClips == nil) {
+        return nil
+    }
+    
+    var result = [AdBreakClipInfo]()
+    adBreakClips?.forEach({ (info: GCKAdBreakClipInfo) in
+        let resultInfo = getFlutterAdBreakClipInfo(adBreakClipInfo: info)
+        result.append(resultInfo)
+    })
+    return result
+}
+
+func getFlutterAdBreakClipInfo(adBreakClipInfo: GCKAdBreakClipInfo) -> AdBreakClipInfo {
+    let result = AdBreakClipInfo()
+    
+    result.id = adBreakClipInfo.adBreakClipID
+    result.title = adBreakClipInfo.title
+    result.contentId = adBreakClipInfo.contentID
+    result.contentUrl = adBreakClipInfo.contentURL?.absoluteString
+    result.clickThroughUrl = adBreakClipInfo.clickThroughURL?.absoluteString
+    result.durationMs = getStreamDuration(streamDuration: adBreakClipInfo.duration)
+    result.imageUrl = adBreakClipInfo.posterURL?.absoluteString
+    result.mimeType = adBreakClipInfo.mimeType
+    result.whenSkippableMs = getFlutterWhenSkippableMs(whenSkippable: adBreakClipInfo.whenSkippable)
     
     return result
 }

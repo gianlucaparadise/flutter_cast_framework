@@ -146,6 +146,10 @@ public class PlatformBridgeApis {
     public Long getStreamDuration() { return streamDuration; }
     public void setStreamDuration(Long setterArg) { this.streamDuration = setterArg; }
 
+    private List<AdBreakClipInfo> adBreakClips;
+    public List<AdBreakClipInfo> getAdBreakClips() { return adBreakClips; }
+    public void setAdBreakClips(List<AdBreakClipInfo> setterArg) { this.adBreakClips = setterArg; }
+
     private String customDataAsJson;
     public String getCustomDataAsJson() { return customDataAsJson; }
     public void setCustomDataAsJson(String setterArg) { this.customDataAsJson = setterArg; }
@@ -158,6 +162,7 @@ public class PlatformBridgeApis {
       toMapResult.put("mediaMetadata", (mediaMetadata == null) ? null : mediaMetadata.toMap());
       toMapResult.put("mediaTracks", mediaTracks);
       toMapResult.put("streamDuration", streamDuration);
+      toMapResult.put("adBreakClips", adBreakClips);
       toMapResult.put("customDataAsJson", customDataAsJson);
       return toMapResult;
     }
@@ -175,6 +180,8 @@ public class PlatformBridgeApis {
       fromMapResult.mediaTracks = (List<MediaTrack>)mediaTracks;
       Object streamDuration = map.get("streamDuration");
       fromMapResult.streamDuration = (streamDuration == null) ? null : ((streamDuration instanceof Integer) ? (Integer)streamDuration : (Long)streamDuration);
+      Object adBreakClips = map.get("adBreakClips");
+      fromMapResult.adBreakClips = (List<AdBreakClipInfo>)adBreakClips;
       Object customDataAsJson = map.get("customDataAsJson");
       fromMapResult.customDataAsJson = (String)customDataAsJson;
       return fromMapResult;
@@ -354,6 +361,81 @@ public class PlatformBridgeApis {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static class AdBreakClipInfo {
+    private String id;
+    public String getId() { return id; }
+    public void setId(String setterArg) { this.id = setterArg; }
+
+    private String title;
+    public String getTitle() { return title; }
+    public void setTitle(String setterArg) { this.title = setterArg; }
+
+    private String contentId;
+    public String getContentId() { return contentId; }
+    public void setContentId(String setterArg) { this.contentId = setterArg; }
+
+    private String contentUrl;
+    public String getContentUrl() { return contentUrl; }
+    public void setContentUrl(String setterArg) { this.contentUrl = setterArg; }
+
+    private String clickThroughUrl;
+    public String getClickThroughUrl() { return clickThroughUrl; }
+    public void setClickThroughUrl(String setterArg) { this.clickThroughUrl = setterArg; }
+
+    private Long durationMs;
+    public Long getDurationMs() { return durationMs; }
+    public void setDurationMs(Long setterArg) { this.durationMs = setterArg; }
+
+    private String imageUrl;
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String setterArg) { this.imageUrl = setterArg; }
+
+    private String mimeType;
+    public String getMimeType() { return mimeType; }
+    public void setMimeType(String setterArg) { this.mimeType = setterArg; }
+
+    private Long whenSkippableMs;
+    public Long getWhenSkippableMs() { return whenSkippableMs; }
+    public void setWhenSkippableMs(Long setterArg) { this.whenSkippableMs = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("id", id);
+      toMapResult.put("title", title);
+      toMapResult.put("contentId", contentId);
+      toMapResult.put("contentUrl", contentUrl);
+      toMapResult.put("clickThroughUrl", clickThroughUrl);
+      toMapResult.put("durationMs", durationMs);
+      toMapResult.put("imageUrl", imageUrl);
+      toMapResult.put("mimeType", mimeType);
+      toMapResult.put("whenSkippableMs", whenSkippableMs);
+      return toMapResult;
+    }
+    static AdBreakClipInfo fromMap(Map<String, Object> map) {
+      AdBreakClipInfo fromMapResult = new AdBreakClipInfo();
+      Object id = map.get("id");
+      fromMapResult.id = (String)id;
+      Object title = map.get("title");
+      fromMapResult.title = (String)title;
+      Object contentId = map.get("contentId");
+      fromMapResult.contentId = (String)contentId;
+      Object contentUrl = map.get("contentUrl");
+      fromMapResult.contentUrl = (String)contentUrl;
+      Object clickThroughUrl = map.get("clickThroughUrl");
+      fromMapResult.clickThroughUrl = (String)clickThroughUrl;
+      Object durationMs = map.get("durationMs");
+      fromMapResult.durationMs = (durationMs == null) ? null : ((durationMs instanceof Integer) ? (Integer)durationMs : (Long)durationMs);
+      Object imageUrl = map.get("imageUrl");
+      fromMapResult.imageUrl = (String)imageUrl;
+      Object mimeType = map.get("mimeType");
+      fromMapResult.mimeType = (String)mimeType;
+      Object whenSkippableMs = map.get("whenSkippableMs");
+      fromMapResult.whenSkippableMs = (whenSkippableMs == null) ? null : ((whenSkippableMs instanceof Integer) ? (Integer)whenSkippableMs : (Long)whenSkippableMs);
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static class CastDevice {
     private String deviceId;
     public String getDeviceId() { return deviceId; }
@@ -418,24 +500,27 @@ public class PlatformBridgeApis {
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
       switch (type) {
         case (byte)128:         
-          return CastDevice.fromMap((Map<String, Object>) readValue(buffer));
+          return AdBreakClipInfo.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)129:         
-          return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
+          return CastDevice.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)130:         
-          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
+          return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)131:         
-          return MediaLoadRequestData.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)132:         
-          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaLoadRequestData.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)133:         
-          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)134:         
+          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)135:         
           return WebImage.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
@@ -445,32 +530,36 @@ public class PlatformBridgeApis {
     }
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value)     {
-      if (value instanceof CastDevice) {
+      if (value instanceof AdBreakClipInfo) {
         stream.write(128);
+        writeValue(stream, ((AdBreakClipInfo) value).toMap());
+      } else 
+      if (value instanceof CastDevice) {
+        stream.write(129);
         writeValue(stream, ((CastDevice) value).toMap());
       } else 
       if (value instanceof CastMessage) {
-        stream.write(129);
+        stream.write(130);
         writeValue(stream, ((CastMessage) value).toMap());
       } else 
       if (value instanceof MediaInfo) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((MediaInfo) value).toMap());
       } else 
       if (value instanceof MediaLoadRequestData) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((MediaLoadRequestData) value).toMap());
       } else 
       if (value instanceof MediaMetadata) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((MediaMetadata) value).toMap());
       } else 
       if (value instanceof MediaTrack) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((MediaTrack) value).toMap());
       } else 
       if (value instanceof WebImage) {
-        stream.write(134);
+        stream.write(135);
         writeValue(stream, ((WebImage) value).toMap());
       } else 
 {
@@ -733,24 +822,27 @@ public class PlatformBridgeApis {
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
       switch (type) {
         case (byte)128:         
-          return AdBreakStatus.fromMap((Map<String, Object>) readValue(buffer));
+          return AdBreakClipInfo.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)129:         
-          return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
+          return AdBreakStatus.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)130:         
-          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
+          return CastMessage.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)131:         
-          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaInfo.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)132:         
-          return MediaStatus.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)133:         
-          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaStatus.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)134:         
+          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)135:         
           return WebImage.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
@@ -760,32 +852,36 @@ public class PlatformBridgeApis {
     }
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value)     {
-      if (value instanceof AdBreakStatus) {
+      if (value instanceof AdBreakClipInfo) {
         stream.write(128);
+        writeValue(stream, ((AdBreakClipInfo) value).toMap());
+      } else 
+      if (value instanceof AdBreakStatus) {
+        stream.write(129);
         writeValue(stream, ((AdBreakStatus) value).toMap());
       } else 
       if (value instanceof CastMessage) {
-        stream.write(129);
+        stream.write(130);
         writeValue(stream, ((CastMessage) value).toMap());
       } else 
       if (value instanceof MediaInfo) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((MediaInfo) value).toMap());
       } else 
       if (value instanceof MediaMetadata) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((MediaMetadata) value).toMap());
       } else 
       if (value instanceof MediaStatus) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((MediaStatus) value).toMap());
       } else 
       if (value instanceof MediaTrack) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((MediaTrack) value).toMap());
       } else 
       if (value instanceof WebImage) {
-        stream.write(134);
+        stream.write(135);
         writeValue(stream, ((WebImage) value).toMap());
       } else 
 {

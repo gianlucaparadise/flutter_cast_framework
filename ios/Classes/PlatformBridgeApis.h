@@ -58,6 +58,7 @@ typedef NS_ENUM(NSUInteger, PlayerState) {
 @class MediaTrack;
 @class MediaStatus;
 @class AdBreakStatus;
+@class AdBreakClipInfo;
 @class CastDevice;
 @class CastMessage;
 
@@ -74,6 +75,7 @@ typedef NS_ENUM(NSUInteger, PlayerState) {
 @property(nonatomic, strong, nullable) MediaMetadata * mediaMetadata;
 @property(nonatomic, strong, nullable) NSArray<MediaTrack *> * mediaTracks;
 @property(nonatomic, strong, nullable) NSNumber * streamDuration;
+@property(nonatomic, strong, nullable) NSArray<AdBreakClipInfo *> * adBreakClips;
 @property(nonatomic, copy, nullable) NSString * customDataAsJson;
 @end
 
@@ -105,6 +107,18 @@ typedef NS_ENUM(NSUInteger, PlayerState) {
 @interface AdBreakStatus : NSObject
 @property(nonatomic, copy, nullable) NSString * adBreakId;
 @property(nonatomic, copy, nullable) NSString * adBreakClipId;
+@property(nonatomic, strong, nullable) NSNumber * whenSkippableMs;
+@end
+
+@interface AdBreakClipInfo : NSObject
+@property(nonatomic, copy, nullable) NSString * id;
+@property(nonatomic, copy, nullable) NSString * title;
+@property(nonatomic, copy, nullable) NSString * contentId;
+@property(nonatomic, copy, nullable) NSString * contentUrl;
+@property(nonatomic, copy, nullable) NSString * clickThroughUrl;
+@property(nonatomic, strong, nullable) NSNumber * durationMs;
+@property(nonatomic, copy, nullable) NSString * imageUrl;
+@property(nonatomic, copy, nullable) NSString * mimeType;
 @property(nonatomic, strong, nullable) NSNumber * whenSkippableMs;
 @end
 

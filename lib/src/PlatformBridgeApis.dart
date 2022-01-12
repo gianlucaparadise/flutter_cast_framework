@@ -82,6 +82,7 @@ class MediaInfo {
   MediaMetadata? mediaMetadata;
   List<MediaTrack?>? mediaTracks;
   int? streamDuration;
+  List<AdBreakClipInfo?>? adBreakClips;
   String? customDataAsJson;
 
   Object encode() {
@@ -92,6 +93,7 @@ class MediaInfo {
     pigeonMap['mediaMetadata'] = mediaMetadata == null ? null : mediaMetadata!.encode();
     pigeonMap['mediaTracks'] = mediaTracks;
     pigeonMap['streamDuration'] = streamDuration;
+    pigeonMap['adBreakClips'] = adBreakClips;
     pigeonMap['customDataAsJson'] = customDataAsJson;
     return pigeonMap;
   }
@@ -109,6 +111,7 @@ class MediaInfo {
           : null
       ..mediaTracks = (pigeonMap['mediaTracks'] as List<Object?>?)?.cast<MediaTrack?>()
       ..streamDuration = pigeonMap['streamDuration'] as int?
+      ..adBreakClips = (pigeonMap['adBreakClips'] as List<Object?>?)?.cast<AdBreakClipInfo?>()
       ..customDataAsJson = pigeonMap['customDataAsJson'] as String?;
   }
 }
@@ -238,6 +241,46 @@ class AdBreakStatus {
   }
 }
 
+class AdBreakClipInfo {
+  String? id;
+  String? title;
+  String? contentId;
+  String? contentUrl;
+  String? clickThroughUrl;
+  int? durationMs;
+  String? imageUrl;
+  String? mimeType;
+  int? whenSkippableMs;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['id'] = id;
+    pigeonMap['title'] = title;
+    pigeonMap['contentId'] = contentId;
+    pigeonMap['contentUrl'] = contentUrl;
+    pigeonMap['clickThroughUrl'] = clickThroughUrl;
+    pigeonMap['durationMs'] = durationMs;
+    pigeonMap['imageUrl'] = imageUrl;
+    pigeonMap['mimeType'] = mimeType;
+    pigeonMap['whenSkippableMs'] = whenSkippableMs;
+    return pigeonMap;
+  }
+
+  static AdBreakClipInfo decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return AdBreakClipInfo()
+      ..id = pigeonMap['id'] as String?
+      ..title = pigeonMap['title'] as String?
+      ..contentId = pigeonMap['contentId'] as String?
+      ..contentUrl = pigeonMap['contentUrl'] as String?
+      ..clickThroughUrl = pigeonMap['clickThroughUrl'] as String?
+      ..durationMs = pigeonMap['durationMs'] as int?
+      ..imageUrl = pigeonMap['imageUrl'] as String?
+      ..mimeType = pigeonMap['mimeType'] as String?
+      ..whenSkippableMs = pigeonMap['whenSkippableMs'] as int?;
+  }
+}
+
 class CastDevice {
   String? deviceId;
   String? friendlyName;
@@ -283,32 +326,36 @@ class _CastHostApiCodec extends StandardMessageCodec {
   const _CastHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is CastDevice) {
+    if (value is AdBreakClipInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else 
-    if (value is CastMessage) {
+    if (value is CastDevice) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaInfo) {
+    if (value is CastMessage) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaLoadRequestData) {
+    if (value is MediaInfo) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaMetadata) {
+    if (value is MediaLoadRequestData) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaTrack) {
+    if (value is MediaMetadata) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else 
-    if (value is WebImage) {
+    if (value is MediaTrack) {
       buffer.putUint8(134);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is WebImage) {
+      buffer.putUint8(135);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -319,24 +366,27 @@ class _CastHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return CastDevice.decode(readValue(buffer)!);
+        return AdBreakClipInfo.decode(readValue(buffer)!);
       
       case 129:       
-        return CastMessage.decode(readValue(buffer)!);
+        return CastDevice.decode(readValue(buffer)!);
       
       case 130:       
-        return MediaInfo.decode(readValue(buffer)!);
+        return CastMessage.decode(readValue(buffer)!);
       
       case 131:       
-        return MediaLoadRequestData.decode(readValue(buffer)!);
+        return MediaInfo.decode(readValue(buffer)!);
       
       case 132:       
-        return MediaMetadata.decode(readValue(buffer)!);
+        return MediaLoadRequestData.decode(readValue(buffer)!);
       
       case 133:       
-        return MediaTrack.decode(readValue(buffer)!);
+        return MediaMetadata.decode(readValue(buffer)!);
       
       case 134:       
+        return MediaTrack.decode(readValue(buffer)!);
+      
+      case 135:       
         return WebImage.decode(readValue(buffer)!);
       
       default:      
@@ -614,32 +664,36 @@ class _CastFlutterApiCodec extends StandardMessageCodec {
   const _CastFlutterApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is AdBreakStatus) {
+    if (value is AdBreakClipInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else 
-    if (value is CastMessage) {
+    if (value is AdBreakStatus) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaInfo) {
+    if (value is CastMessage) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaMetadata) {
+    if (value is MediaInfo) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaStatus) {
+    if (value is MediaMetadata) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaTrack) {
+    if (value is MediaStatus) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else 
-    if (value is WebImage) {
+    if (value is MediaTrack) {
       buffer.putUint8(134);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is WebImage) {
+      buffer.putUint8(135);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -650,24 +704,27 @@ class _CastFlutterApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return AdBreakStatus.decode(readValue(buffer)!);
+        return AdBreakClipInfo.decode(readValue(buffer)!);
       
       case 129:       
-        return CastMessage.decode(readValue(buffer)!);
+        return AdBreakStatus.decode(readValue(buffer)!);
       
       case 130:       
-        return MediaInfo.decode(readValue(buffer)!);
+        return CastMessage.decode(readValue(buffer)!);
       
       case 131:       
-        return MediaMetadata.decode(readValue(buffer)!);
+        return MediaInfo.decode(readValue(buffer)!);
       
       case 132:       
-        return MediaStatus.decode(readValue(buffer)!);
+        return MediaMetadata.decode(readValue(buffer)!);
       
       case 133:       
-        return MediaTrack.decode(readValue(buffer)!);
+        return MediaStatus.decode(readValue(buffer)!);
       
       case 134:       
+        return MediaTrack.decode(readValue(buffer)!);
+      
+      case 135:       
         return WebImage.decode(readValue(buffer)!);
       
       default:      

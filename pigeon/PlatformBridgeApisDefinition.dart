@@ -19,6 +19,8 @@ class MediaInfo {
   List<MediaTrack?>? mediaTracks;
   int? streamDuration;
 
+  List<AdBreakClipInfo?>? adBreakClips;
+
   /// String containing a json object
   String? customDataAsJson;
 }
@@ -236,6 +238,18 @@ class MediaStatus {
 class AdBreakStatus {
   String? adBreakId;
   String? adBreakClipId;
+  int? whenSkippableMs;
+}
+
+class AdBreakClipInfo {
+  String? id;
+  String? title;
+  String? contentId;
+  String? contentUrl;
+  String? clickThroughUrl;
+  int? durationMs;
+  String? imageUrl;
+  String? mimeType;
   int? whenSkippableMs;
 }
 

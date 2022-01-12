@@ -41,6 +41,7 @@ fun getFlutterMediaInfo(mediaInfo: MediaInfo?): PlatformBridgeApis.MediaInfo {
     val flutterMediaMetadata = getFlutterMediaMetadata(mediaInfo?.metadata)
     val flutterMediaTracks = getFlutterMediaTracks(mediaInfo?.mediaTracks)
     val flutterStreamType = getFlutterStreamType(mediaInfo?.streamType)
+    val flutterAdBreakClips = getFlutterAdBreakClips(mediaInfo?.adBreakClips)
 
     return PlatformBridgeApis.MediaInfo().apply {
         contentId = mediaInfo?.contentId ?: ""
@@ -50,6 +51,7 @@ fun getFlutterMediaInfo(mediaInfo: MediaInfo?): PlatformBridgeApis.MediaInfo {
         mediaTracks = flutterMediaTracks
         streamDuration = mediaInfo?.streamDuration ?: 0
         streamType = flutterStreamType
+        adBreakClips = flutterAdBreakClips
     }
 }
 
@@ -80,6 +82,26 @@ fun getFlutterMediaTrack(mediaTrack: MediaTrack?): PlatformBridgeApis.MediaTrack
         name = mediaTrack?.name ?: ""
         trackSubtype = flutterSubtype
         trackType = flutterType
+    }
+}
+
+fun getFlutterAdBreakClips(adBreakClips: List<AdBreakClipInfo>?): List<PlatformBridgeApis.AdBreakClipInfo> {
+    return adBreakClips?.map {
+        getFlutterAdBreakClipInfo(it)
+    } ?: emptyList()
+}
+
+fun getFlutterAdBreakClipInfo(adBreakClipInfo: AdBreakClipInfo?): PlatformBridgeApis.AdBreakClipInfo {
+    return PlatformBridgeApis.AdBreakClipInfo().apply {
+        id = adBreakClipInfo?.id
+        title = adBreakClipInfo?.title
+        contentId = adBreakClipInfo?.contentId
+        contentUrl = adBreakClipInfo?.contentUrl
+        clickThroughUrl = adBreakClipInfo?.clickThroughUrl
+        durationMs = adBreakClipInfo?.durationInMs
+        imageUrl = adBreakClipInfo?.imageUrl
+        mimeType = adBreakClipInfo?.mimeType
+        whenSkippableMs = adBreakClipInfo?.whenSkippableInMs
     }
 }
 
