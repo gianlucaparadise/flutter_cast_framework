@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../cast.dart';
+import 'MiniControllerProgress.dart';
 import 'MiniControllerThumbnail.dart';
 import 'MiniControllerPlayPauseButton.dart';
 
@@ -78,11 +79,7 @@ class MiniController extends StatelessWidget {
             }
           },
         ),
-        LinearProgressIndicator(
-          color: Colors.red,
-          backgroundColor: Colors.transparent,
-          value: 0.1,
-        ),
+        MiniControllerProgress(castFramework: castFramework),
       ],
     );
   }
