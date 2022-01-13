@@ -150,6 +150,7 @@ class _CastFlutterApiImplementor extends CastFlutterApi {
   @override
   void onProgressUpdated(int progressMs, int durationMs) {
     remoteMediaClient.onProgressUpdated?.call(progressMs, durationMs);
+    remoteMediaClient.dispatchProgressUpdate(progressMs, durationMs);
   }
 
   @override

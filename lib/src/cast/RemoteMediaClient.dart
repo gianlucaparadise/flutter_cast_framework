@@ -16,14 +16,23 @@ typedef AdBreakClipProgressListener = void Function(
 );
 typedef MediaStatusListener = void Function(MediaStatus mediaStatus);
 
+class ProgressInfo {
+  int progressMs;
+  int durationMs;
+
+  ProgressInfo(this.progressMs, this.durationMs);
+}
+
 /// Class for controlling a media player application running on a receiver.
 class RemoteMediaClient {
   RemoteMediaClient(this._hostApi) {
     this.mediaStatusStream = this._mediaStatusStreamController.stream;
+    this.progressStream = this._progressStreamController.stream;
   }
 
   void dispose() {
     this._mediaStatusStreamController.close();
+    this._progressStreamController.close();
   }
 
   final CastHostApi _hostApi;
@@ -34,6 +43,9 @@ class RemoteMediaClient {
 
   /// Callback to get updates on the progress of the currently playing media.
   ProgressListener? onProgressUpdated;
+
+  final _progressStreamController = StreamController<ProgressInfo>.broadcast();
+  late Stream<ProgressInfo> progressStream;
 
   /// Called when updated media metadata is received.
   VoidCallback? onMetadataUpdated;
@@ -107,5 +119,11 @@ class RemoteMediaClient {
   @internal
   void dispatchMediaStatusUpdate(MediaStatus mediaStatus) {
     this._mediaStatusStreamController.add(mediaStatus);
+  }
+
+  /// Internal method that shouldn't be visible
+  @internal
+  void dispatchProgressUpdate(int progressMs, int durationMs) {
+    this._progressStreamController.add(ProgressInfo(progressMs, durationMs));
   }
 }
