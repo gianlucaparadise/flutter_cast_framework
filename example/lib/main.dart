@@ -175,7 +175,9 @@ class _MyAppState extends State<MyApp> {
             _buildTitle("Mini Controller"),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: MiniController(),
+              child: MiniController(
+                castFramework: castFramework,
+              ),
             ),
           ],
         ),
