@@ -171,7 +171,12 @@ class _MyAppState extends State<MyApp> {
                 child: Text('Expanded Controls'),
                 onPressed: _openExpandedControls,
               ),
-            )
+            ),
+            _buildTitle("Mini Controller"),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: MiniController(),
+            ),
           ],
         ),
       ),
