@@ -150,7 +150,6 @@ I used this project to test the capabilities of the following technologies:
 
 * CC in Expanded Controls (iOS)
 * Expanded Controls cosmetics (ad in progress bar, full screen, progress bar handle)
-* Handle mini-player
 * Handle queue
 * Handle progress seek
 * Understand if it is better to refactor using streams instead of listeners

@@ -8,9 +8,15 @@ import 'MiniControllerPlayPauseButton.dart';
 class MiniController extends StatelessWidget {
   final FlutterCastFramework castFramework;
 
+  /// This is called when the mini controller is tapped and the tap is not
+  /// handled by the controller. Generally, you want to open the expanded controls
+  /// on this callback.
+  final VoidCallback? onControllerTapped;
+
   const MiniController({
     Key? key,
     required this.castFramework,
+    this.onControllerTapped,
   }) : super(key: key);
 
   Widget _getControls(MediaStatus? status) {
@@ -38,24 +44,28 @@ class MiniController extends StatelessWidget {
       status: status,
     );
 
-    return SizedBox(
-      height: 60,
-      child: Row(
-        children: [
-          thumbnail,
-          Container(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                title,
-                subtitle,
-              ],
+    return InkWell(
+      onTap: onControllerTapped,
+      child: SizedBox(
+        height: 60,
+        child: Row(
+          children: [
+            thumbnail,
+            Container(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  title,
+                  subtitle,
+                ],
+              ),
             ),
-          ),
-          playPauseButton,
-        ],
+            // ),
+            playPauseButton,
+          ],
+        ),
       ),
     );
   }

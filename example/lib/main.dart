@@ -177,6 +177,7 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: MiniController(
                 castFramework: castFramework,
+                onControllerTapped: _openExpandedControls,
               ),
             ),
           ],
