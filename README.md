@@ -20,6 +20,7 @@ Currently only the following APIs are integrated (both Android and iOS):
 * Load RemoteMediaRequestData
 * Play, Pause, Stop media
 * Expanded controls
+* Mini Controller
 * Cast Button
 * Chromecast connection
 
@@ -148,8 +149,12 @@ I used this project to test the capabilities of the following technologies:
 
 ## Roadmap
 
+Next features to be developed:
+
 * CC in Expanded Controls (iOS)
 * Expanded Controls cosmetics (ad in progress bar, full screen, progress bar handle)
+* Title in MiniController and ExpandedControls (blocked because of a [pigeon issue](https://github.com/flutter/flutter/issues/93464))
 * Handle queue
 * Handle progress seek
 * Understand if it is better to refactor using streams instead of listeners
+* Add tests

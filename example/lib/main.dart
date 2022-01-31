@@ -22,6 +22,23 @@ class _MyAppState extends State<MyApp> {
   CastState _castState = CastState.idle;
   SessionState _sessionState = SessionState.idle;
   String _message = '';
+  PlayerState _playerState = PlayerState.idle;
+
+  bool get _hasSession => _sessionState == SessionState.started;
+  bool get _hasMedia {
+    if (!_hasSession) return false;
+
+    switch (_playerState) {
+      case PlayerState.idle:
+      case PlayerState.unknown:
+        return false;
+      case PlayerState.loading:
+      case PlayerState.buffering:
+      case PlayerState.paused:
+      case PlayerState.playing:
+        return true;
+    }
+  }
 
   final textMessageController = TextEditingController();
 
@@ -78,9 +95,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onRemoteMediaClientStatusUpdated() {
-    final playerState = castFramework
-        .castContext.sessionManager.remoteMediaClient.playerState.value;
-    debugPrint("RemoteMediaClient status updated - playerState $playerState");
+    debugPrint("Player state changed from example");
+    setState(() {
+      final playerState = castFramework
+          .castContext.sessionManager.remoteMediaClient.playerState.value;
+
+      _playerState = playerState;
+    });
   }
 
   void _onSendMessage() {
@@ -141,13 +162,14 @@ class _MyAppState extends State<MyApp> {
                   Expanded(
                     child: TextField(
                       controller: textMessageController,
+                      enabled: _hasSession,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       child: Text('Send'),
-                      onPressed: _onSendMessage,
+                      onPressed: _hasSession ? _onSendMessage : null,
                     ),
                   )
                 ],
@@ -162,14 +184,18 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 child: Text('Cast video'),
-                onPressed: _onCastVideo,
+                onPressed: _hasSession ? _onCastVideo : null,
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Player State: $_playerState"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 child: Text('Expanded Controls'),
-                onPressed: _openExpandedControls,
+                onPressed: _hasMedia ? _openExpandedControls : null,
               ),
             ),
             _buildTitle("Mini Controller"),
@@ -177,7 +203,7 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: MiniController(
                 castFramework: castFramework,
-                onControllerTapped: _openExpandedControls,
+                onControllerTapped: _hasMedia ? _openExpandedControls : null,
               ),
             ),
           ],
