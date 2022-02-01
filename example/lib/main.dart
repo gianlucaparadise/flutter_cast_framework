@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast.dart';
 import 'package:flutter_cast_framework/widgets.dart';
 import 'package:flutter_cast_framework_example/expanded_controls_route.dart';
+import 'package:flutter_cast_framework_example/queue_route.dart';
 
 import 'media_load_request_data_helper.dart';
 
@@ -127,6 +128,17 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  Future<void> _openQueue() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QueueRoute(
+          castFramework: castFramework,
+        ),
+      ),
+    );
+  }
+
   Widget _buildTitle(String text) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -196,6 +208,13 @@ class _MyAppState extends State<MyApp> {
               child: ElevatedButton(
                 child: Text('Expanded Controls'),
                 onPressed: _hasMedia ? _openExpandedControls : null,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                child: Text('Queue'),
+                onPressed: _hasSession ? _openQueue : null,
               ),
             ),
             _buildTitle("Mini Controller"),

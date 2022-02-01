@@ -62,7 +62,6 @@ class MiniController extends StatelessWidget {
                 ],
               ),
             ),
-            // ),
             playPauseButton,
           ],
         ),
