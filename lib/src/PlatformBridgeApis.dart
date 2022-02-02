@@ -281,6 +281,39 @@ class AdBreakClipInfo {
   }
 }
 
+class MediaQueueItem {
+  int? itemId;
+  double? playbackDuration;
+  double? startTime;
+  MediaInfo? media;
+  bool? autoplay;
+  double? preloadTime;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['itemId'] = itemId;
+    pigeonMap['playbackDuration'] = playbackDuration;
+    pigeonMap['startTime'] = startTime;
+    pigeonMap['media'] = media == null ? null : media!.encode();
+    pigeonMap['autoplay'] = autoplay;
+    pigeonMap['preloadTime'] = preloadTime;
+    return pigeonMap;
+  }
+
+  static MediaQueueItem decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return MediaQueueItem()
+      ..itemId = pigeonMap['itemId'] as int?
+      ..playbackDuration = pigeonMap['playbackDuration'] as double?
+      ..startTime = pigeonMap['startTime'] as double?
+      ..media = pigeonMap['media'] != null
+          ? MediaInfo.decode(pigeonMap['media']!)
+          : null
+      ..autoplay = pigeonMap['autoplay'] as bool?
+      ..preloadTime = pigeonMap['preloadTime'] as double?;
+  }
+}
+
 class CastDevice {
   String? deviceId;
   String? friendlyName;
@@ -350,12 +383,16 @@ class _CastHostApiCodec extends StandardMessageCodec {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else 
-    if (value is MediaTrack) {
+    if (value is MediaQueueItem) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
     } else 
-    if (value is WebImage) {
+    if (value is MediaTrack) {
       buffer.putUint8(135);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is WebImage) {
+      buffer.putUint8(136);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -384,9 +421,12 @@ class _CastHostApiCodec extends StandardMessageCodec {
         return MediaMetadata.decode(readValue(buffer)!);
       
       case 134:       
-        return MediaTrack.decode(readValue(buffer)!);
+        return MediaQueueItem.decode(readValue(buffer)!);
       
       case 135:       
+        return MediaTrack.decode(readValue(buffer)!);
+      
+      case 136:       
         return WebImage.decode(readValue(buffer)!);
       
       default:      
@@ -641,6 +681,29 @@ class CastHostApi {
         'dev.flutter.pigeon.CastHostApi.skipAd', codec, binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+        details: null,
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> queueAppendItem(MediaQueueItem arg_item) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.CastHostApi.queueAppendItem', codec, binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(<Object>[arg_item]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',

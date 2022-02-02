@@ -54,6 +54,10 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 + (AdBreakClipInfo *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
 @end
+@interface MediaQueueItem ()
++ (MediaQueueItem *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
 @interface CastDevice ()
 + (CastDevice *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
@@ -272,6 +276,40 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
 }
 @end
 
+@implementation MediaQueueItem
++ (MediaQueueItem *)fromMap:(NSDictionary *)dict {
+  MediaQueueItem *result = [[MediaQueueItem alloc] init];
+  result.itemId = dict[@"itemId"];
+  if ((NSNull *)result.itemId == [NSNull null]) {
+    result.itemId = nil;
+  }
+  result.playbackDuration = dict[@"playbackDuration"];
+  if ((NSNull *)result.playbackDuration == [NSNull null]) {
+    result.playbackDuration = nil;
+  }
+  result.startTime = dict[@"startTime"];
+  if ((NSNull *)result.startTime == [NSNull null]) {
+    result.startTime = nil;
+  }
+  result.media = [MediaInfo fromMap:dict[@"media"]];
+  if ((NSNull *)result.media == [NSNull null]) {
+    result.media = nil;
+  }
+  result.autoplay = dict[@"autoplay"];
+  if ((NSNull *)result.autoplay == [NSNull null]) {
+    result.autoplay = nil;
+  }
+  result.preloadTime = dict[@"preloadTime"];
+  if ((NSNull *)result.preloadTime == [NSNull null]) {
+    result.preloadTime = nil;
+  }
+  return result;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.itemId ? self.itemId : [NSNull null]), @"itemId", (self.playbackDuration ? self.playbackDuration : [NSNull null]), @"playbackDuration", (self.startTime ? self.startTime : [NSNull null]), @"startTime", (self.media ? [self.media toMap] : [NSNull null]), @"media", (self.autoplay ? self.autoplay : [NSNull null]), @"autoplay", (self.preloadTime ? self.preloadTime : [NSNull null]), @"preloadTime", nil];
+}
+@end
+
 @implementation CastDevice
 + (CastDevice *)fromMap:(NSDictionary *)dict {
   CastDevice *result = [[CastDevice alloc] init];
@@ -337,9 +375,12 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
       return [MediaMetadata fromMap:[self readValue]];
     
     case 134:     
-      return [MediaTrack fromMap:[self readValue]];
+      return [MediaQueueItem fromMap:[self readValue]];
     
     case 135:     
+      return [MediaTrack fromMap:[self readValue]];
+    
+    case 136:     
       return [WebImage fromMap:[self readValue]];
     
     default:    
@@ -378,12 +419,16 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
     [self writeByte:133];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[MediaTrack class]]) {
+  if ([value isKindOfClass:[MediaQueueItem class]]) {
     [self writeByte:134];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[WebImage class]]) {
+  if ([value isKindOfClass:[MediaTrack class]]) {
     [self writeByte:135];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[WebImage class]]) {
+    [self writeByte:136];
     [self writeValue:[value toMap]];
   } else 
 {
@@ -612,6 +657,26 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         [api skipAdWithError:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.CastHostApi.queueAppendItem"
+        binaryMessenger:binaryMessenger
+        codec:CastHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(queueAppendItemItem:error:)], @"CastHostApi api (%@) doesn't respond to @selector(queueAppendItemItem:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        MediaQueueItem *arg_item = args[0];
+        FlutterError *error;
+        [api queueAppendItemItem:arg_item error:&error];
         callback(wrapResult(nil, error));
       }];
     }

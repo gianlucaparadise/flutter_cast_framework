@@ -59,6 +59,7 @@ typedef NS_ENUM(NSUInteger, PlayerState) {
 @class MediaStatus;
 @class AdBreakStatus;
 @class AdBreakClipInfo;
+@class MediaQueueItem;
 @class CastDevice;
 @class CastMessage;
 
@@ -122,6 +123,15 @@ typedef NS_ENUM(NSUInteger, PlayerState) {
 @property(nonatomic, strong, nullable) NSNumber * whenSkippableMs;
 @end
 
+@interface MediaQueueItem : NSObject
+@property(nonatomic, strong, nullable) NSNumber * itemId;
+@property(nonatomic, strong, nullable) NSNumber * playbackDuration;
+@property(nonatomic, strong, nullable) NSNumber * startTime;
+@property(nonatomic, strong, nullable) MediaInfo * media;
+@property(nonatomic, strong, nullable) NSNumber * autoplay;
+@property(nonatomic, strong, nullable) NSNumber * preloadTime;
+@end
+
 @interface CastDevice : NSObject
 @property(nonatomic, copy, nullable) NSString * deviceId;
 @property(nonatomic, copy, nullable) NSString * friendlyName;
@@ -148,6 +158,7 @@ NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 - (void)stopWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)showTracksChooserDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)skipAdWithError:(FlutterError *_Nullable *_Nonnull)error;
+- (void)queueAppendItemItem:(MediaQueueItem *)item error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastHostApi> *_Nullable api);

@@ -255,6 +255,17 @@ class AdBreakClipInfo {
 
 //#endregion
 
+//#region Queue
+class MediaQueueItem {
+  int? itemId;
+  double? playbackDuration;
+  double? startTime;
+  MediaInfo? media;
+  bool? autoplay;
+  double? preloadTime;
+}
+//#endregion
+
 class CastDevice {
   String? deviceId;
   String? friendlyName;
@@ -282,6 +293,10 @@ abstract class CastHostApi {
   void stop();
   void showTracksChooserDialog();
   void skipAd();
+  //endregion
+
+  //region Queue
+  void queueAppendItem(MediaQueueItem item);
   //endregion
 }
 

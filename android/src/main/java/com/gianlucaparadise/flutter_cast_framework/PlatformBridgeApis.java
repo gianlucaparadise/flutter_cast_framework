@@ -436,6 +436,60 @@ public class PlatformBridgeApis {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static class MediaQueueItem {
+    private Long itemId;
+    public Long getItemId() { return itemId; }
+    public void setItemId(Long setterArg) { this.itemId = setterArg; }
+
+    private Double playbackDuration;
+    public Double getPlaybackDuration() { return playbackDuration; }
+    public void setPlaybackDuration(Double setterArg) { this.playbackDuration = setterArg; }
+
+    private Double startTime;
+    public Double getStartTime() { return startTime; }
+    public void setStartTime(Double setterArg) { this.startTime = setterArg; }
+
+    private MediaInfo media;
+    public MediaInfo getMedia() { return media; }
+    public void setMedia(MediaInfo setterArg) { this.media = setterArg; }
+
+    private Boolean autoplay;
+    public Boolean getAutoplay() { return autoplay; }
+    public void setAutoplay(Boolean setterArg) { this.autoplay = setterArg; }
+
+    private Double preloadTime;
+    public Double getPreloadTime() { return preloadTime; }
+    public void setPreloadTime(Double setterArg) { this.preloadTime = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("itemId", itemId);
+      toMapResult.put("playbackDuration", playbackDuration);
+      toMapResult.put("startTime", startTime);
+      toMapResult.put("media", (media == null) ? null : media.toMap());
+      toMapResult.put("autoplay", autoplay);
+      toMapResult.put("preloadTime", preloadTime);
+      return toMapResult;
+    }
+    static MediaQueueItem fromMap(Map<String, Object> map) {
+      MediaQueueItem fromMapResult = new MediaQueueItem();
+      Object itemId = map.get("itemId");
+      fromMapResult.itemId = (itemId == null) ? null : ((itemId instanceof Integer) ? (Integer)itemId : (Long)itemId);
+      Object playbackDuration = map.get("playbackDuration");
+      fromMapResult.playbackDuration = (Double)playbackDuration;
+      Object startTime = map.get("startTime");
+      fromMapResult.startTime = (Double)startTime;
+      Object media = map.get("media");
+      fromMapResult.media = MediaInfo.fromMap((Map)media);
+      Object autoplay = map.get("autoplay");
+      fromMapResult.autoplay = (Boolean)autoplay;
+      Object preloadTime = map.get("preloadTime");
+      fromMapResult.preloadTime = (Double)preloadTime;
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static class CastDevice {
     private String deviceId;
     public String getDeviceId() { return deviceId; }
@@ -518,9 +572,12 @@ public class PlatformBridgeApis {
           return MediaMetadata.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)134:         
-          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+          return MediaQueueItem.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)135:         
+          return MediaTrack.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)136:         
           return WebImage.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
@@ -554,12 +611,16 @@ public class PlatformBridgeApis {
         stream.write(133);
         writeValue(stream, ((MediaMetadata) value).toMap());
       } else 
-      if (value instanceof MediaTrack) {
+      if (value instanceof MediaQueueItem) {
         stream.write(134);
+        writeValue(stream, ((MediaQueueItem) value).toMap());
+      } else 
+      if (value instanceof MediaTrack) {
+        stream.write(135);
         writeValue(stream, ((MediaTrack) value).toMap());
       } else 
       if (value instanceof WebImage) {
-        stream.write(135);
+        stream.write(136);
         writeValue(stream, ((WebImage) value).toMap());
       } else 
 {
@@ -581,6 +642,7 @@ public class PlatformBridgeApis {
     void stop();
     void showTracksChooserDialog();
     void skipAd();
+    void queueAppendItem(MediaQueueItem item);
 
     /** The codec used by CastHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -802,6 +864,30 @@ public class PlatformBridgeApis {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               api.skipAd();
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.queueAppendItem", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              MediaQueueItem itemArg = (MediaQueueItem)args.get(0);
+              if (itemArg == null) {
+                throw new NullPointerException("itemArg unexpectedly null.");
+              }
+              api.queueAppendItem(itemArg);
               wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {
