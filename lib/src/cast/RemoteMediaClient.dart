@@ -109,6 +109,11 @@ class RemoteMediaClient {
     _hostApi.skipAd();
   }
 
+  /// Appends a new media item to the end of the queue.
+  void queueAppendItem(MediaQueueItem item) {
+    _hostApi.queueAppendItem(item);
+  }
+
   /// Internal method that shouldn't be visible
   @internal
   void dispatchPlayerStateUpdate(PlayerState playerState) {

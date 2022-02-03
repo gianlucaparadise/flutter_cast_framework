@@ -183,3 +183,13 @@ func getCustomData(customDataAsString: String?) -> Any? {
     let data = customDataAsString!.data(using: .utf8)!
     return try? JSONSerialization.jsonObject(with: data, options: [])
 }
+
+func getMediaQueueItem(item: MediaQueueItem) -> GCKMediaQueueItem {
+    let mediaQueueItemBuilder = GCKMediaQueueItemBuilder.init()
+    
+    mediaQueueItemBuilder.mediaInformation = getMediaInfo(mediaInfo: item.media)
+    mediaQueueItemBuilder.autoplay = item.autoplay == 1
+    mediaQueueItemBuilder.preloadTime = item.preloadTime?.doubleValue ?? 0
+    
+    return mediaQueueItemBuilder.build()
+}

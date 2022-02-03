@@ -13,8 +13,8 @@ import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaInfo
 import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaStatus
 import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
+import com.gianlucaparadise.flutter_cast_framework.media.getMediaQueueItem
 import com.google.android.gms.cast.MediaError
-import com.google.android.gms.cast.MediaStatus
 import com.google.android.gms.cast.MediaStatus.*
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
@@ -339,6 +339,15 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun skipAd() {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
             remoteMediaClient.skipAd()
+        }
+
+        override fun queueAppendItem(item: PlatformBridgeApis.MediaQueueItem?) {
+            if (item == null) return
+
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+
+            val mediaQueueItem = getMediaQueueItem(item)
+            remoteMediaClient.queueAppendItem(mediaQueueItem, null)
         }
 
         override fun setMute(muted: Boolean?) {

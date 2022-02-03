@@ -2,10 +2,7 @@ package com.gianlucaparadise.flutter_cast_framework.media
 
 import android.net.Uri
 import com.gianlucaparadise.flutter_cast_framework.PlatformBridgeApis
-import com.google.android.gms.cast.MediaInfo
-import com.google.android.gms.cast.MediaLoadRequestData
-import com.google.android.gms.cast.MediaMetadata
-import com.google.android.gms.cast.MediaTrack
+import com.google.android.gms.cast.*
 import com.google.android.gms.common.images.WebImage
 import org.json.JSONObject
 
@@ -139,4 +136,15 @@ fun getTrackSubtype(trackSubtype: PlatformBridgeApis.TrackSubtype): Int {
         PlatformBridgeApis.TrackSubtype.chapters -> 4
         PlatformBridgeApis.TrackSubtype.metadata -> 5
     }
+}
+
+fun getMediaQueueItem(item: PlatformBridgeApis.MediaQueueItem?): MediaQueueItem? {
+    if (item?.media == null) return null
+
+    val mediaInfo = getMediaInfo(item.media)
+
+    return MediaQueueItem.Builder(mediaInfo)
+            .setAutoplay(item.autoplay)
+            .setPreloadTime(item.preloadTime)
+            .build()
 }

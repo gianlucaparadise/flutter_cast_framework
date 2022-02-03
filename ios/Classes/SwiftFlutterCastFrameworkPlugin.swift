@@ -326,6 +326,19 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     public func skipAdWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         remoteMediaClient?.skipAd()
     }
+    
+    public func queueAppendItemItem(_ item: MediaQueueItem, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let remoteMediaClient = castSession?.remoteMediaClient
+        if remoteMediaClient == nil {
+            return
+        }
+        
+        let mediaQueueItem = getMediaQueueItem(item: item)
+        // as per documentation: If beforeItemWithID is kGCKMediaQueueInvalidItemID, the inserted item will be appended to the end of the queue
+        remoteMediaClient?.queueInsert(mediaQueueItem, beforeItemWithID: kGCKMediaQueueInvalidItemID)
+    }
+    
     // MARK: - GCKSessionManagerListener
     
     // onSessionSuspended
