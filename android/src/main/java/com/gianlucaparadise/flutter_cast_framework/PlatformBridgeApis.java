@@ -643,6 +643,8 @@ public class PlatformBridgeApis {
     void showTracksChooserDialog();
     void skipAd();
     void queueAppendItem(MediaQueueItem item);
+    void queueNextItem();
+    void queuePrevItem();
 
     /** The codec used by CastHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -888,6 +890,44 @@ public class PlatformBridgeApis {
                 throw new NullPointerException("itemArg unexpectedly null.");
               }
               api.queueAppendItem(itemArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.queueNextItem", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              api.queueNextItem();
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.queuePrevItem", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              api.queuePrevItem();
               wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {

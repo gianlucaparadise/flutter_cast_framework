@@ -297,6 +297,8 @@ abstract class CastHostApi {
 
   //region Queue
   void queueAppendItem(MediaQueueItem item);
+  void queueNextItem();
+  void queuePrevItem();
   //endregion
 }
 

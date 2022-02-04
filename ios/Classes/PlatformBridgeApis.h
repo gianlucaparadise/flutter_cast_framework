@@ -159,6 +159,8 @@ NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 - (void)showTracksChooserDialogWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)skipAdWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)queueAppendItemItem:(MediaQueueItem *)item error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)queueNextItemWithError:(FlutterError *_Nullable *_Nonnull)error;
+- (void)queuePrevItemWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastHostApi> *_Nullable api);
