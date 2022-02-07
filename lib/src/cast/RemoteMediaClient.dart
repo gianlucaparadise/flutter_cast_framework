@@ -114,6 +114,16 @@ class RemoteMediaClient {
     _hostApi.queueAppendItem(item);
   }
 
+  /// Jumps to the next item in the queue.
+  void queueNext() {
+    _hostApi.queueNextItem();
+  }
+
+  /// Jumps to the previous item in the queue.
+  void queuePrev() {
+    _hostApi.queuePrevItem();
+  }
+
   /// Internal method that shouldn't be visible
   @internal
   void dispatchPlayerStateUpdate(PlayerState playerState) {

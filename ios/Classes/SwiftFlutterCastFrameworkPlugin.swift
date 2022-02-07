@@ -339,6 +339,16 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         remoteMediaClient?.queueInsert(mediaQueueItem, beforeItemWithID: kGCKMediaQueueInvalidItemID)
     }
     
+    public func queueNextItemWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        let remoteMediaClient = castSession?.remoteMediaClient
+        remoteMediaClient?.queueNextItem()
+    }
+    
+    public func queuePrevItemWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        let remoteMediaClient = castSession?.remoteMediaClient
+        remoteMediaClient?.queuePreviousItem()
+    }
+    
     // MARK: - GCKSessionManagerListener
     
     // onSessionSuspended

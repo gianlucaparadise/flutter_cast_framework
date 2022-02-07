@@ -350,6 +350,16 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             remoteMediaClient.queueAppendItem(mediaQueueItem, null)
         }
 
+        override fun queueNextItem() {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            remoteMediaClient.queueNext(null)
+        }
+
+        override fun queuePrevItem() {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            remoteMediaClient.queuePrev(null)
+        }
+
         override fun setMute(muted: Boolean?) {
             if (muted == null) return
             val castSession = mCastSession ?: return
