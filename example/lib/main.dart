@@ -113,7 +113,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onCastVideo() {
-    final request = getMediaLoadRequestData();
+    final request = getMediaLoadRequestData(mainVideo);
     castFramework.castContext.sessionManager.remoteMediaClient.load(request);
   }
 
@@ -137,6 +137,14 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  void _appendToQueue() {
+    final sessionManager = castFramework.castContext.sessionManager;
+    for (var video in otherVideos) {
+      final item = getMediaQueueItem(video);
+      sessionManager.remoteMediaClient.queueAppendItem(item);
+    }
   }
 
   Widget _buildTitle(String text) {
@@ -210,10 +218,18 @@ class _MyAppState extends State<MyApp> {
                 onPressed: _hasMedia ? _openExpandedControls : null,
               ),
             ),
+            _buildTitle("Queue"),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
-                child: Text('Queue'),
+                child: Text("Append to Queue"),
+                onPressed: _hasSession ? _appendToQueue : null,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                child: Text('Show Queue'),
                 onPressed: _hasSession ? _openQueue : null,
               ),
             ),
