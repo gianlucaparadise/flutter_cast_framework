@@ -20,6 +20,7 @@ import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManager
 import com.google.android.gms.cast.framework.SessionManagerListener
+import com.google.android.gms.cast.framework.media.MediaQueue
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.google.android.gms.cast.framework.media.TracksChooserDialogFragment
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -105,6 +106,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private lateinit var mSessionManager: SessionManager
     private val mSessionManagerListener = CastSessionManagerListener()
     private val remoteMediaClientListener = RemoteMediaClientListener()
+    private val mediaQueueListener = MediaQueueListener()
 
     private var castApi: PlatformBridgeApis.CastHostApi? = null
     private var flutterApi: PlatformBridgeApis.CastFlutterApi? = null
@@ -136,6 +138,18 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             val periodMs = 1000L
             field?.removeProgressListener(remoteMediaClientListener)
             value?.addProgressListener(remoteMediaClientListener, periodMs)
+
+            field = value
+
+            mediaQueue = value?.mediaQueue
+        }
+
+    private var mediaQueue: MediaQueue? = null
+        set(value) {
+            Log.d(TAG, "Updating mediaQueue - mediaQueue changed: ${field != value}")
+
+            field?.unregisterCallback(mediaQueueListener)
+            value?.registerCallback(mediaQueueListener)
 
             field = value
         }
@@ -270,6 +284,46 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     adBreakClipDurationMs,
                     whenSkippableMs,
             ) { }
+        }
+    }
+
+    private inner class MediaQueueListener : MediaQueue.Callback() {
+        override fun mediaQueueWillChange() {
+            Log.d(TAG, "MediaQueue - mediaQueueWillChange")
+            super.mediaQueueWillChange()
+            flutterApi?.mediaQueueWillChange {  }
+        }
+
+        override fun mediaQueueChanged() {
+            Log.d(TAG, "MediaQueue - mediaQueueChanged")
+            super.mediaQueueChanged()
+            flutterApi?.mediaQueueChanged {  }
+        }
+
+        override fun itemsReloaded() {
+            Log.d(TAG, "MediaQueue - itemsReloaded")
+            super.itemsReloaded()
+            flutterApi?.itemsReloaded {  }
+        }
+
+        override fun itemsInsertedInRange(insertIndex: Int, insertCount: Int) {
+            Log.d(TAG, "MediaQueue - itemsInsertedInRange")
+            super.itemsInsertedInRange(insertIndex, insertCount)
+            flutterApi?.itemsInsertedInRange(insertIndex.toLong(), insertCount.toLong()) {  }
+        }
+
+        override fun itemsUpdatedAtIndexes(indexes: IntArray?) {
+            Log.d(TAG, "MediaQueue - itemsUpdatedAtIndexes")
+            super.itemsUpdatedAtIndexes(indexes)
+            val longIndexes = indexes?.map { it.toLong() }
+            flutterApi?.itemsUpdatedAtIndexes(longIndexes) {  }
+        }
+
+        override fun itemsRemovedAtIndexes(indexes: IntArray?) {
+            Log.d(TAG, "MediaQueue itemsRemovedAtIndexeseWillChange")
+            super.itemsRemovedAtIndexes(indexes)
+            val longIndexes = indexes?.map { it.toLong() }
+            flutterApi?.itemsRemovedAtIndexes(longIndexes) {  }
         }
     }
 
