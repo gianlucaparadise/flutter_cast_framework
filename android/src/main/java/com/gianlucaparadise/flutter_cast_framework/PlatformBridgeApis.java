@@ -1178,6 +1178,55 @@ public class PlatformBridgeApis {
         callback.reply(null);
       });
     }
+    public void itemsInsertedInRange(Long insertIndexArg, Long insertCountArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.itemsInsertedInRange", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(insertIndexArg, insertCountArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void itemsReloaded(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.itemsReloaded", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void itemsRemovedAtIndexes(List<Long> indexesArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.itemsRemovedAtIndexes", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(indexesArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void itemsReorderedAtIndexes(List<Long> indexesArg, Long insertBeforeIndexArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.itemsReorderedAtIndexes", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(indexesArg, insertBeforeIndexArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void itemsUpdatedAtIndexes(List<Long> indexesArg, Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.itemsUpdatedAtIndexes", getCodec());
+      channel.send(new ArrayList<Object>(Arrays.asList(indexesArg)), channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void mediaQueueChanged(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.mediaQueueChanged", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
+    public void mediaQueueWillChange(Reply<Void> callback) {
+      BasicMessageChannel<Object> channel =
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastFlutterApi.mediaQueueWillChange", getCodec());
+      channel.send(null, channelReply -> {
+        callback.reply(null);
+      });
+    }
   }
   private static Map<String, Object> wrapError(Throwable exception) {
     Map<String, Object> errorMap = new HashMap<>();

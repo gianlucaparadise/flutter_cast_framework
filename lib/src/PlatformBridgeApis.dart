@@ -866,6 +866,13 @@ abstract class CastFlutterApi {
   void onMediaError();
   void onProgressUpdated(int progressMs, int durationMs);
   void onAdBreakClipProgressUpdated(String adBreakId, String adBreakClipId, int progressMs, int durationMs, int whenSkippableMs);
+  void itemsInsertedInRange(int insertIndex, int insertCount);
+  void itemsReloaded();
+  void itemsRemovedAtIndexes(List<int?> indexes);
+  void itemsReorderedAtIndexes(List<int?> indexes, int insertBeforeIndex);
+  void itemsUpdatedAtIndexes(List<int?> indexes);
+  void mediaQueueChanged();
+  void mediaQueueWillChange();
   static void setup(CastFlutterApi? api) {
     {
       const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -1164,6 +1171,113 @@ abstract class CastFlutterApi {
           final int? arg_whenSkippableMs = args[4] as int?;
           assert(arg_whenSkippableMs != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.onAdBreakClipProgressUpdated was null, expected non-null int.');
           api.onAdBreakClipProgressUpdated(arg_adBreakId!, arg_adBreakClipId!, arg_progressMs!, arg_durationMs!, arg_whenSkippableMs!);
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.itemsInsertedInRange', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsInsertedInRange was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_insertIndex = args[0] as int?;
+          assert(arg_insertIndex != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsInsertedInRange was null, expected non-null int.');
+          final int? arg_insertCount = args[1] as int?;
+          assert(arg_insertCount != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsInsertedInRange was null, expected non-null int.');
+          api.itemsInsertedInRange(arg_insertIndex!, arg_insertCount!);
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.itemsReloaded', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          // ignore message
+          api.itemsReloaded();
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.itemsRemovedAtIndexes', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsRemovedAtIndexes was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final List<int?>? arg_indexes = args[0] as List<int?>?;
+          assert(arg_indexes != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsRemovedAtIndexes was null, expected non-null List<int?>.');
+          api.itemsRemovedAtIndexes(arg_indexes!);
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.itemsReorderedAtIndexes', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsReorderedAtIndexes was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final List<int?>? arg_indexes = args[0] as List<int?>?;
+          assert(arg_indexes != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsReorderedAtIndexes was null, expected non-null List<int?>.');
+          final int? arg_insertBeforeIndex = args[1] as int?;
+          assert(arg_insertBeforeIndex != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsReorderedAtIndexes was null, expected non-null int.');
+          api.itemsReorderedAtIndexes(arg_indexes!, arg_insertBeforeIndex!);
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.itemsUpdatedAtIndexes', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsUpdatedAtIndexes was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final List<int?>? arg_indexes = args[0] as List<int?>?;
+          assert(arg_indexes != null, 'Argument for dev.flutter.pigeon.CastFlutterApi.itemsUpdatedAtIndexes was null, expected non-null List<int?>.');
+          api.itemsUpdatedAtIndexes(arg_indexes!);
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.mediaQueueChanged', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          // ignore message
+          api.mediaQueueChanged();
+          return;
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.CastFlutterApi.mediaQueueWillChange', codec);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          // ignore message
+          api.mediaQueueWillChange();
           return;
         });
       }

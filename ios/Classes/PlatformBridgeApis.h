@@ -191,5 +191,12 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec(void);
 - (void)onMediaErrorWithCompletion:(void(^)(NSError *_Nullable))completion;
 - (void)onProgressUpdatedProgressMs:(NSNumber *)progressMs durationMs:(NSNumber *)durationMs completion:(void(^)(NSError *_Nullable))completion;
 - (void)onAdBreakClipProgressUpdatedAdBreakId:(NSString *)adBreakId adBreakClipId:(NSString *)adBreakClipId progressMs:(NSNumber *)progressMs durationMs:(NSNumber *)durationMs whenSkippableMs:(NSNumber *)whenSkippableMs completion:(void(^)(NSError *_Nullable))completion;
+- (void)itemsInsertedInRangeInsertIndex:(NSNumber *)insertIndex insertCount:(NSNumber *)insertCount completion:(void(^)(NSError *_Nullable))completion;
+- (void)itemsReloadedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)itemsRemovedAtIndexesIndexes:(NSArray<NSNumber *> *)indexes completion:(void(^)(NSError *_Nullable))completion;
+- (void)itemsReorderedAtIndexesIndexes:(NSArray<NSNumber *> *)indexes insertBeforeIndex:(NSNumber *)insertBeforeIndex completion:(void(^)(NSError *_Nullable))completion;
+- (void)itemsUpdatedAtIndexesIndexes:(NSArray<NSNumber *> *)indexes completion:(void(^)(NSError *_Nullable))completion;
+- (void)mediaQueueChangedWithCompletion:(void(^)(NSError *_Nullable))completion;
+- (void)mediaQueueWillChangeWithCompletion:(void(^)(NSError *_Nullable))completion;
 @end
 NS_ASSUME_NONNULL_END

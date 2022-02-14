@@ -1047,4 +1047,74 @@ NSObject<FlutterMessageCodec> *CastFlutterApiGetCodec() {
     completion(nil);
   }];
 }
+- (void)itemsInsertedInRangeInsertIndex:(NSNumber *)arg_insertIndex insertCount:(NSNumber *)arg_insertCount completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.itemsInsertedInRange"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_insertIndex, arg_insertCount] reply:^(id reply) {
+    completion(nil);
+  }];
+}
+- (void)itemsReloadedWithCompletion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.itemsReloaded"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:nil reply:^(id reply) {
+    completion(nil);
+  }];
+}
+- (void)itemsRemovedAtIndexesIndexes:(NSArray<NSNumber *> *)arg_indexes completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.itemsRemovedAtIndexes"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_indexes] reply:^(id reply) {
+    completion(nil);
+  }];
+}
+- (void)itemsReorderedAtIndexesIndexes:(NSArray<NSNumber *> *)arg_indexes insertBeforeIndex:(NSNumber *)arg_insertBeforeIndex completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.itemsReorderedAtIndexes"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_indexes, arg_insertBeforeIndex] reply:^(id reply) {
+    completion(nil);
+  }];
+}
+- (void)itemsUpdatedAtIndexesIndexes:(NSArray<NSNumber *> *)arg_indexes completion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.itemsUpdatedAtIndexes"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:@[arg_indexes] reply:^(id reply) {
+    completion(nil);
+  }];
+}
+- (void)mediaQueueChangedWithCompletion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.mediaQueueChanged"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:nil reply:^(id reply) {
+    completion(nil);
+  }];
+}
+- (void)mediaQueueWillChangeWithCompletion:(void(^)(NSError *_Nullable))completion {
+  FlutterBasicMessageChannel *channel =
+    [FlutterBasicMessageChannel
+      messageChannelWithName:@"dev.flutter.pigeon.CastFlutterApi.mediaQueueWillChange"
+      binaryMessenger:self.binaryMessenger
+      codec:CastFlutterApiGetCodec()];
+  [channel sendMessage:nil reply:^(id reply) {
+    completion(nil);
+  }];
+}
 @end

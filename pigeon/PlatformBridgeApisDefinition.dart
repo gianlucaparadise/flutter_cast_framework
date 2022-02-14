@@ -339,4 +339,14 @@ abstract class CastFlutterApi {
     int whenSkippableMs,
   );
   //endregion
+
+  //region MediaQueue
+  void itemsInsertedInRange(int insertIndex, int insertCount);
+  void itemsReloaded();
+  void itemsRemovedAtIndexes(List<int> indexes);
+  void itemsReorderedAtIndexes(List<int> indexes, int insertBeforeIndex);
+  void itemsUpdatedAtIndexes(List<int> indexes);
+  void mediaQueueChanged();
+  void mediaQueueWillChange();
+  //endregion
 }
