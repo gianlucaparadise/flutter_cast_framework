@@ -2,7 +2,7 @@ import Flutter
 import UIKit
 import GoogleCast
 
-public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastHostApi, GCKRemoteMediaClientListener {
+public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastHostApi, GCKRemoteMediaClientListener, GCKMediaQueueDelegate {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let messenger : FlutterBinaryMessenger = registrar.messenger()
         let flutterApi = CastFlutterApi.init(binaryMessenger: messenger)
@@ -74,6 +74,20 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
             newValue?.add(self)
             
             _remoteMediaClient = newValue
+            mediaQueue = newValue?.mediaQueue
+        }
+    }
+    
+    var _mediaQueue: GCKMediaQueue?
+    var mediaQueue: GCKMediaQueue? {
+        get { return _mediaQueue }
+        set {
+            debugPrint("Updating mediaQueue - mediaQueue changed: \(_mediaQueue != newValue)")
+            
+            _mediaQueue?.remove(self)
+            newValue?.add(self)
+            
+            _mediaQueue = newValue
         }
     }
     
@@ -515,4 +529,50 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         flutterApi.onQueueStatusUpdated { (_:Error?) in
         }
     }
+    
+    // mediaQueueWillChange
+    public func mediaQueueWillChange(_ queue: GCKMediaQueue) {
+        debugPrint("MediaQueueListener: mediaQueueWillChange")
+        flutterApi.mediaQueueWillChange { (_:Error?) in
+        }
+    }
+    
+    // mediaQueueChanged
+    public func mediaQueueDidChange(_ queue: GCKMediaQueue) {
+        debugPrint("MediaQueueListener: mediaQueueDidChange")
+        flutterApi.mediaQueueChanged { (_:Error?) in
+        }
+    }
+    
+    // itemsReloaded
+    public func mediaQueueDidReloadItems(_ queue: GCKMediaQueue) {
+        debugPrint("MediaQueueListener: mediaQueueDidReloadItems")
+        flutterApi.itemsReloaded { (_:Error?) in
+        }
+    }
+    
+    // itemsInsertedInRange
+    public func mediaQueue(_ queue: GCKMediaQueue, didInsertItemsIn range: NSRange) {
+        debugPrint("MediaQueueListener: mediaQueueDidInsertItemsIn")
+        let count = range.upperBound - range.lowerBound
+        let start = range.lowerBound
+        flutterApi.itemsInserted(inRangeInsertIndex: NSNumber(value: start), insertCount: NSNumber(value: count)) { (_:Error?) in
+        }
+    }
+    
+    // itemsUpdatedAtIndexes
+    public func mediaQueue(_ queue: GCKMediaQueue, didUpdateItemsAtIndexes indexes: [NSNumber]) {
+        debugPrint("MediaQueueListener: mediaQueueDidUpdateItemsAtIndexes")
+        flutterApi.itemsUpdated(atIndexesIndexes: indexes) { (_:Error?) in
+        }
+    }
+    
+    // itemsRemovedAtIndexes
+    public func mediaQueue(_ queue: GCKMediaQueue, didRemoveItemsAtIndexes indexes: [NSNumber]) {
+        debugPrint("MediaQueueListener: mediaQueueDidRemoveItemsAtIndexes")
+        flutterApi.itemsRemoved(atIndexesIndexes: indexes) { (_:Error?) in
+        }
+    }
+    
+    //  itemsReorderedAtIndexes - Can't find on iOS
 }
