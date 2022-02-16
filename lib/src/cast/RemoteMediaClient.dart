@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../../cast.dart';
 import '../PlatformBridgeApis.dart';
+import './MediaQueue.dart';
 
 typedef ProgressListener = void Function(int progressMs, int durationMs);
 typedef AdBreakClipProgressListener = void Function(
@@ -26,6 +27,7 @@ class ProgressInfo {
 /// Class for controlling a media player application running on a receiver.
 class RemoteMediaClient {
   RemoteMediaClient(this._hostApi) {
+    this.mediaQueue = MediaQueue(_hostApi);
     this.mediaStatusStream = this._mediaStatusStreamController.stream;
     this.progressStream = this._progressStreamController.stream;
   }
@@ -36,6 +38,9 @@ class RemoteMediaClient {
   }
 
   final CastHostApi _hostApi;
+
+  /// Returns the associated MediaQueue.
+  late MediaQueue mediaQueue;
 
   /// Listenable state of the remote media player
   ValueListenable<PlayerState> get playerState => _playerStateNotifier;

@@ -4,6 +4,7 @@ import 'package:flutter_cast_framework/src/cast/RemoteMediaClient.dart';
 
 import 'PlatformBridgeApis.dart';
 import 'cast/CastContext.dart';
+import 'cast/MediaQueue.dart';
 
 /// Entrypoint for the Flutter Cast Framework
 class FlutterCastFramework {
@@ -34,8 +35,8 @@ class _CastFlutterApiImplementor extends CastFlutterApi {
   final List<String> namespaces = [];
 
   SessionManager get sessionManager => castContext.sessionManager;
-  RemoteMediaClient get remoteMediaClient =>
-      castContext.sessionManager.remoteMediaClient;
+  RemoteMediaClient get remoteMediaClient => sessionManager.remoteMediaClient;
+  MediaQueue get mediaQueue => remoteMediaClient.mediaQueue;
 
   _CastFlutterApiImplementor({
     required this.castContext,
@@ -163,6 +164,43 @@ class _CastFlutterApiImplementor extends CastFlutterApi {
       durationMs,
       whenSkippableMs,
     );
+  }
+  //endregion
+
+  //region MediaQueueu
+  @override
+  void itemsInsertedInRange(int insertIndex, int insertCount) {
+    mediaQueue.itemsInsertedInRange?.call(insertIndex, insertCount);
+  }
+
+  @override
+  void itemsReloaded() {
+    mediaQueue.itemsReloaded?.call();
+  }
+
+  @override
+  void itemsRemovedAtIndexes(List<int?> indexes) {
+    mediaQueue.itemsRemovedAtIndexes?.call(indexes);
+  }
+
+  @override
+  void itemsReorderedAtIndexes(List<int?> indexes, int insertBeforeIndex) {
+    mediaQueue.itemsReorderedAtIndexes?.call(indexes, insertBeforeIndex);
+  }
+
+  @override
+  void itemsUpdatedAtIndexes(List<int?> indexes) {
+    mediaQueue.itemsUpdatedAtIndexes?.call(indexes);
+  }
+
+  @override
+  void mediaQueueChanged() {
+    mediaQueue.mediaQueueChanged?.call();
+  }
+
+  @override
+  void mediaQueueWillChange() {
+    mediaQueue.mediaQueueWillChange?.call();
   }
   //endregion
 }
