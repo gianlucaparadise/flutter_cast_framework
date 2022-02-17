@@ -161,6 +161,8 @@ NSObject<FlutterMessageCodec> *CastHostApiGetCodec(void);
 - (void)queueAppendItemItem:(MediaQueueItem *)item error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)queueNextItemWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)queuePrevItemWithError:(FlutterError *_Nullable *_Nonnull)error;
+- (nullable NSNumber *)getQueueItemCountWithError:(FlutterError *_Nullable *_Nonnull)error;
+- (nullable MediaQueueItem *)getQueueItemAtIndexIndex:(NSNumber *)index error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastHostApi> *_Nullable api);

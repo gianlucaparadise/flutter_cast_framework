@@ -645,6 +645,8 @@ public class PlatformBridgeApis {
     void queueAppendItem(MediaQueueItem item);
     void queueNextItem();
     void queuePrevItem();
+    Long getQueueItemCount();
+    MediaQueueItem getQueueItemAtIndex(Long index);
 
     /** The codec used by CastHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -929,6 +931,49 @@ public class PlatformBridgeApis {
             try {
               api.queuePrevItem();
               wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.getQueueItemCount", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              Long output = api.getQueueItemCount();
+              wrapped.put("result", output);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.CastHostApi.getQueueItemAtIndex", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Number indexArg = (Number)args.get(0);
+              if (indexArg == null) {
+                throw new NullPointerException("indexArg unexpectedly null.");
+              }
+              MediaQueueItem output = api.getQueueItemAtIndex(indexArg.longValue());
+              wrapped.put("result", output);
             }
             catch (Error | RuntimeException exception) {
               wrapped.put("error", wrapError(exception));

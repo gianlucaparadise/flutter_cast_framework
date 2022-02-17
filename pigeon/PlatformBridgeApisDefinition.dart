@@ -295,10 +295,15 @@ abstract class CastHostApi {
   void skipAd();
   //endregion
 
-  //region Queue
+  //region RemoteMediaClient Queue
   void queueAppendItem(MediaQueueItem item);
   void queueNextItem();
   void queuePrevItem();
+  //endregion
+
+  //region MediaQueue
+  int getQueueItemCount();
+  MediaQueueItem getQueueItemAtIndex(int index);
   //endregion
 }
 
