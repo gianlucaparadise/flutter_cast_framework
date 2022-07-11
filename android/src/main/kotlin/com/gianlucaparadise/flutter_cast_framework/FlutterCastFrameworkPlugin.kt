@@ -10,10 +10,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
-import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaInfo
-import com.gianlucaparadise.flutter_cast_framework.media.getFlutterMediaStatus
-import com.gianlucaparadise.flutter_cast_framework.media.getMediaLoadRequestData
-import com.gianlucaparadise.flutter_cast_framework.media.getMediaQueueItem
+import com.gianlucaparadise.flutter_cast_framework.media.*
 import com.google.android.gms.cast.MediaError
 import com.google.android.gms.cast.MediaStatus.*
 import com.google.android.gms.cast.framework.CastContext
@@ -412,6 +409,17 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun queuePrevItem() {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
             remoteMediaClient.queuePrev(null)
+        }
+
+        override fun getQueueItemCount(): Long {
+            return mediaQueue?.itemCount?.toLong() ?: -1
+        }
+
+        override fun getQueueItemAtIndex(index: Long?): PlatformBridgeApis.MediaQueueItem {
+            if (index == null || index < 0) return getFlutterMediaQueueItem(null)
+
+            val mediaQueueItem = mediaQueue?.getItemAtIndex(index.toInt(), true)
+            return getFlutterMediaQueueItem(mediaQueueItem)
         }
 
         override fun setMute(muted: Boolean?) {

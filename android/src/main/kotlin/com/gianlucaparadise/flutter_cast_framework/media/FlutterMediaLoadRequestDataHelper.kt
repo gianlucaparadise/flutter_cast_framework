@@ -158,3 +158,16 @@ fun getFlutterMediaType(mediaType: Int?): PlatformBridgeApis.MediaType {
         else -> PlatformBridgeApis.MediaType.generic
     }
 }
+
+fun getFlutterMediaQueueItem(item: MediaQueueItem?): PlatformBridgeApis.MediaQueueItem {
+    val mediaInto = getFlutterMediaInfo(item?.media)
+
+    return PlatformBridgeApis.MediaQueueItem().apply {
+        itemId = item?.itemId?.toLong() ?: -1
+        autoplay = item?.autoplay ?: false
+        playbackDuration = item?.playbackDuration ?: -1.0
+        startTime = item?.startTime ?: 0.0
+        preloadTime = item?.preloadTime ?: 0.0
+        media = mediaInto
+    }
+}
