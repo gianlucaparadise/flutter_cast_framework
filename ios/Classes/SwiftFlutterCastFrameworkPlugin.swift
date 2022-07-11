@@ -363,6 +363,24 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         remoteMediaClient?.queuePreviousItem()
     }
     
+    public func getQueueItemCountWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> NSNumber? {
+        if (mediaQueue == nil) {
+            return -1
+        }
+        
+        let itemCount = mediaQueue?.itemCount ?? 0
+        return NSNumber(value: itemCount)
+    }
+    
+    public func getQueueItemAtIndexIndex(_ index: NSNumber, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> MediaQueueItem? {
+        if (index.intValue < 0) {
+            return getFlutterMediaQueueItem(item: nil)
+        }
+        
+        let mediaQueueItem = mediaQueue?.item(at: index.uintValue, fetchIfNeeded: true)
+        return getFlutterMediaQueueItem(item: mediaQueueItem)
+    }
+    
     // MARK: - GCKSessionManagerListener
     
     // onSessionSuspended

@@ -247,3 +247,20 @@ func getFlutterMediaType(mediaType: GCKMediaMetadataType?) -> MediaType {
     }
 }
 
+func getFlutterMediaQueueItem(item: GCKMediaQueueItem?) -> MediaQueueItem {
+    let result = MediaQueueItem()
+    
+    if (item == nil) {
+        result.itemId = -1
+    } else {
+        result.itemId = NSNumber(value: item?.itemID ?? 0)
+    }
+    
+    result.autoplay = NSNumber(value: item?.autoplay ?? false)
+    result.playbackDuration = NSNumber(value: item?.playbackDuration ?? -1)
+    result.startTime = NSNumber(value: item?.startTime ?? 0)
+    result.preloadTime = NSNumber(value: item?.preloadTime ?? 0)
+    result.media = getFlutterMediaInfo(mediaInfo: item?.mediaInformation)
+    
+    return result
+}
