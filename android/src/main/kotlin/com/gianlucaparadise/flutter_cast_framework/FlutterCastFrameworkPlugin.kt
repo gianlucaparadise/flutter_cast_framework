@@ -312,20 +312,24 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun itemsUpdatedAtIndexes(indexes: IntArray?) {
             Log.d(TAG, "MediaQueue - itemsUpdatedAtIndexes")
             super.itemsUpdatedAtIndexes(indexes)
-            val longIndexes = indexes?.map { it.toLong() }
+            if (indexes == null) return
+
+            val longIndexes = indexes.map { it.toLong() }
             flutterApi?.itemsUpdatedAtIndexes(longIndexes) {  }
         }
 
         override fun itemsRemovedAtIndexes(indexes: IntArray?) {
             Log.d(TAG, "MediaQueue itemsRemovedAtIndexeseWillChange")
             super.itemsRemovedAtIndexes(indexes)
-            val longIndexes = indexes?.map { it.toLong() }
+            if (indexes == null) return
+
+            val longIndexes = indexes.map { it.toLong() }
             flutterApi?.itemsRemovedAtIndexes(longIndexes) {  }
         }
     }
 
     private inner class MyApi : PlatformBridgeApis.CastHostApi {
-        override fun sendMessage(message: PlatformBridgeApis.CastMessage?) {
+        override fun sendMessage(message: PlatformBridgeApis.CastMessage) {
             mMessageCastingChannel?.sendMessage(mCastSession, message)
         }
 
@@ -340,9 +344,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             CastDialogOpener.showCastDialog(context, activity)
         }
 
-        override fun loadMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData?) {
-            if (request == null) return
-
+        override fun loadMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData) {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
 
             val mediaLoadRequest = getMediaLoadRequestData(request)
@@ -392,9 +394,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             remoteMediaClient.skipAd()
         }
 
-        override fun queueAppendItem(item: PlatformBridgeApis.MediaQueueItem?) {
-            if (item == null) return
-
+        override fun queueAppendItem(item: PlatformBridgeApis.MediaQueueItem) {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
 
             val mediaQueueItem = getMediaQueueItem(item)
@@ -415,15 +415,14 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             return mediaQueue?.itemCount?.toLong() ?: -1
         }
 
-        override fun getQueueItemAtIndex(index: Long?): PlatformBridgeApis.MediaQueueItem {
-            if (index == null || index < 0) return getFlutterMediaQueueItem(null)
+        override fun getQueueItemAtIndex(index: Long): PlatformBridgeApis.MediaQueueItem {
+            if (index < 0) return getFlutterMediaQueueItem(null)
 
             val mediaQueueItem = mediaQueue?.getItemAtIndex(index.toInt(), true)
             return getFlutterMediaQueueItem(mediaQueueItem)
         }
 
-        override fun setMute(muted: Boolean?) {
-            if (muted == null) return
+        override fun setMute(muted: Boolean) {
             val castSession = mCastSession ?: return
             castSession.isMute = muted
         }

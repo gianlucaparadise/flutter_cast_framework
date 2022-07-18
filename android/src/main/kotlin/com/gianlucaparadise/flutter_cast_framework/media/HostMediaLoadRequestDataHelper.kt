@@ -9,29 +9,40 @@ import org.json.JSONObject
 fun getMediaLoadRequestData(request: PlatformBridgeApis.MediaLoadRequestData): MediaLoadRequestData {
     val mediaInfo = getMediaInfo(request.mediaInfo)
 
-    return MediaLoadRequestData.Builder()
+    val builder = MediaLoadRequestData.Builder()
             .setMediaInfo(mediaInfo)
             .setAutoplay(request.shouldAutoplay)
-            .setCurrentTime(request.currentTime)
-            .build()
+
+    request.currentTime?.let { builder.setCurrentTime(it) }
+
+    return builder.build()
 }
 
 fun getMediaInfo(mediaInfo: PlatformBridgeApis.MediaInfo?): MediaInfo? {
     if (mediaInfo == null) return null
 
-    val streamType = getStreamType(mediaInfo.streamType)
-    val metadata = getMediaMetadata(mediaInfo.mediaMetadata)
-    val mediaTracks = mediaInfo.mediaTracks.map { getMediaTrack(it) }
+    val streamType = getStreamType(mediaInfo.streamType
+            ?: throw IllegalArgumentException("streamType is a required field"))
     val customData = JSONObject(mediaInfo.customDataAsJson ?: "{}")
 
-    return MediaInfo.Builder(mediaInfo.contentId)
+    val builder = MediaInfo.Builder(mediaInfo.contentId)
             .setStreamType(streamType)
             .setContentType(mediaInfo.contentType)
-            .setMetadata(metadata)
-            .setMediaTracks(mediaTracks)
-            .setStreamDuration(mediaInfo.streamDuration)
+            .setStreamDuration(mediaInfo.streamDuration
+                    ?: throw IllegalArgumentException("streamDuration is a required field"))
             .setCustomData(customData)
-            .build()
+
+    mediaInfo.mediaMetadata?.let {
+        val metadata = getMediaMetadata(it)
+        builder.setMetadata(metadata)
+    }
+
+    mediaInfo.mediaTracks?.let {
+        val mediaTracks = it.map { t -> getMediaTrack(t) }
+        builder.setMediaTracks(mediaTracks)
+    }
+
+    return builder.build()
 }
 
 fun getStreamType(streamType: PlatformBridgeApis.StreamType): Int {
@@ -44,15 +55,18 @@ fun getStreamType(streamType: PlatformBridgeApis.StreamType): Int {
 }
 
 fun getMediaMetadata(mediaMetadata: PlatformBridgeApis.MediaMetadata): MediaMetadata {
-    val mediaType = getMediaType(mediaMetadata.mediaType)
-    val result = MediaMetadata(mediaType)
+    val mediaType = mediaMetadata.mediaType
+    val result = if (mediaType == null) MediaMetadata() else {
+        val hostMediaType = getMediaType(mediaType)
+        MediaMetadata(hostMediaType)
+    }
 
 //    mediaMetadata.strings.forEach {
 //        val key = getMediaMetadataKey(it.key)
 //        result.putString(key, it.value)
 //    }
 
-    mediaMetadata.webImages.forEach {
+    mediaMetadata.webImages?.forEach {
         val uri = Uri.parse(it.url)
         val webImage = WebImage(uri)
         result.addImage(webImage)
@@ -107,14 +121,21 @@ fun getMediaType(mediaType: PlatformBridgeApis.MediaType): Int {
 //}
 
 fun getMediaTrack(mediaTrack: PlatformBridgeApis.MediaTrack): MediaTrack {
-    val trackType = getTrackType(mediaTrack.trackType)
-    val trackSubtype = getTrackSubtype(mediaTrack.trackSubtype)
+    val trackId = mediaTrack.id
+            ?: throw IllegalArgumentException("mediaTrack ID is a required field")
+    val trackType = getTrackType(mediaTrack.trackType
+            ?: throw IllegalArgumentException("trackType is a required field"))
 
-    return MediaTrack.Builder(mediaTrack.id, trackType)
+    val builder = MediaTrack.Builder(trackId, trackType)
             .setName(mediaTrack.name)
-            .setSubtype(trackSubtype)
             .setContentId(mediaTrack.contentId)
-            .build()
+
+    mediaTrack.trackSubtype?.let {
+        val trackSubtype = getTrackSubtype(it)
+        builder.setSubtype(trackSubtype)
+    }
+
+    return builder.build()
 }
 
 fun getTrackType(trackType: PlatformBridgeApis.TrackType): Int {
@@ -143,8 +164,10 @@ fun getMediaQueueItem(item: PlatformBridgeApis.MediaQueueItem?): MediaQueueItem?
 
     val mediaInfo = getMediaInfo(item.media)
 
-    return MediaQueueItem.Builder(mediaInfo)
-            .setAutoplay(item.autoplay)
-            .setPreloadTime(item.preloadTime)
-            .build()
+    val builder = MediaQueueItem.Builder(mediaInfo)
+
+    item.autoplay?.let { builder.setAutoplay(it) }
+    item.preloadTime?.let { builder.setPreloadTime(it) }
+
+    return builder.build()
 }

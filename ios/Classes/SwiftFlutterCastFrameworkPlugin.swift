@@ -39,12 +39,12 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
             remoteMediaClient = newValue?.remoteMediaClient
             
             flutterApi.getSessionMessageNamespaces { (namespaces, err) in
-                debugPrint("Updating castSession - getSessionMessageNamespaces success - param: \(namespaces.joined(separator: ", "))")
+                debugPrint("Updating castSession - getSessionMessageNamespaces success - param: \(String(describing: namespaces?.joined(separator: ", ")))")
                 if (oldSession == nil && newSession == nil) {
                     return // nothing to do here
                 }
                 
-                if (namespaces.count == 0) {
+                if (namespaces == nil || namespaces?.count == 0) {
                     return  // nothing to do here
                 }
                 
@@ -55,7 +55,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
                     }
                 }
 
-                namespaces.forEach({ (namespace) in
+                namespaces?.forEach({ (namespace) in
                     let castingChannel = MessageCastingChannel.init(namespace: namespace, flutterApi: self.flutterApi)
                     self.castingChannels[namespace] = castingChannel
                     newSession?.add(castingChannel)
@@ -372,7 +372,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         return NSNumber(value: itemCount)
     }
     
-    public func getQueueItemAtIndexIndex(_ index: NSNumber, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> MediaQueueItem? {
+    public func getQueueItem(atIndexIndex index: NSNumber, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> MediaQueueItem? {
         if (index.intValue < 0) {
             return getFlutterMediaQueueItem(item: nil)
         }
