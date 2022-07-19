@@ -191,6 +191,7 @@ class _CastFlutterApiImplementor extends CastFlutterApi {
   @override
   void itemsUpdatedAtIndexes(List<int?> indexes) {
     mediaQueue.onItemsUpdatedAtIndexes?.call(indexes);
+    mediaQueue.dispatchItemUpdatedAtIndex(indexes);
   }
 
   @override

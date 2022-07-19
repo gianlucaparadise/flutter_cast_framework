@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/src/PlatformBridgeApis.dart';
+import 'package:meta/meta.dart';
 
 typedef MediaQueueItemsInsertedInRangeCallback = void Function(
     int insertIndex, int insertCount);
@@ -11,7 +14,14 @@ typedef MediaQueueItemsReorderedAtIndexesCallback = void Function(
 class MediaQueue {
   final CastHostApi _hostApi;
 
-  MediaQueue(this._hostApi);
+  MediaQueue(this._hostApi) {
+    this.itemUpdatedAtIndexStream =
+        this._itemUpdatedAtIndexStreamController.stream;
+  }
+
+  void dispose() {
+    this._itemUpdatedAtIndexStreamController.close();
+  }
 
   Future<int> getItemCount() {
     return _hostApi.getQueueItemCount();
@@ -41,4 +51,17 @@ class MediaQueue {
 
   /// Called when one or more changes are about to be made to the queue.
   VoidCallback? onMediaQueueWillChange;
+
+  final _itemUpdatedAtIndexStreamController = StreamController<int>.broadcast();
+  late Stream<int> itemUpdatedAtIndexStream;
+
+  /// Internal method that shouldn't be visible
+  @internal
+  void dispatchItemUpdatedAtIndex(List<int?> indexes) {
+    indexes.forEach((i) {
+      if (i != null) {
+        this._itemUpdatedAtIndexStreamController.add(i);
+      }
+    });
+  }
 }
