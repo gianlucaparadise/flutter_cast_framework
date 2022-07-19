@@ -170,37 +170,37 @@ class _CastFlutterApiImplementor extends CastFlutterApi {
   //region MediaQueueu
   @override
   void itemsInsertedInRange(int insertIndex, int insertCount) {
-    mediaQueue.itemsInsertedInRange?.call(insertIndex, insertCount);
+    mediaQueue.onItemsInsertedInRange?.call(insertIndex, insertCount);
   }
 
   @override
   void itemsReloaded() {
-    mediaQueue.itemsReloaded?.call();
+    mediaQueue.onItemsReloaded?.call();
   }
 
   @override
   void itemsRemovedAtIndexes(List<int?> indexes) {
-    mediaQueue.itemsRemovedAtIndexes?.call(indexes);
+    mediaQueue.onItemsRemovedAtIndexes?.call(indexes);
   }
 
   @override
   void itemsReorderedAtIndexes(List<int?> indexes, int insertBeforeIndex) {
-    mediaQueue.itemsReorderedAtIndexes?.call(indexes, insertBeforeIndex);
+    mediaQueue.onItemsReorderedAtIndexes?.call(indexes, insertBeforeIndex);
   }
 
   @override
   void itemsUpdatedAtIndexes(List<int?> indexes) {
-    mediaQueue.itemsUpdatedAtIndexes?.call(indexes);
+    mediaQueue.onItemsUpdatedAtIndexes?.call(indexes);
   }
 
   @override
   void mediaQueueChanged() {
-    mediaQueue.mediaQueueChanged?.call();
+    mediaQueue.onMediaQueueChanged?.call();
   }
 
   @override
   void mediaQueueWillChange() {
-    mediaQueue.mediaQueueWillChange?.call();
+    mediaQueue.onMediaQueueWillChange?.call();
   }
   //endregion
 }
