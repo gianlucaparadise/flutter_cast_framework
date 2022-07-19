@@ -250,9 +250,7 @@ func getFlutterMediaType(mediaType: GCKMediaMetadataType?) -> MediaType {
 func getFlutterMediaQueueItem(item: GCKMediaQueueItem?) -> MediaQueueItem {
     let result = MediaQueueItem()
     
-    if (item == nil) {
-        result.itemId = -1
-    } else {
+    if (item != nil) {
         result.itemId = NSNumber(value: item?.itemID ?? 0)
     }
     

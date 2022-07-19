@@ -163,7 +163,7 @@ fun getFlutterMediaQueueItem(item: MediaQueueItem?): PlatformBridgeApis.MediaQue
     val mediaInto = getFlutterMediaInfo(item?.media)
 
     return PlatformBridgeApis.MediaQueueItem().apply {
-        itemId = item?.itemId?.toLong() ?: -1
+        itemId = item?.itemId?.toLong()
         autoplay = item?.autoplay ?: false
         playbackDuration = item?.playbackDuration ?: -1.0
         startTime = item?.startTime ?: 0.0
