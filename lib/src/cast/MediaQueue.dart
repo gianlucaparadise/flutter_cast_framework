@@ -13,6 +13,14 @@ class MediaQueue {
 
   MediaQueue(this._hostApi);
 
+  Future<int> getItemCount() {
+    return _hostApi.getQueueItemCount();
+  }
+
+  Future<MediaQueueItem> getItemAtIndex(int index) {
+    return _hostApi.getQueueItemAtIndex(index);
+  }
+
   /// Called when a contiguous range of queue items have been inserted into the queue.
   MediaQueueItemsInsertedInRangeCallback? onItemsInsertedInRange;
 
