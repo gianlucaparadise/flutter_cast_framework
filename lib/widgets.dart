@@ -9,3 +9,5 @@ export 'src/cast/widgets/expanded_controls/ExpandedControlsToolbar.dart';
 export 'src/cast/widgets/expanded_controls/ExpandedControlsConnectedDeviceLabel.dart';
 
 export 'src/cast/widgets/mini_controller/MiniController.dart';
+
+export 'src/cast/widgets/queue_list/QueueList.dart';

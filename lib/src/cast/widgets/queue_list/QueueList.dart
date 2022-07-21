@@ -1,43 +1,71 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_cast_framework/cast.dart';
-import 'package:flutter_cast_framework/src/cast/widgets/queue_list/MyPaginatedList.dart';
+import 'package:flutter_cast_framework/src/cast/widgets/queue_list/QueueListItemHolder.dart';
+import 'package:flutter_cast_framework/src/cast/widgets/queue_list/utils.dart';
 
-class QueueList extends StatefulWidget {
-  final FlutterCastFramework flutterCastFramework;
-  final ItemWidgetBuilder<MediaQueueItem>? widgetBuilder;
+class QueueList extends StatelessWidget {
+  final FlutterCastFramework castFramework;
+  final ListItemBuilder listItemBuilder;
+  final EmptyStateBuilder? emptyListStateBuilder;
+  final EmptyStateBuilder? emptyItemStateBuilder;
 
-  const QueueList({
+  QueueList({
     Key? key,
-    required this.flutterCastFramework,
-    this.widgetBuilder,
+    required this.castFramework,
+    required this.listItemBuilder,
+    this.emptyListStateBuilder,
+    this.emptyItemStateBuilder,
   }) : super(key: key);
 
   @override
-  _QueueListState createState() => _QueueListState();
-}
-
-class _QueueListState extends State<QueueList> {
-  Widget widgetBuilder(MediaQueueItem item) {
-    // TODO complete this method
-    return SizedBox.shrink();
-  }
-
-  Future<List<MediaQueueItem>> loadMore(MediaQueueItem? lastLoadedItem) async {
-    // TODO complete this method
-    if (lastLoadedItem == null) {
-      //first load request
-      return [];
-    } else {
-      //subsequent load request(s)
-      return [];
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return MyPaginatedList<MediaQueueItem>(
-      widgetBuilder: this.widget.widgetBuilder ?? widgetBuilder,
-      loadMore: loadMore,
+    final sessionManager = castFramework.castContext.sessionManager;
+
+    Widget _getEmptyState(BuildContext context) {
+      if (emptyListStateBuilder == null) return defaultEmptyState();
+      return emptyListStateBuilder!(context, false, null);
+    }
+
+    Widget _getErrorState(BuildContext context, Object? error) {
+      if (emptyListStateBuilder == null) return defaultEmptyState();
+      return emptyListStateBuilder!(context, false, error);
+    }
+
+    Widget _getLoadingState(BuildContext context) {
+      if (emptyListStateBuilder == null) return defaultEmptyState();
+      return emptyListStateBuilder!(context, true, null);
+    }
+
+    Widget _getList(int count) {
+      return ListView.builder(
+        itemCount: count,
+        itemBuilder: (context, index) {
+          return QueueListItemHolder(
+            castFramework: this.castFramework,
+            index: index,
+            listItemBuilder: listItemBuilder,
+            emptyItemStateBuilder: emptyItemStateBuilder,
+          );
+        },
+      );
+    }
+
+    return FutureBuilder<int>(
+      future: sessionManager.remoteMediaClient.mediaQueue.getItemCount(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final count = snapshot.data;
+          if (count == null || count < 0) {
+            return _getEmptyState(context);
+          }
+
+          return _getList(count);
+        } else if (snapshot.hasError) {
+          return _getErrorState(context, snapshot.error);
+        } else {
+          return _getLoadingState(context);
+        }
+      },
     );
   }
 }
