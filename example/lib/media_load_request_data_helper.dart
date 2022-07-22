@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_cast_framework/cast.dart';
 
 /// in seconds
 const double QUEUE_PRELOAD_TIME = 20;
 
 const mainVideo = const VideoInfo(
+  "Big Buck Bunny",
+  "Blender Foundation",
   "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4",
   "mp4",
   596 * 1000,
@@ -13,6 +16,8 @@ const mainVideo = const VideoInfo(
 
 const List<VideoInfo> otherVideos = [
   const VideoInfo(
+    "Elephants Dream",
+    "Blender Foundation",
     "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/ElephantsDream.mp4",
     "mp4",
     653 * 1000,
@@ -20,6 +25,8 @@ const List<VideoInfo> otherVideos = [
     "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/780x1200/ElephantsDream-780x1200.jpg",
   ),
   const VideoInfo(
+    "Sintel",
+    "Blender Foundation",
     "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/Sintel.mp4",
     "mp4",
     888 * 1000,
@@ -27,6 +34,8 @@ const List<VideoInfo> otherVideos = [
     "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/780x1200/Sintel-780x1200.jpg",
   ),
   const VideoInfo(
+    "Tears of Steel",
+    "Blender Foundation",
     "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/TearsOfSteel.mp4",
     "mp4",
     734 * 1000,
@@ -37,6 +46,8 @@ const List<VideoInfo> otherVideos = [
 
 class VideoInfo {
   const VideoInfo(
+    this.title,
+    this.studio,
     this.url,
     this.type,
     this.duration,
@@ -44,6 +55,8 @@ class VideoInfo {
     this.poster,
   );
 
+  final String title;
+  final String studio;
   final String url;
   final String type;
   final int duration;
@@ -78,6 +91,10 @@ MediaInfo _getMediaInfo(VideoInfo video) {
   final bigImg = WebImage()..url = video.poster;
   final mediaMetadata = MediaMetadata()
     ..mediaType = MediaType.movie
+    ..strings = {
+      describeEnum(MediaMetadataKey.title): video.title,
+      describeEnum(MediaMetadataKey.subtitle): video.studio,
+    }
     ..webImages = [
       img,
       bigImg,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast.dart';
 
@@ -11,22 +12,22 @@ class QueueItemHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final titleText = mediaInfo?.mediaMetadata?.strings[MediaMetadataKey.title]
-    // final subtitleText = mediaInfo?.mediaMetadata?.strings[MediaMetadataKey.subtitle]
-    final titleText = "";
-    final subtitleText = "";
+    final titleText = mediaInfo
+        ?.mediaMetadata?.strings?[describeEnum(MediaMetadataKey.title)];
+    final subtitleText = mediaInfo
+        ?.mediaMetadata?.strings?[describeEnum(MediaMetadataKey.subtitle)];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          titleText,
+          titleText ?? "",
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
         ),
         Container(height: 2),
         Text(
-          subtitleText,
+          subtitleText ?? "",
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
         )
