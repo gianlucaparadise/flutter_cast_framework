@@ -169,15 +169,18 @@ class MediaInfo {
 class MediaMetadata {
   MediaMetadata({
     this.mediaType,
+    this.strings,
     this.webImages,
   });
 
   MediaType? mediaType;
+  Map<String?, String?>? strings;
   List<WebImage?>? webImages;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
     pigeonMap['mediaType'] = mediaType?.index;
+    pigeonMap['strings'] = strings;
     pigeonMap['webImages'] = webImages;
     return pigeonMap;
   }
@@ -188,6 +191,7 @@ class MediaMetadata {
       mediaType: pigeonMap['mediaType'] != null
           ? MediaType.values[pigeonMap['mediaType']! as int]
           : null,
+      strings: (pigeonMap['strings'] as Map<Object?, Object?>?)?.cast<String?, String?>(),
       webImages: (pigeonMap['webImages'] as List<Object?>?)?.cast<WebImage?>(),
     );
   }

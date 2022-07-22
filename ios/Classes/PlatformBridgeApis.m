@@ -150,21 +150,25 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 
 @implementation MediaMetadata
 + (instancetype)makeWithMediaType:(MediaType)mediaType
+    strings:(nullable NSDictionary<NSString *, NSString *> *)strings
     webImages:(nullable NSArray<WebImage *> *)webImages {
   MediaMetadata* pigeonResult = [[MediaMetadata alloc] init];
   pigeonResult.mediaType = mediaType;
+  pigeonResult.strings = strings;
   pigeonResult.webImages = webImages;
   return pigeonResult;
 }
 + (MediaMetadata *)fromMap:(NSDictionary *)dict {
   MediaMetadata *pigeonResult = [[MediaMetadata alloc] init];
   pigeonResult.mediaType = [GetNullableObject(dict, @"mediaType") integerValue];
+  pigeonResult.strings = GetNullableObject(dict, @"strings");
   pigeonResult.webImages = GetNullableObject(dict, @"webImages");
   return pigeonResult;
 }
 - (NSDictionary *)toMap {
   return @{
     @"mediaType" : @(self.mediaType),
+    @"strings" : (self.strings ?: [NSNull null]),
     @"webImages" : (self.webImages ?: [NSNull null]),
   };
 }

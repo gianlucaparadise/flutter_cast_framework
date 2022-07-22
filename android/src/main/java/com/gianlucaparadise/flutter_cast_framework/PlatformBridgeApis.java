@@ -335,6 +335,12 @@ public class PlatformBridgeApis {
       this.mediaType = setterArg;
     }
 
+    private @Nullable Map<String, String> strings;
+    public @Nullable Map<String, String> getStrings() { return strings; }
+    public void setStrings(@Nullable Map<String, String> setterArg) {
+      this.strings = setterArg;
+    }
+
     private @Nullable List<WebImage> webImages;
     public @Nullable List<WebImage> getWebImages() { return webImages; }
     public void setWebImages(@Nullable List<WebImage> setterArg) {
@@ -347,6 +353,11 @@ public class PlatformBridgeApis {
         this.mediaType = setterArg;
         return this;
       }
+      private @Nullable Map<String, String> strings;
+      public @NonNull Builder setStrings(@Nullable Map<String, String> setterArg) {
+        this.strings = setterArg;
+        return this;
+      }
       private @Nullable List<WebImage> webImages;
       public @NonNull Builder setWebImages(@Nullable List<WebImage> setterArg) {
         this.webImages = setterArg;
@@ -355,6 +366,7 @@ public class PlatformBridgeApis {
       public @NonNull MediaMetadata build() {
         MediaMetadata pigeonReturn = new MediaMetadata();
         pigeonReturn.setMediaType(mediaType);
+        pigeonReturn.setStrings(strings);
         pigeonReturn.setWebImages(webImages);
         return pigeonReturn;
       }
@@ -362,6 +374,7 @@ public class PlatformBridgeApis {
     @NonNull Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
       toMapResult.put("mediaType", mediaType == null ? null : mediaType.index);
+      toMapResult.put("strings", strings);
       toMapResult.put("webImages", webImages);
       return toMapResult;
     }
@@ -369,6 +382,8 @@ public class PlatformBridgeApis {
       MediaMetadata pigeonResult = new MediaMetadata();
       Object mediaType = map.get("mediaType");
       pigeonResult.setMediaType(mediaType == null ? null : MediaType.values()[(int)mediaType]);
+      Object strings = map.get("strings");
+      pigeonResult.setStrings((Map<String, String>)strings);
       Object webImages = map.get("webImages");
       pigeonResult.setWebImages((List<WebImage>)webImages);
       return pigeonResult;

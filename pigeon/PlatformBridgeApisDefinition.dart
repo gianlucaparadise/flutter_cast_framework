@@ -44,6 +44,7 @@ enum StreamType {
 class MediaMetadata {
   MediaType? mediaType;
   // Map<MediaMetadataKey?, String?>? strings; // Can't uncomment this because of https://github.com/flutter/flutter/issues/93525
+  Map<String?, String?>? strings;
   List<WebImage?>? webImages;
 }
 
