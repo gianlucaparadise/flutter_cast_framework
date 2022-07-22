@@ -223,7 +223,17 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 child: Text("Append to Queue"),
-                onPressed: _hasSession ? _appendToQueue : null,
+                /**
+                 * From the documentation:
+                 * The Receiver SDK maintains the queue and responds to operations
+                 * on the queue as long as the queue has at least one item 
+                 * currently active (playing or paused).
+                 */
+                onPressed: _hasSession &&
+                        ![PlayerState.idle, PlayerState.unknown]
+                            .contains(_playerState)
+                    ? _appendToQueue
+                    : null,
               ),
             ),
             Padding(
