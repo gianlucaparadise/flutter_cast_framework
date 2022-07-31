@@ -75,7 +75,10 @@ func getMetadata(metadata: MediaMetadata?) -> GCKMediaMetadata? {
     let mediaType = getMediaType(mediaType: metadata?.mediaType)
     let result = GCKMediaMetadata.init(metadataType: mediaType)
     
-    // metadata.strings // TODO map this
+    metadata?.strings?.forEach({ (key: String, value: String) in
+        let resultKey = getMediaMetadataKey(key: key)
+        result.setString(value, forKey: resultKey)
+    })
     
     metadata?.webImages?.forEach({ (img: WebImage) in
         if img.url == nil {
@@ -110,6 +113,69 @@ func getMediaType(mediaType: MediaType?) -> GCKMediaMetadataType {
         return GCKMediaMetadataType.generic
     @unknown default:
         return GCKMediaMetadataType.generic
+    }
+}
+
+func getMediaMetadataKey(key: String) -> String {
+    switch key {
+    case getEnumLabelFor(key: MediaMetadataKey.albumArtist):
+        return kGCKMetadataKeyAlbumArtist
+    case getEnumLabelFor(key: MediaMetadataKey.albumTitle):
+        return kGCKMetadataKeyAlbumTitle
+    case getEnumLabelFor(key: MediaMetadataKey.artist):
+        return kGCKMetadataKeyArtist
+    case getEnumLabelFor(key: MediaMetadataKey.bookTitle):
+        return kGCKMetadataKeyBookTitle
+    case getEnumLabelFor(key: MediaMetadataKey.broadcastDate):
+        return kGCKMetadataKeyBroadcastDate
+    case getEnumLabelFor(key: MediaMetadataKey.chapterNumber):
+        return kGCKMetadataKeyChapterNumber
+    case getEnumLabelFor(key: MediaMetadataKey.chapterTitle):
+        return kGCKMetadataKeyChapterTitle
+    case getEnumLabelFor(key: MediaMetadataKey.composer):
+        return kGCKMetadataKeyComposer
+    case getEnumLabelFor(key: MediaMetadataKey.creationDate):
+        return kGCKMetadataKeyCreationDate
+    case getEnumLabelFor(key: MediaMetadataKey.discNumber):
+        return kGCKMetadataKeyDiscNumber
+    case getEnumLabelFor(key: MediaMetadataKey.episodeNumber):
+        return kGCKMetadataKeyEpisodeNumber
+    case getEnumLabelFor(key: MediaMetadataKey.height):
+        return kGCKMetadataKeyHeight
+    case getEnumLabelFor(key: MediaMetadataKey.locationLatitude):
+        return kGCKMetadataKeyLocationLatitude
+    case getEnumLabelFor(key: MediaMetadataKey.locationLongitude):
+        return kGCKMetadataKeyLocationLongitude
+    case getEnumLabelFor(key: MediaMetadataKey.locationName):
+        return kGCKMetadataKeyLocationName
+    case getEnumLabelFor(key: MediaMetadataKey.queueItemId):
+        return kGCKMetadataKeyQueueItemID
+    case getEnumLabelFor(key: MediaMetadataKey.releaseDate):
+        return kGCKMetadataKeyReleaseDate
+    case getEnumLabelFor(key: MediaMetadataKey.seasonNumber):
+        return kGCKMetadataKeySeasonNumber
+    case getEnumLabelFor(key: MediaMetadataKey.sectionDuration):
+        return kGCKMetadataKeySectionDuration
+    case getEnumLabelFor(key: MediaMetadataKey.sectionStartAbsoluteTime):
+        return kGCKMetadataKeySectionStartAbsoluteTime
+    case getEnumLabelFor(key: MediaMetadataKey.sectionStartTimeInContainer):
+        return kGCKMetadataKeySectionStartTimeInContainer
+    case getEnumLabelFor(key: MediaMetadataKey.sectionStartTimeInMedia):
+        return kGCKMetadataKeySectionStartTimeInMedia
+    case getEnumLabelFor(key: MediaMetadataKey.seriesTitle):
+        return kGCKMetadataKeySeriesTitle
+    case getEnumLabelFor(key: MediaMetadataKey.studio):
+        return kGCKMetadataKeyStudio
+    case getEnumLabelFor(key: MediaMetadataKey.subtitle):
+        return kGCKMetadataKeySubtitle
+    case getEnumLabelFor(key: MediaMetadataKey.title):
+        return kGCKMetadataKeyTitle
+    case getEnumLabelFor(key: MediaMetadataKey.trackNumber):
+        return kGCKMetadataKeyTrackNumber
+    case getEnumLabelFor(key: MediaMetadataKey.width):
+        return kGCKMetadataKeyWidth
+    default:
+        return "default"
     }
 }
 

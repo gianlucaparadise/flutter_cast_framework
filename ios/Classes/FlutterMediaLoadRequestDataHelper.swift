@@ -208,7 +208,13 @@ func getFlutterMediaMetadata(mediaMetadata: GCKMediaMetadata?) -> MediaMetadata 
     let result = MediaMetadata()
     
     result.mediaType = getFlutterMediaType(mediaType: mediaMetadata?.metadataType)
+    result.strings = [:]
     result.webImages = []
+    
+    mediaMetadata?.allKeys().forEach({ key in
+        let flutterKey = getFlutterMediaMetadataKey(mediaMetadataKey: key)
+        result.strings?[flutterKey] = mediaMetadata?.string(forKey: key)
+    })
     
     mediaMetadata?.images().forEach({ (imageAny: Any) in
         let image = imageAny as? GCKImage
@@ -222,6 +228,69 @@ func getFlutterMediaMetadata(mediaMetadata: GCKMediaMetadata?) -> MediaMetadata 
     })
     
     return result
+}
+
+func getFlutterMediaMetadataKey(mediaMetadataKey: String) -> String {
+    switch mediaMetadataKey {
+    case kGCKMetadataKeyAlbumArtist:
+        return getEnumLabelFor(key: MediaMetadataKey.albumArtist)
+    case kGCKMetadataKeyAlbumTitle:
+        return getEnumLabelFor(key: MediaMetadataKey.albumTitle)
+    case kGCKMetadataKeyArtist:
+        return getEnumLabelFor(key: MediaMetadataKey.artist)
+    case kGCKMetadataKeyBookTitle:
+        return getEnumLabelFor(key: MediaMetadataKey.bookTitle)
+    case kGCKMetadataKeyBroadcastDate:
+        return getEnumLabelFor(key: MediaMetadataKey.broadcastDate)
+    case kGCKMetadataKeyChapterNumber:
+        return getEnumLabelFor(key: MediaMetadataKey.chapterNumber)
+    case kGCKMetadataKeyChapterTitle:
+        return getEnumLabelFor(key: MediaMetadataKey.chapterTitle)
+    case kGCKMetadataKeyComposer:
+        return getEnumLabelFor(key: MediaMetadataKey.composer)
+    case kGCKMetadataKeyCreationDate:
+        return getEnumLabelFor(key: MediaMetadataKey.creationDate)
+    case kGCKMetadataKeyDiscNumber:
+        return getEnumLabelFor(key: MediaMetadataKey.discNumber)
+    case kGCKMetadataKeyEpisodeNumber:
+        return getEnumLabelFor(key: MediaMetadataKey.episodeNumber)
+    case kGCKMetadataKeyHeight:
+        return getEnumLabelFor(key: MediaMetadataKey.height)
+    case kGCKMetadataKeyLocationLatitude:
+        return getEnumLabelFor(key: MediaMetadataKey.locationLatitude)
+    case kGCKMetadataKeyLocationLongitude:
+        return getEnumLabelFor(key: MediaMetadataKey.locationLongitude)
+    case kGCKMetadataKeyLocationName:
+        return getEnumLabelFor(key: MediaMetadataKey.locationName)
+    case kGCKMetadataKeyQueueItemID:
+        return getEnumLabelFor(key: MediaMetadataKey.queueItemId)
+    case kGCKMetadataKeyReleaseDate:
+        return getEnumLabelFor(key: MediaMetadataKey.releaseDate)
+    case kGCKMetadataKeySeasonNumber:
+        return getEnumLabelFor(key: MediaMetadataKey.seasonNumber)
+    case kGCKMetadataKeySectionDuration:
+        return getEnumLabelFor(key: MediaMetadataKey.sectionDuration)
+    case kGCKMetadataKeySectionStartAbsoluteTime:
+        return getEnumLabelFor(key: MediaMetadataKey.sectionStartAbsoluteTime)
+    case kGCKMetadataKeySectionStartTimeInContainer:
+        return getEnumLabelFor(key: MediaMetadataKey.sectionStartTimeInContainer)
+    case kGCKMetadataKeySectionStartTimeInMedia:
+        return getEnumLabelFor(key: MediaMetadataKey.sectionStartTimeInMedia)
+    case kGCKMetadataKeySeriesTitle:
+        return getEnumLabelFor(key: MediaMetadataKey.seriesTitle)
+    case kGCKMetadataKeyStudio:
+        return getEnumLabelFor(key: MediaMetadataKey.studio)
+    case kGCKMetadataKeySubtitle:
+        return getEnumLabelFor(key: MediaMetadataKey.subtitle)
+    case kGCKMetadataKeyTitle:
+        return getEnumLabelFor(key: MediaMetadataKey.title)
+    case kGCKMetadataKeyTrackNumber:
+        return getEnumLabelFor(key: MediaMetadataKey.trackNumber)
+    case kGCKMetadataKeyWidth:
+        return getEnumLabelFor(key: MediaMetadataKey.width)
+    default:
+        return "default"
+    }
 }
 
 func getFlutterMediaType(mediaType: GCKMediaMetadataType?) -> MediaType {
