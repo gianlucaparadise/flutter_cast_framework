@@ -2,6 +2,8 @@
 
 ## Overview
 
+![Pub Version (including pre-releases)](https://img.shields.io/pub/v/flutter_cast_framework?include_prereleases)
+
 Flutter Cast Framework is a POC of a flutter plugin that lets you use Chromecast API in a flutter app.
 
 ## Useful links
