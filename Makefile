@@ -1,6 +1,6 @@
 .PHONY: pigeon deploy-receiver open-android open-ios run-all
 
-pigeon: # Generates the typesafe bridge between host and flutter
+pigeon: # Generate the typesafe bridge between host and flutter
 	flutter pub run pigeon \
 	--input pigeon/PlatformBridgeApisDefinition.dart \
 	--dart_out lib/src/PlatformBridgeApis.dart \
@@ -9,17 +9,17 @@ pigeon: # Generates the typesafe bridge between host and flutter
 	--java_out ./android/src/main/java/com/gianlucaparadise/flutter_cast_framework/PlatformBridgeApis.java \
 	--java_package "com.gianlucaparadise.flutter_cast_framework"
 
-deploy-receiver:
+deploy-receiver: # Deploy the example receiver
 	surge receiver
 
-open-android:
+open-android: # Open Android Studio with the correct project configuration
 	studio example/android
 
-open-ios:
+open-ios: # Open XCode with the correct project configuration
 	open example/ios/Runner.xcworkspace
 
-run-all:
+run-all: # Run on all devices
 	cd example && flutter run -d all
 
-docs:
-	flutter pub run dartdoc --output docs/api
+docs: # Generate documentation
+	flutter pub run dartdoc --output doc/api
