@@ -30,12 +30,9 @@ Currently only the following APIs are integrated (both Android and iOS):
 
 #### Add Dependency
 
-Clone this repo and add the following piece of code to your app's pubspec
-
-```yaml
-dependencies:
-  flutter_cast_framework:
-    path: ../flutter_cast_framework/ # the path depends on where you cloned this repo
+Run the following to add `flutter_cast_framework` to the dependencies:
+```shell
+flutter pub add flutter_cast_framework
 ```
 
 ### Android Setup
@@ -155,8 +152,9 @@ Next features to be developed:
 
 * CC in Expanded Controls (iOS)
 * Expanded Controls cosmetics (ad in progress bar, full screen, progress bar handle)
-* Title in MiniController and ExpandedControls (blocked because of a [pigeon issue](https://github.com/flutter/flutter/issues/93464))
+* Title in MiniController and ExpandedControls (blocked because of a [pigeon issue](https://github.com/flutter/flutter/issues/93464), but solved with a workaround)
 * Handle queue
 * Handle progress seek
 * Understand if it is better to refactor using streams instead of listeners
 * Add tests
+* Various glitches and cosmetic fixes
