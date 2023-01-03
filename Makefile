@@ -22,4 +22,4 @@ run-all: # Run on all devices
 	cd example && flutter run -d all
 
 docs: # Generate documentation
-	flutter pub run dartdoc --output doc/api
+	flutter pub run dartdoc --output docs/api

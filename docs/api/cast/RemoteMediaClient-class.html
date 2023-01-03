@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the RemoteMediaClient class from the cast library, for the Dart programming language.">
+  <title>RemoteMediaClient class - cast library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">flutter_cast_framework</a></li>
+    <li><a href="../cast/cast-library.html">cast</a></li>
+    <li class="self-crumb">RemoteMediaClient class</li>
+  </ol>
+  <div class="self-name">RemoteMediaClient</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-class">RemoteMediaClient</span> class 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>Class for controlling a media player application running on a receiver.</p>
+</section>
+
+
+
+    <section class="summary offset-anchor" id="constructors">
+      <h2>Constructors</h2>
+
+      <dl class="constructor-summary-list">
+        <dt id="RemoteMediaClient" class="callable">
+          <span class="name"><a href="../cast/RemoteMediaClient/RemoteMediaClient.html">RemoteMediaClient</a></span><span class="signature">(<span class="parameter" id="-param-_hostApi"><span class="type-annotation">CastHostApi</span> <span class="parameter-name">_hostApi</span></span>)</span>
+        </dt>
+        <dd>
+           
+        </dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> 
+
+</dt>
+<dd class="inherited">
+  The hash code for this object. <a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">[...]</a>
+  <div class="features">read-only, inherited</div>
+
+</dd>
+
+        <dt id="mediaQueue" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/mediaQueue.html">mediaQueue</a></span>
+  <span class="signature">&#8596; MediaQueue</span> 
+
+</dt>
+<dd>
+  Returns the associated MediaQueue. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="mediaStatusStream" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/mediaStatusStream.html">mediaStatusStream</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../cast/MediaStatus-class.html">MediaStatus</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+   
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onAdBreakClipProgressUpdated" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onAdBreakClipProgressUpdated.html">onAdBreakClipProgressUpdated</a></span>
+  <span class="signature">&#8596; <a href="../cast/AdBreakClipProgressListener.html">AdBreakClipProgressListener</a>?</span> 
+
+</dt>
+<dd>
+  Callback to get updates on the progess of the currently playing ad break clip 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onAdBreakStatusUpdated" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onAdBreakStatusUpdated.html">onAdBreakStatusUpdated</a></span>
+  <span class="signature">&#8596; <a href="../cast/MediaStatusListener.html">MediaStatusListener</a>?</span> 
+
+</dt>
+<dd>
+  Called when updated ad break status information is received. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onMediaError" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onMediaError.html">onMediaError</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a>?</span> 
+
+</dt>
+<dd>
+  Called when receiving media error message. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onMetadataUpdated" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onMetadataUpdated.html">onMetadataUpdated</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a>?</span> 
+
+</dt>
+<dd>
+  Called when updated media metadata is received. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onPreloadStatusUpdated" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onPreloadStatusUpdated.html">onPreloadStatusUpdated</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a>?</span> 
+
+</dt>
+<dd>
+  Called when updated player queue preload status information is received,
+for example, the next item to play has been preloaded. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onProgressUpdated" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onProgressUpdated.html">onProgressUpdated</a></span>
+  <span class="signature">&#8596; <a href="../cast/ProgressListener.html">ProgressListener</a>?</span> 
+
+</dt>
+<dd>
+  Callback to get updates on the progress of the currently playing media. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onQueueStatusUpdated" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onQueueStatusUpdated.html">onQueueStatusUpdated</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a>?</span> 
+
+</dt>
+<dd>
+  Called when updated player queue status information is received. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="onSendingRemoteMediaRequest" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/onSendingRemoteMediaRequest.html">onSendingRemoteMediaRequest</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a>?</span> 
+
+</dt>
+<dd>
+  Called when there is an outgoing request to the receiver. 
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="playerState" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/playerState.html">playerState</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/foundation/ValueListenable-class.html">ValueListenable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../cast/PlayerState.html">PlayerState</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Listenable state of the remote media player 
+  <div class="features">read-only</div>
+
+</dd>
+
+        <dt id="progressStream" class="property">
+  <span class="name"><a href="../cast/RemoteMediaClient/progressStream.html">progressStream</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../cast/ProgressInfo-class.html">ProgressInfo</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+   
+  <div class="features">read / write</div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span> 
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object. 
+  <div class="features">read-only, inherited</div>
+
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-methods">
+      <h2>Methods</h2>
+      <dl class="callables">
+        <dt id="dispatchMediaStatusUpdate" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/dispatchMediaStatusUpdate.html">dispatchMediaStatusUpdate</a></span><span class="signature">(<wbr><span class="parameter" id="dispatchMediaStatusUpdate-param-mediaStatus"><span class="type-annotation"><a href="../cast/MediaStatus-class.html">MediaStatus</a></span> <span class="parameter-name">mediaStatus</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Internal method that shouldn't be visible 
+  <div class="features">@<a href="https://pub.dev/documentation/meta/1.8.0/meta/internal-constant.html">internal</a></div>
+
+</dd>
+
+        <dt id="dispatchPlayerStateUpdate" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/dispatchPlayerStateUpdate.html">dispatchPlayerStateUpdate</a></span><span class="signature">(<wbr><span class="parameter" id="dispatchPlayerStateUpdate-param-playerState"><span class="type-annotation"><a href="../cast/PlayerState.html">PlayerState</a></span> <span class="parameter-name">playerState</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Internal method that shouldn't be visible 
+  <div class="features">@<a href="https://pub.dev/documentation/meta/1.8.0/meta/internal-constant.html">internal</a></div>
+
+</dd>
+
+        <dt id="dispatchProgressUpdate" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/dispatchProgressUpdate.html">dispatchProgressUpdate</a></span><span class="signature">(<wbr><span class="parameter" id="dispatchProgressUpdate-param-progressMs"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">progressMs</span>, </span><span class="parameter" id="dispatchProgressUpdate-param-durationMs"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">durationMs</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Internal method that shouldn't be visible 
+  <div class="features">@<a href="https://pub.dev/documentation/meta/1.8.0/meta/internal-constant.html">internal</a></div>
+
+</dd>
+
+        <dt id="dispose" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/dispose.html">dispose</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+   
+  
+
+</dd>
+
+        <dt id="getMediaInfo" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/getMediaInfo.html">getMediaInfo</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../cast/MediaInfo-class.html">MediaInfo</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns the current media information 
+  
+
+</dd>
+
+        <dt id="load" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/load.html">load</a></span><span class="signature">(<wbr><span class="parameter" id="load-param-request"><span class="type-annotation"><a href="../cast/MediaLoadRequestData-class.html">MediaLoadRequestData</a></span> <span class="parameter-name">request</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Loads a new media item with specified options. 
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a non-existent method or property is accessed. <a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">[...]</a>
+  <div class="features">inherited</div>
+
+</dd>
+
+        <dt id="pause" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/pause.html">pause</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Pauses playback of the current media item. 
+  
+
+</dd>
+
+        <dt id="play" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/play.html">play</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Begins (or resumes) playback of the current media item. 
+  
+
+</dd>
+
+        <dt id="queueAppendItem" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/queueAppendItem.html">queueAppendItem</a></span><span class="signature">(<wbr><span class="parameter" id="queueAppendItem-param-item"><span class="type-annotation"><a href="../cast/MediaQueueItem-class.html">MediaQueueItem</a></span> <span class="parameter-name">item</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Appends a new media item to the end of the queue. 
+  
+
+</dd>
+
+        <dt id="queueNext" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/queueNext.html">queueNext</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Jumps to the next item in the queue. 
+  
+
+</dd>
+
+        <dt id="queuePrev" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/queuePrev.html">queuePrev</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Jumps to the previous item in the queue. 
+  
+
+</dd>
+
+        <dt id="showTracksChooserDialog" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/showTracksChooserDialog.html">showTracksChooserDialog</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  A Dialog to show the available tracks (Text and Audio) for user to select. 
+  
+
+</dd>
+
+        <dt id="skipAd" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/skipAd.html">skipAd</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Skips the playing ad. 
+  
+
+</dd>
+
+        <dt id="stop" class="callable">
+  <span class="name"><a href="../cast/RemoteMediaClient/stop.html">stop</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Stops playback of the current media item. 
+  
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object. <a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">[...]</a>
+  <div class="features">inherited</div>
+
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor inherited" id="operators">
+      <h2>Operators</h2>
+      <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator. <a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">[...]</a>
+  <div class="features">inherited</div>
+
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../index.html">flutter_cast_framework</a></li>
+  <li><a href="../cast/cast-library.html">cast</a></li>
+  <li class="self-crumb">RemoteMediaClient class</li>
+</ol>
+
+
+    <h5>cast library</h5>
+    <ol>
+  <li class="section-title"><a href="../cast/cast-library.html#classes">Classes</a></li>
+  <li><a href="../cast/AdBreakClipInfo-class.html">AdBreakClipInfo</a></li>
+  <li><a href="../cast/AdBreakStatus-class.html">AdBreakStatus</a></li>
+  <li><a href="../cast/CastContext-class.html">CastContext</a></li>
+  <li><a href="../cast/CastDevice-class.html">CastDevice</a></li>
+  <li><a href="../cast/CastMessage-class.html">CastMessage</a></li>
+  <li><a href="../cast/FlutterCastFramework-class.html">FlutterCastFramework</a></li>
+  <li><a href="../cast/MediaInfo-class.html">MediaInfo</a></li>
+  <li><a href="../cast/MediaLoadRequestData-class.html">MediaLoadRequestData</a></li>
+  <li><a href="../cast/MediaMetadata-class.html">MediaMetadata</a></li>
+  <li><a href="../cast/MediaQueueItem-class.html">MediaQueueItem</a></li>
+  <li><a href="../cast/MediaStatus-class.html">MediaStatus</a></li>
+  <li><a href="../cast/MediaTrack-class.html">MediaTrack</a></li>
+  <li><a href="../cast/ProgressInfo-class.html">ProgressInfo</a></li>
+  <li><a href="../cast/RemoteMediaClient-class.html">RemoteMediaClient</a></li>
+  <li><a href="../cast/SessionManager-class.html">SessionManager</a></li>
+  <li><a href="../cast/WebImage-class.html">WebImage</a></li>
+
+
+
+
+
+
+  <li class="section-title"><a href="../cast/cast-library.html#enums">Enums</a></li>
+  <li><a href="../cast/CastState.html">CastState</a></li>
+  <li><a href="../cast/MediaMetadataKey.html">MediaMetadataKey</a></li>
+  <li><a href="../cast/MediaType.html">MediaType</a></li>
+  <li><a href="../cast/PlayerState.html">PlayerState</a></li>
+  <li><a href="../cast/SessionState.html">SessionState</a></li>
+  <li><a href="../cast/StreamType.html">StreamType</a></li>
+  <li><a href="../cast/TrackSubtype.html">TrackSubtype</a></li>
+  <li><a href="../cast/TrackType.html">TrackType</a></li>
+
+  <li class="section-title"><a href="../cast/cast-library.html#typedefs">Typedefs</a></li>
+  <li><a href="../cast/AdBreakClipProgressListener.html">AdBreakClipProgressListener</a></li>
+  <li><a href="../cast/MediaStatusListener.html">MediaStatusListener</a></li>
+  <li><a href="../cast/MessageReceivedCallback.html">MessageReceivedCallback</a></li>
+  <li><a href="../cast/ProgressListener.html">ProgressListener</a></li>
+
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <ol>
+
+    <li class="section-title"><a href="../cast/RemoteMediaClient-class.html#constructors">Constructors</a></li>
+    <li><a href="../cast/RemoteMediaClient/RemoteMediaClient.html">RemoteMediaClient</a></li>
+
+
+    <li class="section-title">
+      <a href="../cast/RemoteMediaClient-class.html#instance-properties">Properties</a>
+    </li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../cast/RemoteMediaClient/mediaQueue.html">mediaQueue</a></li>
+    <li><a href="../cast/RemoteMediaClient/mediaStatusStream.html">mediaStatusStream</a></li>
+    <li><a href="../cast/RemoteMediaClient/onAdBreakClipProgressUpdated.html">onAdBreakClipProgressUpdated</a></li>
+    <li><a href="../cast/RemoteMediaClient/onAdBreakStatusUpdated.html">onAdBreakStatusUpdated</a></li>
+    <li><a href="../cast/RemoteMediaClient/onMediaError.html">onMediaError</a></li>
+    <li><a href="../cast/RemoteMediaClient/onMetadataUpdated.html">onMetadataUpdated</a></li>
+    <li><a href="../cast/RemoteMediaClient/onPreloadStatusUpdated.html">onPreloadStatusUpdated</a></li>
+    <li><a href="../cast/RemoteMediaClient/onProgressUpdated.html">onProgressUpdated</a></li>
+    <li><a href="../cast/RemoteMediaClient/onQueueStatusUpdated.html">onQueueStatusUpdated</a></li>
+    <li><a href="../cast/RemoteMediaClient/onSendingRemoteMediaRequest.html">onSendingRemoteMediaRequest</a></li>
+    <li><a href="../cast/RemoteMediaClient/playerState.html">playerState</a></li>
+    <li><a href="../cast/RemoteMediaClient/progressStream.html">progressStream</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../cast/RemoteMediaClient-class.html#instance-methods">Methods</a></li>
+    <li><a href="../cast/RemoteMediaClient/dispatchMediaStatusUpdate.html">dispatchMediaStatusUpdate</a></li>
+    <li><a href="../cast/RemoteMediaClient/dispatchPlayerStateUpdate.html">dispatchPlayerStateUpdate</a></li>
+    <li><a href="../cast/RemoteMediaClient/dispatchProgressUpdate.html">dispatchProgressUpdate</a></li>
+    <li><a href="../cast/RemoteMediaClient/dispose.html">dispose</a></li>
+    <li><a href="../cast/RemoteMediaClient/getMediaInfo.html">getMediaInfo</a></li>
+    <li><a href="../cast/RemoteMediaClient/load.html">load</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../cast/RemoteMediaClient/pause.html">pause</a></li>
+    <li><a href="../cast/RemoteMediaClient/play.html">play</a></li>
+    <li><a href="../cast/RemoteMediaClient/queueAppendItem.html">queueAppendItem</a></li>
+    <li><a href="../cast/RemoteMediaClient/queueNext.html">queueNext</a></li>
+    <li><a href="../cast/RemoteMediaClient/queuePrev.html">queuePrev</a></li>
+    <li><a href="../cast/RemoteMediaClient/showTracksChooserDialog.html">showTracksChooserDialog</a></li>
+    <li><a href="../cast/RemoteMediaClient/skipAd.html">skipAd</a></li>
+    <li><a href="../cast/RemoteMediaClient/stop.html">stop</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../cast/RemoteMediaClient-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    flutter_cast_framework
+      0.0.1-alpha.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
