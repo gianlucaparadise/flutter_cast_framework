@@ -17,9 +17,9 @@ A new flutter plugin project.
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'google-cast-sdk-no-bluetooth', '~> 4.4.4'
+  s.dependency 'google-cast-sdk-dynamic-xcframework-no-bluetooth'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '12.0'
 
   # This is to enable build on simulator
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
