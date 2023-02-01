@@ -2,16 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_cast_framework (0.0.1):
     - Flutter
-    - google-cast-sdk-no-bluetooth (~> 4.4.4)
-  - google-cast-sdk-no-bluetooth (4.4.8):
-    - google-cast-sdk-no-bluetooth/Core (= 4.4.8)
-    - GTMSessionFetcher/Core (~> 1.0)
-    - Protobuf (~> 3.12)
-  - google-cast-sdk-no-bluetooth/Core (4.4.8):
-    - GTMSessionFetcher/Core (~> 1.0)
-    - Protobuf (~> 3.12)
-  - GTMSessionFetcher/Core (1.7.0)
-  - Protobuf (3.19.0)
+    - google-cast-sdk-dynamic-xcframework-no-bluetooth
+  - google-cast-sdk-dynamic-xcframework-no-bluetooth (4.7.1)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -19,9 +11,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - google-cast-sdk-no-bluetooth
-    - GTMSessionFetcher
-    - Protobuf
+    - google-cast-sdk-dynamic-xcframework-no-bluetooth
 
 EXTERNAL SOURCES:
   Flutter:
@@ -31,11 +21,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_cast_framework: 1a7183ed51a5af57cbec987d0c422086b4ac2c52
-  google-cast-sdk-no-bluetooth: d5a60530c72b0907fb302d835952b6cb0ba5f128
-  GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
-  Protobuf: e9b99dd5da72f665ec503b19191f245a22188b4d
+  flutter_cast_framework: 67e74e23e47c1e44234c1ed8167cfb2077620f8d
+  google-cast-sdk-dynamic-xcframework-no-bluetooth: 1fa9e267df3fd6f8a1c6e3345142ca5286297968
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
 COCOAPODS: 1.11.3
