@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.android.gms.cast.framework.CastOptions
 import com.google.android.gms.cast.framework.OptionsProvider
 import com.google.android.gms.cast.framework.SessionProvider
-
+import com.google.android.gms.cast.CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
 
 /**
  * This is here to be used as an example
@@ -14,7 +14,7 @@ class DefaultCastOptionsProvider : OptionsProvider {
 
     override fun getCastOptions(context: Context): CastOptions {
         return CastOptions.Builder()
-                .setReceiverApplicationId("4F8B3483")
+                .setReceiverApplicationId(DEFAULT_MEDIA_RECEIVER_APPLICATION_ID)
                 .build()
     }
 
