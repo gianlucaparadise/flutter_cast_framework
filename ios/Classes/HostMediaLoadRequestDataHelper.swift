@@ -186,14 +186,14 @@ func getMediaTracks(mediaTracks: [MediaTrack]?) -> [GCKMediaTrack]? {
     
     var result = [GCKMediaTrack]()
     mediaTracks?.forEach({ (t: MediaTrack) in
-        let track = getMediaTrack(mediaTrack: t)
+        guard let track = getMediaTrack(mediaTrack: t) else { return }
         result.append(track)
     })
     
     return result
 }
 
-func getMediaTrack(mediaTrack: MediaTrack) -> GCKMediaTrack{
+func getMediaTrack(mediaTrack: MediaTrack) -> GCKMediaTrack? {
     let trackId = mediaTrack.id as! Int
     let trackType = getTrackType(trackType: mediaTrack.trackType)
     let trackSubtype = getTrackSubtype(trackSubtype: mediaTrack.trackSubtype)
