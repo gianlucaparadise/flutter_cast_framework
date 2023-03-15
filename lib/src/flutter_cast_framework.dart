@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cast_framework/cast.dart';
-import 'package:flutter_cast_framework/src/cast/RemoteMediaClient.dart';
 
 import 'PlatformBridgeApis.dart';
-import 'cast/CastContext.dart';
 import 'cast/MediaQueue.dart';
 
 /// Entrypoint for the Flutter Cast Framework

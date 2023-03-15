@@ -23,7 +23,7 @@ class CastIcon extends StatefulWidget {
 Widget _getButton(String assetName, Color color) {
   return SvgPicture.asset(
     assetName,
-    color: color,
+    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
     package: 'flutter_cast_framework',
     semanticsLabel: 'Cast Button',
   );
