@@ -1572,6 +1572,8 @@ public class PlatformBridgeApis {
 
     void skipAd();
 
+    void seekTo(@NonNull Long position);
+
     void queueAppendItem(@NonNull MediaQueueItem item);
 
     void queueNextItem();
@@ -1828,6 +1830,33 @@ public class PlatformBridgeApis {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 try {
                   api.skipAd();
+                  wrapped.add(0, null);
+                } catch (Error | RuntimeException exception) {
+                  ArrayList<Object> wrappedError = wrapError(exception);
+                  wrapped = wrappedError;
+                }
+                reply.reply(wrapped);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger, "dev.flutter.pigeon.CastHostApi.seekTo", getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                try {
+                  ArrayList<Object> args = (ArrayList<Object>) message;
+                  assert args != null;
+                  Number positionArg = (Number) args.get(0);
+                  if (positionArg == null) {
+                    throw new NullPointerException("positionArg unexpectedly null.");
+                  }
+                  api.seekTo((positionArg == null) ? null : positionArg.longValue());
                   wrapped.add(0, null);
                 } catch (Error | RuntimeException exception) {
                   ArrayList<Object> wrappedError = wrapError(exception);

@@ -294,6 +294,7 @@ abstract class CastHostApi {
   void stop();
   void showTracksChooserDialog();
   void skipAd();
+  void seekTo(int position);
   //endregion
 
   //region RemoteMediaClient Queue

@@ -97,6 +97,11 @@ class RemoteMediaClient {
     _hostApi.stop();
   }
 
+  /// Seeks the playback to the position.
+  void seekTo(int position) {
+    _hostApi.seekTo(position);
+  }
+
   /// Returns the current media information
   Future<MediaInfo> getMediaInfo() async {
     // FIXME: can remove future? we could avoid to call host and rely on listener callbacks (maybe onMetadataUpdated)

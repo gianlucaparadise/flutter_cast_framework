@@ -750,6 +750,25 @@ void CastHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CastH
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.CastHostApi.seekTo"
+        binaryMessenger:binaryMessenger
+        codec:CastHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(seekToPosition:error:)], @"CastHostApi api (%@) doesn't respond to @selector(seekToPosition:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSNumber *arg_position = GetNullableObjectAtIndex(args, 0);
+        FlutterError *error;
+        [api seekToPosition:arg_position error:&error];
+        callback(wrapResult(nil, error));
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
         initWithName:@"dev.flutter.pigeon.CastHostApi.queueAppendItem"
         binaryMessenger:binaryMessenger
         codec:CastHostApiGetCodec()];

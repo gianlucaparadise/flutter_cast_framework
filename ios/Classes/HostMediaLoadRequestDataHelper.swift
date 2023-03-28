@@ -17,7 +17,7 @@ let kThumbnailHeight = 720
 func getMediaLoadRequest(request: MediaLoadRequestData) -> GCKMediaLoadRequestData {
     let mediaRequestBuilder = GCKMediaLoadRequestDataBuilder.init()
     mediaRequestBuilder.autoplay = request.shouldAutoplay
-    mediaRequestBuilder.startTime = request.currentTime?.doubleValue ?? 0
+    mediaRequestBuilder.startTime = (request.currentTime?.doubleValue ?? 0) / 1000
     
     mediaRequestBuilder.mediaInformation = getMediaInfo(mediaInfo: request.mediaInfo)
     

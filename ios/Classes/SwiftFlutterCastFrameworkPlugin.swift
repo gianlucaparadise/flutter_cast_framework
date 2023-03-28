@@ -3,6 +3,7 @@ import UIKit
 import GoogleCast
 
 public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessionManagerListener, CastHostApi, GCKRemoteMediaClientListener, GCKMediaQueueDelegate {
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let messenger : FlutterBinaryMessenger = registrar.messenger()
         let flutterApi = CastFlutterApi.init(binaryMessenger: messenger)
@@ -301,6 +302,15 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         let isMuted = muted == 1
         castSession?.setDeviceMuted(isMuted)
     }
+    
+    public func seek(toPosition position: NSNumber, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        let options = GCKMediaSeekOptions()
+        options.interval = position.doubleValue / 1000
+        options.resumeState = .unchanged
+        
+        remoteMediaClient?.seek(with: options)
+    }
+    
     
     public func getCastDeviceWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> CastDevice? {
         let castDevice = castSession?.device

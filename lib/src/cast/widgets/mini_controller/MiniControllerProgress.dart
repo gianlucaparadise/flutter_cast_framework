@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../cast.dart';
 
-class MiniControllerProgress extends StatelessWidget {
+class MiniControllerProgress extends StatefulWidget {
   final FlutterCastFramework castFramework;
 
   const MiniControllerProgress({
@@ -11,9 +11,17 @@ class MiniControllerProgress extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<MiniControllerProgress> createState() => _MiniControllerProgressState();
+}
+
+class _MiniControllerProgressState extends State<MiniControllerProgress> {
+
+  double? _newValue;
+
+  @override
   Widget build(BuildContext context) {
-    var remoteMediaClient =
-        this.castFramework.castContext.sessionManager.remoteMediaClient;
+    final remoteMediaClient =
+        this.widget.castFramework.castContext.sessionManager.remoteMediaClient;
 
     return StreamBuilder<ProgressInfo>(
       stream: remoteMediaClient.progressStream,
@@ -28,6 +36,18 @@ class MiniControllerProgress extends StatelessWidget {
           // this is the denominator, can't be 0
           final durationFix = duration == 0 ? 1 : duration;
           progressPercent = progress / durationFix;
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 48.0),
+            child: Slider(
+              activeColor: Colors.red,
+              inactiveColor: Colors.white70,
+              value: _newValue ?? progressPercent,
+              onChangeStart: (value) => setState(() => _newValue = value),
+              onChangeEnd: (value) => _onChangeEnd(value, duration),
+              onChanged: (value) => setState(() => _newValue = value),
+            ),
+          );
         } else {
           progressPercent = 0;
         }
@@ -39,5 +59,14 @@ class MiniControllerProgress extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _onChangeEnd(double value, int duration) {
+    final remoteMediaClient =
+        this.widget.castFramework.castContext.sessionManager.remoteMediaClient;
+
+    remoteMediaClient.seekTo((value * duration).toInt());
+
+    setState(() => _newValue = null);
   }
 }

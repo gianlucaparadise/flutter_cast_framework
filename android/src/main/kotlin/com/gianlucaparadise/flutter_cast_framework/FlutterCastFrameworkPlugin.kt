@@ -12,6 +12,8 @@ import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.gianlucaparadise.flutter_cast_framework.media.*
 import com.google.android.gms.cast.MediaError
+import com.google.android.gms.cast.MediaSeekOptions
+import com.google.android.gms.cast.MediaSeekOptions.ResumeState
 import com.google.android.gms.cast.MediaStatus.*
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
@@ -392,6 +394,14 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun skipAd() {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
             remoteMediaClient.skipAd()
+        }
+
+        override fun seekTo(position: Long) {
+            val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
+            remoteMediaClient.seek(MediaSeekOptions.Builder()
+                    .setPosition(position)
+                    .setResumeState(MediaSeekOptions.RESUME_STATE_UNCHANGED)
+                    .build());
         }
 
         override fun queueAppendItem(item: PlatformBridgeApis.MediaQueueItem) {
