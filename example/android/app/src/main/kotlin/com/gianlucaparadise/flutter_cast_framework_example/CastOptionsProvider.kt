@@ -9,7 +9,7 @@ import com.google.android.gms.cast.framework.SessionProvider
 class CastOptionsProvider : OptionsProvider {
     override fun getCastOptions(context: Context): CastOptions {
         return CastOptions.Builder()
-                .setReceiverApplicationId("D6760CCD")
+                .setReceiverApplicationId("CC1AD845")
                 .build()
     }
 

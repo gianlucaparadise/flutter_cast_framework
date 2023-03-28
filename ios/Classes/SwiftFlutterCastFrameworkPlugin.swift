@@ -135,7 +135,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         let castStateRaw = castState.rawValue
         // Android CastStates are 1-to-4, while iOS CastStates are 0-to-3. I align iOS to Android by adding 1
         let castStateRawAdjusted = castStateRaw + 1
-        self.flutterApi.onCastStateChangedCastState(NSNumber(value: castStateRawAdjusted)) { (_: Error?) in
+        self.flutterApi.onCastStateChangedCastState(NSNumber(value: castStateRawAdjusted)) { (_: FlutterError?) in
             
         }
     }
@@ -225,7 +225,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         let nsAdBreakClipDuration = NSNumber(value: adBreakClipDurationMs)
         
         DispatchQueue.main.async {
-            self.flutterApi.onAdBreakClipProgressUpdatedAdBreakId(adBreakId, adBreakClipId: adBreakClipId, progressMs: nsAdBreakClipProgress, durationMs: nsAdBreakClipDuration, whenSkippableMs: nsWhenSkippable) { (_:Error?) in
+            self.flutterApi.onAdBreakClipProgressUpdatedAdBreakId(adBreakId, adBreakClipId: adBreakClipId, progressMs: nsAdBreakClipProgress, durationMs: nsAdBreakClipDuration, whenSkippableMs: nsWhenSkippable) { (_:FlutterError?) in
             }
         }
     }
@@ -241,7 +241,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         let nsProgress = NSNumber(value: progressMs)
         
         DispatchQueue.main.async {
-            self.flutterApi.onProgressUpdatedProgressMs(nsProgress, durationMs: nsDuration) { (_:Error?) in
+            self.flutterApi.onProgressUpdatedProgressMs(nsProgress, durationMs: nsDuration) { (_:FlutterError?) in
             }
         }
     }
@@ -386,14 +386,14 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionSuspended
     public func sessionManager(_ sessionManager: GCKSessionManager, didSuspend session: GCKCastSession, with reason: GCKConnectionSuspendReason) {
         debugPrint("SessionListener: didSuspend")
-        flutterApi.onSessionSuspended { (_:Error?) in
+        flutterApi.onSessionSuspended { (_:FlutterError?) in
         }
     }
     
     // onSessionStarting
     public func sessionManager(_ sessionManager: GCKSessionManager, willStart session: GCKCastSession) {
         debugPrint("SessionListener: willStart")
-        flutterApi.onSessionStarting { (_:Error?) in
+        flutterApi.onSessionStarting { (_:FlutterError?) in
         }
         
         castSession = session
@@ -402,7 +402,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionResuming
     public func sessionManager(_ sessionManager: GCKSessionManager, willResumeCastSession session: GCKCastSession) {
         debugPrint("SessionListener: willResumeCastSession")
-        flutterApi.onSessionResuming { (_:Error?) in
+        flutterApi.onSessionResuming { (_:FlutterError?) in
         }
         
         castSession = session
@@ -412,14 +412,14 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
         debugPrint("SessionListener: willEnd")
         stopProgressTimer()
-        flutterApi.onSessionEnding { (_:Error?) in
+        flutterApi.onSessionEnding { (_:FlutterError?) in
         }
     }
     
     // onSessionStartFailed
     public func sessionManager(_ sessionManager: GCKSessionManager, didFailToStart session: GCKCastSession, withError error: Error) {
         debugPrint("SessionListener: didFailToStart")
-        flutterApi.onSessionStartFailed { (_:Error?) in
+        flutterApi.onSessionStartFailed { (_:FlutterError?) in
         }
     }
     
@@ -428,7 +428,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionStarted
     public func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKCastSession) {
         debugPrint("SessionListener: didStart")
-        flutterApi.onSessionStarted { (_:Error?) in
+        flutterApi.onSessionStarted { (_:FlutterError?) in
         }
         
         castSession = session
@@ -437,7 +437,7 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionResumed
     public func sessionManager(_ sessionManager: GCKSessionManager, didResumeCastSession session: GCKCastSession) {
         debugPrint("SessionListener: didResumeCastSession")
-        flutterApi.onSessionResumed { (_:Error?) in
+        flutterApi.onSessionResumed { (_:FlutterError?) in
         }
         
         castSession = session
@@ -446,21 +446,21 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onSessionEnded
     public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
         debugPrint("SessionListener: didEnd")
-        flutterApi.onSessionEnded { (_:Error?) in
+        flutterApi.onSessionEnded { (_:FlutterError?) in
         }
     }
     
     // onQueueStatusUpdated
     public func remoteMediaClientDidUpdateQueue(_ client: GCKRemoteMediaClient) {
         debugPrint("RemoteMediaClientListener: didUpdateQueue")
-        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        flutterApi.onQueueStatusUpdated { (_:FlutterError?) in
         }
     }
     
     // onPreloadStatusUpdated
     public func remoteMediaClientDidUpdatePreloadStatus(_ client: GCKRemoteMediaClient) {
         debugPrint("RemoteMediaClientListener: didUpdatePreloadStatus")
-        flutterApi.onPreloadStatusUpdated { (_:Error?) in
+        flutterApi.onPreloadStatusUpdated { (_:FlutterError?) in
         }
     }
     
@@ -490,9 +490,9 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         
         debugPrint("RemoteMediaClientListener: didUpdate mediaStatus - playerState: \(playerStateLabel)")
         let flutterMediaStatus = getFlutterMediaStatus(mediaStatus: mediaStatus)
-        flutterApi.onStatusUpdatedMediaStatus(flutterMediaStatus) { (_:Error?) in
+        flutterApi.onStatusUpdatedMediaStatus(flutterMediaStatus) { (_:FlutterError?) in
         }
-        flutterApi.onAdBreakStatusUpdatedMediaStatus(flutterMediaStatus) { (_:Error?) in
+        flutterApi.onAdBreakStatusUpdatedMediaStatus(flutterMediaStatus) { (_:FlutterError?) in
         }
     }
     
@@ -502,70 +502,70 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
     // onMetadataUpdated
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaMetadata: GCKMediaMetadata?) {
         debugPrint("RemoteMediaClientListener: didUpdate mediaMetadata")
-        flutterApi.onMetadataUpdated { (_:Error?) in
+        flutterApi.onMetadataUpdated { (_:FlutterError?) in
         }
     }
     
     // onQueueStatusUpdated
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didReceive queueItems: [GCKMediaQueueItem]) {
         debugPrint("RemoteMediaClientListener: didReceive queueItems")
-        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        flutterApi.onQueueStatusUpdated { (_:FlutterError?) in
         }
     }
     
     // onSendingRemoteMediaRequest
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didStartMediaSessionWithID sessionID: Int) {
         debugPrint("RemoteMediaClientListener: didStartMediaSessionWithID")
-        flutterApi.onSendingRemoteMediaRequest { (_:Error?) in
+        flutterApi.onSendingRemoteMediaRequest { (_:FlutterError?) in
         }
     }
     
     // onQueueStatusUpdated
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didReceiveQueueItemIDs queueItemIDs: [NSNumber]) {
         debugPrint("RemoteMediaClientListener: didReceiveQueueItemIDs")
-        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        flutterApi.onQueueStatusUpdated { (_:FlutterError?) in
         }
     }
     
     // onQueueStatusUpdated
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdateQueueItemsWithIDs queueItemIDs: [NSNumber]) {
         debugPrint("RemoteMediaClientListener: didUpdateQueueItemsWithIDs")
-        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        flutterApi.onQueueStatusUpdated { (_:FlutterError?) in
         }
     }
     
     // onQueueStatusUpdated
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didRemoveQueueItemsWithIDs queueItemIDs: [NSNumber]) {
         debugPrint("RemoteMediaClientListener: didRemoveQueueItemsWithIDs")
-        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        flutterApi.onQueueStatusUpdated { (_:FlutterError?) in
         }
     }
     
     // onQueueStatusUpdated
     public func remoteMediaClient(_ client: GCKRemoteMediaClient, didInsertQueueItemsWithIDs queueItemIDs: [NSNumber], beforeItemWithID beforeItemID: UInt) {
         debugPrint("RemoteMediaClientListener: didInsertQueueItemsWithIDs")
-        flutterApi.onQueueStatusUpdated { (_:Error?) in
+        flutterApi.onQueueStatusUpdated { (_:FlutterError?) in
         }
     }
     
     // mediaQueueWillChange
     public func mediaQueueWillChange(_ queue: GCKMediaQueue) {
         debugPrint("MediaQueueListener: mediaQueueWillChange")
-        flutterApi.mediaQueueWillChange { (_:Error?) in
+        flutterApi.mediaQueueWillChange { (_:FlutterError?) in
         }
     }
     
     // mediaQueueChanged
     public func mediaQueueDidChange(_ queue: GCKMediaQueue) {
         debugPrint("MediaQueueListener: mediaQueueDidChange")
-        flutterApi.mediaQueueChanged { (_:Error?) in
+        flutterApi.mediaQueueChanged { (_:FlutterError?) in
         }
     }
     
     // itemsReloaded
     public func mediaQueueDidReloadItems(_ queue: GCKMediaQueue) {
         debugPrint("MediaQueueListener: mediaQueueDidReloadItems")
-        flutterApi.itemsReloaded { (_:Error?) in
+        flutterApi.itemsReloaded { (_:FlutterError?) in
         }
     }
     
@@ -574,21 +574,21 @@ public class SwiftFlutterCastFrameworkPlugin: NSObject, FlutterPlugin, GCKSessio
         debugPrint("MediaQueueListener: mediaQueueDidInsertItemsIn")
         let count = range.upperBound - range.lowerBound
         let start = range.lowerBound
-        flutterApi.itemsInserted(inRangeInsertIndex: NSNumber(value: start), insertCount: NSNumber(value: count)) { (_:Error?) in
+        flutterApi.itemsInserted(inRangeInsertIndex: NSNumber(value: start), insertCount: NSNumber(value: count)) { (_:FlutterError?) in
         }
     }
     
     // itemsUpdatedAtIndexes
     public func mediaQueue(_ queue: GCKMediaQueue, didUpdateItemsAtIndexes indexes: [NSNumber]) {
         debugPrint("MediaQueueListener: mediaQueueDidUpdateItemsAtIndexes")
-        flutterApi.itemsUpdated(atIndexesIndexes: indexes) { (_:Error?) in
+        flutterApi.itemsUpdated(atIndexesIndexes: indexes) { (_:FlutterError?) in
         }
     }
     
     // itemsRemovedAtIndexes
     public func mediaQueue(_ queue: GCKMediaQueue, didRemoveItemsAtIndexes indexes: [NSNumber]) {
         debugPrint("MediaQueueListener: mediaQueueDidRemoveItemsAtIndexes")
-        flutterApi.itemsRemoved(atIndexesIndexes: indexes) { (_:Error?) in
+        flutterApi.itemsRemoved(atIndexesIndexes: indexes) { (_:FlutterError?) in
         }
     }
     

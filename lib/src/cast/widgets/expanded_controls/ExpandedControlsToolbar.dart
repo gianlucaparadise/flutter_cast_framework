@@ -20,11 +20,11 @@ class ExpandedControlsToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context)
         .textTheme
-        .headline5
+        .headlineSmall
         ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white);
 
     final subtitleStyle =
-        Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey);
+        Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey);
 
     return Row(
       children: [

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ExpandedControlsProgressController extends ChangeNotifier {
   int progress = 0;
@@ -52,7 +51,7 @@ class _ExpandedControlsProgressState extends State<ExpandedControlsProgress> {
   @override
   Widget build(BuildContext context) {
     final textStyle =
-        Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.white);
+        Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white);
 
     // this is the denominator, can't be 0
     final durationFix = this.duration == 0 ? 1 : this.duration;

@@ -25,7 +25,7 @@ class MessageCastingChannel : GCKCastChannel {
         castMessage.namespace = namespace
         castMessage.message = message
         
-        flutterApi.onMessageReceivedMessage(castMessage) { (_: Error?) in
+        flutterApi.onMessageReceivedMessage(castMessage) { (_: FlutterError?) in
         }
     }
     
