@@ -15,8 +15,7 @@ class ExpandedControlsBasicButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: this.onPressed,
       style: OutlinedButton.styleFrom(
-        primary: Colors.white,
-        backgroundColor: Colors.black,
+        foregroundColor: Colors.white, backgroundColor: Colors.black,
         shape: const RoundedRectangleBorder(),
         side: BorderSide(
           width: 1,

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
-import '../../cast.dart';
 import '../PlatformBridgeApis.dart';
 import './MediaQueue.dart';
 

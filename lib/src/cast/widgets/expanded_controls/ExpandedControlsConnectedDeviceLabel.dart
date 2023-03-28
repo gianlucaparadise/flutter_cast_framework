@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_cast_framework/cast.dart';
 
 /// Placeholder to be used for the castingToText of ExpandedControlsConnectedDeviceLabel
@@ -28,7 +27,7 @@ class ExpandedControlsConnectedDeviceLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle =
-        Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.white);
+        Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white);
 
     return FutureBuilder<CastDevice>(
       future: castFramework.castContext.sessionManager.getCastDevice(),

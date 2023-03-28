@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cast_framework/cast.dart';
+import 'package:recase/recase.dart';
 
 class QueueItemHeading extends StatelessWidget {
   final MediaInfo? mediaInfo;
@@ -13,9 +13,9 @@ class QueueItemHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleText = mediaInfo
-        ?.mediaMetadata?.strings?[describeEnum(MediaMetadataKey.title)];
+        ?.mediaMetadata?.strings?[MediaMetadataKey.title.name.constantCase];
     final subtitleText = mediaInfo
-        ?.mediaMetadata?.strings?[describeEnum(MediaMetadataKey.subtitle)];
+        ?.mediaMetadata?.strings?[MediaMetadataKey.subtitle.name.constantCase];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
