@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_cast_framework/cast.dart';
+import 'package:recase/recase.dart';
 
 /// in seconds
 const double QUEUE_PRELOAD_TIME = 20;
@@ -92,8 +92,8 @@ MediaInfo _getMediaInfo(VideoInfo video) {
   final mediaMetadata = MediaMetadata()
     ..mediaType = MediaType.movie
     ..strings = {
-      describeEnum(MediaMetadataKey.title): video.title,
-      describeEnum(MediaMetadataKey.subtitle): video.studio,
+      MediaMetadataKey.title.name.constantCase: video.title,
+      MediaMetadataKey.subtitle.name.constantCase: video.studio,
     }
     ..webImages = [
       img,
