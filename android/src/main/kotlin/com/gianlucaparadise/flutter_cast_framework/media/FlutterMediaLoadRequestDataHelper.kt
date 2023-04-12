@@ -161,9 +161,9 @@ fun getFlutterMediaType(mediaType: Int?): PlatformBridgeApis.MediaType {
     }
 }
 
-fun getFlutterStrings(mediaMetadata: MediaMetadata?): Map<String, String> {
+fun getFlutterStrings(mediaMetadata: MediaMetadata?): Map<String, String?> {
     val stringsKeys = mediaMetadata?.keySet() ?: return emptyMap()
-    return stringsKeys.map { getFlutterMediaMetadataKey(it) to mediaMetadata.getString(it) }.toMap()
+    return stringsKeys.associate { getFlutterMediaMetadataKey(it) to mediaMetadata.getString(it) }
 }
 
 fun getFlutterMediaMetadataKey(mediaMetadataKey: String): String {

@@ -4,16 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.*
 import com.gianlucaparadise.flutter_cast_framework.cast.CastDialogOpener
 import com.gianlucaparadise.flutter_cast_framework.cast.MessageCastingChannel
 import com.gianlucaparadise.flutter_cast_framework.media.*
 import com.google.android.gms.cast.MediaError
 import com.google.android.gms.cast.MediaSeekOptions
-import com.google.android.gms.cast.MediaSeekOptions.ResumeState
 import com.google.android.gms.cast.MediaStatus.*
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
@@ -32,7 +28,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 
-class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, LifecycleObserver {
+class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, DefaultLifecycleObserver {
     companion object {
         const val TAG = "AndroidCastPlugin"
 
@@ -64,7 +60,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
         mMessageCastingChannel = MessageCastingChannel(castFlutterApi)
 
-        CastContext.getSharedInstance(applicationContext).addCastStateListener { i ->
+        CastContext.getSharedInstance(applicationContext, ).addCastStateListener { i ->
             Log.d(TAG, "Cast state changed: $i")
             flutterApi?.onCastStateChanged(i.toLong()) { }
         }
@@ -153,14 +149,12 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             field = value
         }
 
-    //region LifecycleObserver
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
         Log.d(TAG, "App: ON_CREATE")
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onResume() {
+    override fun onResume(owner: LifecycleOwner) {
         Log.d(TAG, "App: ON_RESUME")
         mSessionManager.addSessionManagerListener(mSessionManagerListener, CastSession::class.java)
         mCastSession = mSessionManager.currentCastSession
@@ -174,8 +168,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         flutterApi?.onCastStateChanged(castState.toLong()) { }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun onPause() {
+    override fun onPause(owner: LifecycleOwner) {
         Log.d(TAG, "App: ON_PAUSE")
         mSessionManager.removeSessionManagerListener(
                 mSessionManagerListener,
@@ -247,7 +240,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             flutterApi?.onAdBreakStatusUpdated(flutterMediaStatus) { }
         }
 
-        override fun onMediaError(error: MediaError?) {
+        override fun onMediaError(error: MediaError) {
             Log.d(TAG, "RemoteMediaClient - onMediaError $error")
             super.onMediaError(error)
             flutterApi?.onMediaError { }
@@ -257,8 +250,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             val isPlayingAd = remoteMediaClient?.mediaStatus?.isPlayingAd ?: false
             if (isPlayingAd) {
                 fireAdBreakClipProgress()
-            }
-            else {
+            } else {
                 flutterApi?.onProgressUpdated(progressMs, durationMs) { }
             }
         }
@@ -290,43 +282,41 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun mediaQueueWillChange() {
             Log.d(TAG, "MediaQueue - mediaQueueWillChange")
             super.mediaQueueWillChange()
-            flutterApi?.mediaQueueWillChange {  }
+            flutterApi?.mediaQueueWillChange { }
         }
 
         override fun mediaQueueChanged() {
             Log.d(TAG, "MediaQueue - mediaQueueChanged")
             super.mediaQueueChanged()
-            flutterApi?.mediaQueueChanged {  }
+            flutterApi?.mediaQueueChanged { }
         }
 
         override fun itemsReloaded() {
             Log.d(TAG, "MediaQueue - itemsReloaded")
             super.itemsReloaded()
-            flutterApi?.itemsReloaded {  }
+            flutterApi?.itemsReloaded { }
         }
 
         override fun itemsInsertedInRange(insertIndex: Int, insertCount: Int) {
             Log.d(TAG, "MediaQueue - itemsInsertedInRange")
             super.itemsInsertedInRange(insertIndex, insertCount)
-            flutterApi?.itemsInsertedInRange(insertIndex.toLong(), insertCount.toLong()) {  }
+            flutterApi?.itemsInsertedInRange(insertIndex.toLong(), insertCount.toLong()) { }
         }
 
-        override fun itemsUpdatedAtIndexes(indexes: IntArray?) {
+        override fun itemsUpdatedAtIndexes(indexes: IntArray) {
             Log.d(TAG, "MediaQueue - itemsUpdatedAtIndexes")
             super.itemsUpdatedAtIndexes(indexes)
-            if (indexes == null) return
 
             val longIndexes = indexes.map { it.toLong() }
-            flutterApi?.itemsUpdatedAtIndexes(longIndexes) {  }
+            flutterApi?.itemsUpdatedAtIndexes(longIndexes) { }
         }
 
-        override fun itemsRemovedAtIndexes(indexes: IntArray?) {
+        override fun itemsRemovedAtIndexes(indexes: IntArray) {
             Log.d(TAG, "MediaQueue itemsRemovedAtIndexeseWillChange")
             super.itemsRemovedAtIndexes(indexes)
-            if (indexes == null) return
 
             val longIndexes = indexes.map { it.toLong() }
-            flutterApi?.itemsRemovedAtIndexes(longIndexes) {  }
+            flutterApi?.itemsRemovedAtIndexes(longIndexes) { }
         }
     }
 
@@ -407,7 +397,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         override fun queueAppendItem(item: PlatformBridgeApis.MediaQueueItem) {
             val remoteMediaClient: RemoteMediaClient = remoteMediaClient ?: return
 
-            val mediaQueueItem = getMediaQueueItem(item)
+            val mediaQueueItem = getMediaQueueItem(item) ?: return
             remoteMediaClient.queueAppendItem(mediaQueueItem, null)
         }
 
@@ -443,9 +433,9 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             val castDevice = castSession.castDevice
 
             return PlatformBridgeApis.CastDevice().apply {
-                deviceId = castDevice.deviceId
-                friendlyName = castDevice.friendlyName
-                modelName = castDevice.modelName
+                deviceId = castDevice?.deviceId
+                friendlyName = castDevice?.friendlyName
+                modelName = castDevice?.modelName
             }
         }
     }
@@ -458,7 +448,7 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         namespaces.forEach { namespace ->
             try {
                 oldSession?.removeMessageReceivedCallbacks(namespace)
-                newSession?.setMessageReceivedCallbacks(namespace, mMessageCastingChannel)
+                if (mMessageCastingChannel != null) newSession?.setMessageReceivedCallbacks(namespace, mMessageCastingChannel!!)
             } catch (e: java.lang.Exception) {
                 Log.e(TAG, "Updating mCastSession - Exception while creating channel", e)
             }
@@ -468,36 +458,36 @@ class FlutterCastFrameworkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private inner class CastSessionManagerListener : SessionManagerListener<CastSession> {
         private var TAG = "SessionManagerListenerImpl"
 
-        override fun onSessionSuspended(session: CastSession?, p1: Int) {
+        override fun onSessionSuspended(session: CastSession, p1: Int) {
             Log.d(TAG, "onSessionSuspended")
             flutterApi?.onSessionSuspended { }
         }
 
-        override fun onSessionStarting(session: CastSession?) {
+        override fun onSessionStarting(session: CastSession) {
             Log.d(TAG, "onSessionStarting")
             flutterApi?.onSessionStarting { }
 
             mCastSession = session
         }
 
-        override fun onSessionResuming(session: CastSession?, p1: String?) {
+        override fun onSessionResuming(session: CastSession, p1: String) {
             Log.d(TAG, "onSessionResuming")
             flutterApi?.onSessionResuming { }
 
             mCastSession = session
         }
 
-        override fun onSessionEnding(session: CastSession?) {
+        override fun onSessionEnding(session: CastSession) {
             Log.d(TAG, "onSessionEnding")
             flutterApi?.onSessionEnding { }
         }
 
-        override fun onSessionStartFailed(session: CastSession?, p1: Int) {
+        override fun onSessionStartFailed(session: CastSession, p1: Int) {
             Log.d(TAG, "onSessionStartFailed")
             flutterApi?.onSessionStartFailed { }
         }
 
-        override fun onSessionResumeFailed(session: CastSession?, p1: Int) {
+        override fun onSessionResumeFailed(session: CastSession, p1: Int) {
             Log.d(TAG, "onSessionResumeFailed")
             flutterApi?.onSessionResumeFailed { }
         }

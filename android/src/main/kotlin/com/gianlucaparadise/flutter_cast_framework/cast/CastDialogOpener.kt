@@ -20,10 +20,10 @@ object CastDialogOpener {
                 // This dialog allows the user to control or disconnect from the currently selected route.
                 MediaRouteControllerDialog(activity, themeResId)
                         .show()
-            } else {
+            } else if (castContext.mergedSelector != null) {
                 // This dialog allows the user to choose a route that matches a given selector.
                 MediaRouteChooserDialog(activity, themeResId).apply {
-                    routeSelector = castContext.mergedSelector
+                    routeSelector = castContext.mergedSelector!!
                     show()
                 }
             }

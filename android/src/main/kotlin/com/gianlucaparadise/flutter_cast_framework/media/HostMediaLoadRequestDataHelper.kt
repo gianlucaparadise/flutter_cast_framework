@@ -25,7 +25,9 @@ fun getMediaInfo(mediaInfo: PlatformBridgeApis.MediaInfo?): MediaInfo? {
             ?: throw IllegalArgumentException("streamType is a required field"))
     val customData = JSONObject(mediaInfo.customDataAsJson ?: "{}")
 
-    val builder = MediaInfo.Builder(mediaInfo.contentId)
+    if (mediaInfo.contentId == null) return null
+
+    val builder = MediaInfo.Builder(mediaInfo.contentId!!)
             .setStreamType(streamType)
             .setContentType(mediaInfo.contentType)
             .setStreamDuration(mediaInfo.streamDuration
@@ -160,10 +162,10 @@ fun getTrackSubtype(trackSubtype: PlatformBridgeApis.TrackSubtype): Int {
     }
 }
 
-fun getMediaQueueItem(item: PlatformBridgeApis.MediaQueueItem?): MediaQueueItem? {
-    if (item?.media == null) return null
+fun getMediaQueueItem(item: PlatformBridgeApis.MediaQueueItem): MediaQueueItem? {
+    if (item.media == null) return null
 
-    val mediaInfo = getMediaInfo(item.media)
+    val mediaInfo = getMediaInfo(item.media) ?: return null
 
     val builder = MediaQueueItem.Builder(mediaInfo)
 

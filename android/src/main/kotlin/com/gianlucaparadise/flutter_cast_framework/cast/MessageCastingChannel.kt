@@ -11,7 +11,7 @@ class MessageCastingChannel(private val flutterApi : PlatformBridgeApis.CastFlut
         const val TAG = "MessageCastingChannel"
     }
 
-    override fun onMessageReceived(castDevice: CastDevice?, namespace: String?, message: String?) {
+    override fun onMessageReceived(castDevice: CastDevice, namespace: String, message: String) {
         Log.d(TAG, "Message received: $message:")
         val castMessage = PlatformBridgeApis.CastMessage()
         castMessage.namespace = namespace
@@ -24,21 +24,30 @@ class MessageCastingChannel(private val flutterApi : PlatformBridgeApis.CastFlut
         Log.d(TAG, "Send Message arguments: $castMessage:")
         if (castMessage == null) return
 
+        if (castSession == null) {
+            Log.d(TAG, "No session")
+            return
+        }
+
         val namespace = castMessage.namespace
         val message = castMessage.message
+
+        if (namespace == null) {
+            Log.d(TAG, "No namespace")
+            return
+        }
+
+        if (message == null) {
+            Log.d(TAG, "No message")
+            return
+        }
 
         sendMessage(castSession, namespace, message)
     }
 
-    private fun sendMessage(castSession: CastSession?, namespace: String?, message: String?) {
+    private fun sendMessage(castSession: CastSession, namespace: String, message: String) {
         try {
-            if (castSession == null) {
-                Log.d(TAG, "No session")
-                return
-            }
-
             castSession.sendMessage(namespace, message)
-
         } catch (ex: Exception) {
             Log.e(TAG, "Error while sending ${message}:")
             Log.e(TAG, ex.toString())
